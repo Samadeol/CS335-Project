@@ -49,8 +49,9 @@ BINEXPONENT [pP][+-]?{DIGITS}
 HEXSIG      {HEX}\.?|0[xX]{HEXDIGITS}?\.{HEXDIGITS}
 HEXDEC      {HEXSIG}{BINEXPONENT}[fFdD]?
 BOOL        true|false
-CHAR        \'[^\'\\\n\r]\'   
-STRING      \"[^\"\\\n\r]*\"
+CHAR        \'[^\'\\\n\r]\'  
+STRING_CHAR   [^\"\\\n\r]
+STRING      \"{STRING_CHAR}*\"
 TEXTBLOCK   \"\"\"{WS}*{LT}
 NULL        null
 SEPARATOR   "("|")"|"{"|"}"|"["|"]"|";"|","|"."|"..."|"@"|"::"
