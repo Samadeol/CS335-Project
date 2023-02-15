@@ -85,7 +85,7 @@ int main(int argc, char* argv[]){
     yylex_destroy(scanner);
     
     fstream fout;
-
+    //hi
     string s;
     s.append(argv[argc-1]);
     fout.open(s+".csv", ios::out);
