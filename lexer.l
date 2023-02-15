@@ -66,14 +66,14 @@ OPERATOR    "="|">"|"<"|"!"|"~"|"?"|":"|"->"|"=="|">="|"<="|"!="|"&&"|"||"|"++"|
 {NULL}|{CHAR}|{STRING}|{HEXDEC}|{FLOATDEC}|{OCT}|{HEX}|{BINARY}|{DECIMAL}|{BOOL}   {func(yytext,lt);}
 {TEXTBLOCK} {yymore(); BEGIN textblock;}
 <textblock>\"\"\" {func(yytext,lt); BEGIN 0;}
-<textblock>\\   {cout<<"Error "<<yytext<<" in line "<<yylineno<<endl; return 0;}
+<textblock>\\   {cerr<<"Error "<<yytext<<" in line "<<yylineno; exit(1);}
 <textblock>[^\\]  {yymore();}
 {WS}|{LT}|{COMMENT} //
 \/\*    {BEGIN comment;}
 <comment>\*\/    {BEGIN 0;}
 <comment>.|{LT} //
 {ID}    {func(yytext,id);}
-.   {cout<<"Error "<<yytext<<" in line "<<yylineno<<endl; return 0;}
+.   {cerr<<"Error "<<yytext<<" in line "<<yylineno; exit(1);}
 
 %%
 
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]){
     //hi
     string s;
     s.append(argv[argc-1]);
-    fout.open(s+".csv", ios::out);
+    fout.open("lexer-results/"+s+".csv", ios::out);
     fout<<"Lexemes,Token,Count"<<endl;
     for(int i= 0;i<order.size();i++){
         auto it = result.find(order[i]);
