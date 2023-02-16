@@ -90,20 +90,24 @@ IDENTIFIER                  [a-zA-Z_$][a-zA-Z0-9_$]*
 
 
 EXTENDS                     "extends"
-AND                          "&"
-LARRROW                        "<"
-RARROW                         ">"
-SUPER                         "super"
-CLASS                         "class"
-IMPLEMENTS                    "implements"
-PERMITS                        permits
-CURLY_LEFT                     \{
-CURLY_RIGHT                    \}
-SEMI_COLON                     ";"
-PUBLIC                         "public"
-PRIVATE                       "private"
-VOID                            "void"
-
+AND                         "&"
+LARRROW                     "<"
+RARROW                      ">"
+SUPER                       "super"
+CLASS                       "class"
+IMPLEMENTS                  "implements"
+PERMITS                      permits
+CURLY_LEFT                   \{
+CURLY_RIGHT                  \}
+SEMI_COLON                   ";"
+PUBLIC                       "public"
+PRIVATE                      "private"
+VOID                         "void"
+FINAL                         "final"
+THROWS                          "throws"
+STATIC                          "static"
+ENUM                            "enum"
+RECORD                          "record"
 
 %s newstate
 %%

@@ -13,10 +13,10 @@ void yyerror(const char* error){
 
 }
 
-%token<s> INTEGRAL_TYPE FLOAT_POINT_TYPE BOOLEAN_TYPE SQUARE_LEFT SQUARE_RIGHT TYPEIDENTIFIER AND LARROW RARROW QUESTION SUPER CLASS PUBLIC PRIVATE IMPLEMENTS PERMITS CURLY_LEFT CURLY_RIGHT SEMI_COLON COMMA EQUALS IDENTIFIER DOT VOID
+%token<s> INTEGRAL_TYPE FLOAT_POINT_TYPE BOOLEAN_TYPE SQUARE_LEFT SQUARE_RIGHT TYPEIDENTIFIER AND LARROW RARROW QUESTION SUPER CLASS PUBLIC PRIVATE IMPLEMENTS PERMITS CURLY_LEFT CURLY_RIGHT SEMI_COLON COMMA EQUALS IDENTIFIER DOT VOID THIS FINAL THROWS STATIC LEFT_BRACKET RIGHT_BRACKET ENUM RECORD
 
 
-%type<s> Primitive_Type NumericType Annotations Annotation ClassOrInterfaceType TypeVariable Dims  Dim
+%type<s> PrimitiveType NumericType Annotations Annotation ClassOrInterfaceType TypeVariable Dims  Dim
 
 
 %%
@@ -86,10 +86,10 @@ TYPEIDENTIFIER
 | Annotations TYPEIDENTIFIER
 
 TypeParameter:
-TypeIdentifier 
-| TypeIdentifier TypeBound 
-| TypeParameterModifiers TypeIdentifier 
-| TypeParameterModifiers TypeIdentifier TypeBound
+TYPEIDENTIFIER 
+| TYPEIDENTIFIER TypeBound 
+| TypeParameterModifiers TYPEIDENTIFIER 
+| TypeParameterModifiers TYPEIDENTIFIER TypeBound
 ;
 
 TypeParameterModifiers:
@@ -155,38 +155,38 @@ NormalClassDeclaration
 ;
 
 NormalClassDeclaration:
-CLASS TypeIdentifier ClassBody 
-| CLASS TypeIdentifier ClassPermits ClassBody 
-| CLASS TypeIdentifier ClassImplements ClassBody 
-| CLASS TypeIdentifier ClassImplements ClassPermits ClassBody 
-| CLASS TypeIdentifier ClassExtends ClassBody 
-| CLASS TypeIdentifier ClassExtends ClassPermits ClassBody 
-| CLASS TypeIdentifier ClassExtends ClassImplements ClassBody 
-| CLASS TypeIdentifier ClassExtends ClassImplements ClassPermits ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassPermits ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassImplements ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassImplements ClassPermits ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassExtends ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassExtends ClassPermits ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassExtends ClassImplements ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassExtends ClassImplements ClassPermits ClassBody 
-| ClassModifiers class TypeIdentifier ClassBody 
-| ClassModifiers class TypeIdentifier ClassPermits ClassBody 
-| ClassModifiers class TypeIdentifier ClassImplements ClassBody 
-| ClassModifiers class TypeIdentifier ClassImplements ClassPermits ClassBody 
-| ClassModifiers class TypeIdentifier ClassExtends ClassBody 
-| ClassModifiers class TypeIdentifier ClassExtends ClassPermits ClassBody 
-| ClassModifiers class TypeIdentifier ClassExtends ClassImplements ClassBody 
-| ClassModifiers class TypeIdentifier ClassExtends ClassImplements ClassPermits ClassBody 
-| ClassModifiers class TypeIdentifier TypeParameters ClassBody 
-| ClassModifiers class TypeIdentifier TypeParameters ClassPermits ClassBody 
-| ClassModifiers class TypeIdentifier TypeParameters ClassImplements ClassBody 
-| ClassModifiers class TypeIdentifier TypeParameters ClassImplements ClassPermits ClassBody 
-| ClassModifiers class TypeIdentifier TypeParameters ClassExtends ClassBody 
-| ClassModifiers class TypeIdentifier TypeParameters ClassExtends ClassPermits ClassBody 
-| ClassModifiers class TypeIdentifier TypeParameters ClassExtends ClassImplements ClassBody 
-| ClassModifiers class TypeIdentifier TypeParameters ClassExtends ClassImplements ClassPermits ClassBody
+CLASS TYPEIDENTIFIER ClassBody 
+| CLASS TYPEIDENTIFIER ClassPermits ClassBody 
+| CLASS TYPEIDENTIFIER ClassImplements ClassBody 
+| CLASS TYPEIDENTIFIER ClassImplements ClassPermits ClassBody 
+| CLASS TYPEIDENTIFIER ClassExtends ClassBody 
+| CLASS TYPEIDENTIFIER ClassExtends ClassPermits ClassBody 
+| CLASS TYPEIDENTIFIER ClassExtends ClassImplements ClassBody 
+| CLASS TYPEIDENTIFIER ClassExtends ClassImplements ClassPermits ClassBody 
+| CLASS TYPEIDENTIFIER TypeParameters ClassBody 
+| CLASS TYPEIDENTIFIER TypeParameters ClassPermits ClassBody 
+| CLASS TYPEIDENTIFIER TypeParameters ClassImplements ClassBody 
+| CLASS TYPEIDENTIFIER TypeParameters ClassImplements ClassPermits ClassBody 
+| CLASS TYPEIDENTIFIER TypeParameters ClassExtends ClassBody 
+| CLASS TYPEIDENTIFIER TypeParameters ClassExtends ClassPermits ClassBody 
+| CLASS TYPEIDENTIFIER TypeParameters ClassExtends ClassImplements ClassBody 
+| CLASS TYPEIDENTIFIER TypeParameters ClassExtends ClassImplements ClassPermits ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER ClassPermits ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER ClassImplements ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER ClassImplements ClassPermits ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER ClassExtends ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER ClassExtends ClassPermits ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER ClassExtends ClassImplements ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER ClassExtends ClassImplements ClassPermits ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER TypeParameters ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER TypeParameters ClassPermits ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER TypeParameters ClassImplements ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER TypeParameters ClassImplements ClassPermits ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER TypeParameters ClassExtends ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER TypeParameters ClassExtends ClassPermits ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER TypeParameters ClassExtends ClassImplements ClassBody 
+| ClassModifiers CLASS TYPEIDENTIFIER TypeParameters ClassExtends ClassImplements ClassPermits ClassBody
 ;
 
 ClassModifiers:
@@ -334,14 +334,14 @@ UnannClassType
 UnannClassType:
 TYPEIDENTIFIER
 | TYPEIDENTIFIER TypeArguments
-| PackageName DOT TypeIdentifier 
-| PackageName DOT TypeIdentifier TypeArguments 
-| PackageName DOT Annotations TypeIdentifier 
-| PackageName DOT Annotations TypeIdentifier TypeArguments
-| UnannClassOrInterfaceType DOT TypeIdentifier 
-| UnannClassOrInterfaceType DOT TypeIdentifier TypeArguments 
-| UnannClassOrInterfaceType DOT Annotations TypeIdentifier 
-| UnannClassOrInterfaceType DOT Annotations TypeIdentifier TypeArguments  
+| PackageName DOT TYPEIDENTIFIER 
+| PackageName DOT TYPEIDENTIFIER TypeArguments 
+| PackageName DOT Annotations TYPEIDENTIFIER 
+| PackageName DOT Annotations TYPEIDENTIFIER TypeArguments
+| UnannClassOrInterfaceType DOT TYPEIDENTIFIER 
+| UnannClassOrInterfaceType DOT TYPEIDENTIFIER TypeArguments 
+| UnannClassOrInterfaceType DOT Annotations TYPEIDENTIFIER 
+| UnannClassOrInterfaceType DOT Annotations TYPEIDENTIFIER TypeArguments  
 ;
 
 UnannInterfaceType:
@@ -389,6 +389,266 @@ UnannType
 ;
 
 MethodDeclarator:
+IDENTIFIER LEFT_BRACKET RIGHT_BRACKET 
+| IDENTIFIER LEFT_BRACKET RIGHT_BRACKET Dims 
+| IDENTIFIER LEFT_BRACKET FormalParameterList RIGHT_BRACKET 
+| IDENTIFIER LEFT_BRACKET FormalParameterList RIGHT_BRACKET Dims 
+| IDENTIFIER LEFT_BRACKET ReceiverParameter COMMA RIGHT_BRACKET 
+| IDENTIFIER LEFT_BRACKET ReceiverParameter COMMA RIGHT_BRACKET Dims 
+| IDENTIFIER LEFT_BRACKET ReceiverParameter COMMA FormalParameterList RIGHT_BRACKET 
+| IDENTIFIER LEFT_BRACKET ReceiverParameter COMMA FormalParameterList RIGHT_BRACKET Dims
+;
+
+ReceiverParameter:
+UnannType THIS 
+| UnannType IDENTIFIER DOT THIS 
+| Annotations UnannType THIS 
+| Annotations UnannType IDENTIFIER DOT THIS
+;
+
+FormalParameterList:
+FormalParameter 
+| FormalParameter CommaFormalParameter 
+;
+
+CommaFormalParameter:
+CommaFormalParameter COMMA FormalParameter
+| COMMA FormalParameter
+;
+
+FormalParameter:
+UnannType VariableDeclaratorId 
+| VariableModifiers UnannType VariableDeclaratorId 
+| VariableArityParameter
+;
+
+VariableModifiers:
+VariableModifiers VariableModifier
+| VariableModifier
+;
+
+VariableArityParameter:
+UnannType DOT DOT DOT IDENTIFIER 
+| UnannType Annotations DOT DOT DOT IDENTIFIER 
+| VariableModifiers UnannType DOT DOT DOT IDENTIFIER 
+| VariableModifiers UnannType Annotations DOT DOT DOT IDENTIFIER
+;
+
+VariableModifier:
+Annotation
+| FINAL
+;
+
+Throws:
+THROWS ExceptionTypeList
+;
+
+ExceptionTypeList:
+ExceptionType
+| ExceptionType CommaExceptionType
+;
+
+CommaExceptionType:
+CommaExceptionType COMMA ExceptionType
+| COMMA ExceptionType
+;
+
+ExceptionType:
+ClassType
+| TypeVariable
+;
+
+MethodBody:
+Block
+| SEMI_COLON
+;
+
+InstanceInitializer:
+Block
+;
+
+StaticInitializer:
+STATIC Block
+;
+
+ConstructorDeclaration:
+ConstructorDeclarator ConstructorBody 
+| ConstructorDeclarator Throws ConstructorBody 
+| ConstructorModifiers ConstructorDeclarator ConstructorBody 
+| ConstructorModifiers ConstructorDeclarator Throws ConstructorBody 
+;
+
+ConstructorModifiers:
+ConstructorModifiers ConstructorModifier
+;
+
+ConstructorModifier:
+Annotation
+| PUBLIC
+| PRIVATE
+;
+
+ConstructorDeclarator:
+SimpleTypeName LEFT_BRACKET RIGHT_BRACKET 
+| SimpleTypeName LEFT_BRACKET FormalParameterList RIGHT_BRACKET 
+| SimpleTypeName LEFT_BRACKET ReceiverParameter COMMA RIGHT_BRACKET 
+| SimpleTypeName LEFT_BRACKET ReceiverParameter COMMA FormalParameterList RIGHT_BRACKET 
+| TypeParameters SimpleTypeName LEFT_BRACKET RIGHT_BRACKET 
+| TypeParameters SimpleTypeName LEFT_BRACKET FormalParameterList RIGHT_BRACKET 
+| TypeParameters SimpleTypeName LEFT_BRACKET ReceiverParameter COMMA RIGHT_BRACKET 
+| TypeParameters SimpleTypeName LEFT_BRACKET ReceiverParameter COMMA FormalParameterList RIGHT_BRACKET
+;
+
+SimpleTypeName:
+TYPEIDENTIFIER
+;
+
+ConstructorBody:
+CURLY_LEFT CURLY_RIGHT 
+| CURLY_LEFT BlockStatements CURLY_RIGHT 
+| CURLY_LEFT ExplicitConstructorInvocation CURLY_RIGHT 
+| CURLY_LEFT ExplicitConstructorInvocation BlockStatements CURLY_RIGHT 
+;
+
+ExplicitConstructorInvocation:
+THIS LEFT_BRACKET RIGHT_BRACKET SEMI_COLON 
+| THIS LEFT_BRACKET ArgumentList RIGHT_BRACKET SEMI_COLON 
+| TypeArguments THIS LEFT_BRACKET RIGHT_BRACKET SEMI_COLON 
+| TypeArguments THIS LEFT_BRACKET ArgumentList RIGHT_BRACKET SEMI_COLON
+| SUPER LEFT_BRACKET RIGHT_BRACKET SEMI_COLON 
+| SUPER LEFT_BRACKET ArgumentList RIGHT_BRACKET SEMI_COLON 
+| TypeArguments SUPER LEFT_BRACKET RIGHT_BRACKET SEMI_COLON 
+| TypeArguments SUPER LEFT_BRACKET ArgumentList RIGHT_BRACKET SEMI_COLON 
+| ExpressionName DOT SUPER LEFT_BRACKET RIGHT_BRACKET SEMI_COLON 
+| ExpressionName DOT SUPER LEFT_BRACKET ArgumentList RIGHT_BRACKET SEMI_COLON 
+| ExpressionName DOT TypeArguments SUPER LEFT_BRACKET RIGHT_BRACKET SEMI_COLON 
+| ExpressionName DOT TypeArguments SUPER LEFT_BRACKET ArgumentList RIGHT_BRACKET SEMI_COLON
+| Primary DOT SUPER LEFT_BRACKET RIGHT_BRACKET SEMI_COLON 
+| Primary DOT SUPER LEFT_BRACKET ArgumentList RIGHT_BRACKET SEMI_COLON 
+| Primary DOT TypeArguments SUPER LEFT_BRACKET RIGHT_BRACKET SEMI_COLON 
+| Primary DOT TypeArguments SUPER LEFT_BRACKET ArgumentList RIGHT_BRACKET SEMI_COLON
+;
+
+EnumDeclaration:
+ENUM TYPEIDENTIFIER EnumBody 
+| ENUM TYPEIDENTIFIER ClassImplements EnumBody 
+| ClassModifiers ENUM TYPEIDENTIFIER EnumBody 
+| ClassModifiers ENUM TYPEIDENTIFIER ClassImplements EnumBody 
+;
+
+EnumBody:
+CURLY_LEFT CURLY_RIGHT 
+| CURLY_LEFT EnumBodyDeclarations CURLY_RIGHT 
+| CURLY_LEFT COMMA CURLY_RIGHT 
+| CURLY_LEFT COMMA EnumBodyDeclarations CURLY_RIGHT 
+| CURLY_LEFT EnumConstantList CURLY_RIGHT 
+| CURLY_LEFT EnumConstantList EnumBodyDeclarations CURLY_RIGHT 
+| CURLY_LEFT EnumConstantList COMMA CURLY_RIGHT 
+| CURLY_LEFT EnumConstantList COMMA EnumBodyDeclarations CURLY_RIGHT
+;
+
+EnumConstantList:
+EnumConstant 
+| EnumConstant CommaEnumConstant 
+;
+
+CommaEnumConstant:
+CommaEnumConstant COMMA EnumConstant
+| COMMA EnumConstant
+;
+
+EnumConstant:
+IDENTIFIER 
+| IDENTIFIER ClassBody
+| IDENTIFIER LEFT_BRACKET RIGHT_BRACKET
+| IDENTIFIER LEFT_BRACKET ArgumentList RIGHT_BRACKET
+| IDENTIFIER LEFT_BRACKET RIGHT_BRACKET ClassBody
+| IDENTIFIER LEFT_BRACKET ArgumentList RIGHT_BRACKET ClassBody
+| EnumConstantModifiers IDENTIFIER ClassBody
+| EnumConstantModifiers IDENTIFIER LEFT_BRACKET RIGHT_BRACKET
+| EnumConstantModifiers IDENTIFIER LEFT_BRACKET ArgumentList RIGHT_BRACKET
+| EnumConstantModifiers IDENTIFIER LEFT_BRACKET RIGHT_BRACKET ClassBody
+| EnumConstantModifiers IDENTIFIER LEFT_BRACKET ArgumentList RIGHT_BRACKET ClassBody
+;
+
+EnumConstantModifiers:
+EnumConstantModifiers EnumConstantModifier
+| EnumConstantModifier
+;
+
+EnumConstantModifier:
+Annotation
+;
+
+EnumBodyDeclarations:
+SEMI_COLON
+| SEMI_COLON ClassBodyDeclarations
+;
+
+RecordDeclaration:
+RECORD TYPEIDENTIFIER RecordHeader RecordBody 
+| RECORD TYPEIDENTIFIER RecordHeader ClassImplements RecordBody 
+| RECORD TYPEIDENTIFIER TypeParameters RecordHeader RecordBody 
+| RECORD TYPEIDENTIFIER TypeParameters RecordHeader ClassImplements RecordBody 
+| ClassModifiers RECORD TYPEIDENTIFIER RecordHeader RecordBody 
+| ClassModifiers RECORD TYPEIDENTIFIER RecordHeader ClassImplements RecordBody 
+| ClassModifiers RECORD TYPEIDENTIFIER TypeParameters RecordHeader RecordBody 
+| ClassModifiers RECORD TYPEIDENTIFIER TypeParameters RecordHeader ClassImplements RecordBody 
+;
+
+RecordHeader:
+LEFT_BRACKET RIGHT_BRACKET 
+| LEFT_BRACKET RecordComponentList RIGHT_BRACKET 
+;
+
+RecordComponentList:
+RecordComponent
+| RecordComponent CommaRecordComponent
+;
+
+CommaRecordComponent:
+CommaRecordComponent COMMA RecordComponent
+| COMMA RecordComponent
+;
+
+RecordComponent:
+UnannType Identifier 
+| RecordComponentModifiers UnannType Identifier
+| VariableArityRecordComponent
+;
+
+VariableArityRecordComponent:
+UnannType DOT DOT DOT IDENTIFIER 
+| UnannType Annotations DOT DOT DOT IDENTIFIER 
+| RecordComponentModifiers UnannType DOT DOT DOT IDENTIFIER 
+| RecordComponentModifiers UnannType Annotations DOT DOT DOT IDENTIFIER
+;
+
+RecordComponentModifier:
+Annotation
+;
+
+RecordBody:
+CURLY_LEFT CURLY_RIGHT
+| CURLY_LEFT RecordBodyDeclarations CURLY_RIGHT
+;
+
+RecordBodyDeclarations:
+RecordBodyDeclarations RecordBodyDeclaration
+| RecordBodyDeclaration
+;
+
+RecordBodyDeclaration:
+ClassBodyDeclaration
+| CompactConstructorDeclaration
+
+CompactConstructorDeclaration:
+SimpleTypeName ConstructorBody
+| ConstructorModifiers SimpleTypeName ConstructorBody
+
+
+
+
 
 
 
