@@ -31,49 +31,52 @@ string bin(int k,int p){
 }
 
 int main(){
+    string s;
     k.clear();k2.clear();
-    string s,temp;
-    int p=0,flag=0;
-    getline(cin,s);
-    vector<pair<string,int> > v;
-    for(int i=0;i<s.size()+1;i++){
-        if(i<s.size()){
-            if(s[i]=='{' || s[i]=='[') flag=1;
-            else if(s[i]=='}' || s[i]==']') flag=0;
-        }
-        if(i==s.size() || (flag==0 && s[i]==' ')){
-            if(temp.size()){
-                if(temp[0]=='['){
-                    v.push_back(make_pair(temp.substr(1,temp.size()-2),p));
-                    p++;
-                }
-                else if(temp[0]=='{'){
-                    if(v.size() && temp.substr(1,temp.size()-2) == v[v.size()-1].first){
-                        k2.push_back(v[v.size()-1].first);
-                        v[v.size()-1].first+='S';
-                    }
-                    else{
-                        v.push_back(make_pair(to_string(check(temp)),p));
+    while(getline(cin,s)){
+        string temp;
+        int p=0,flag=0;
+        vector<pair<string,int> > v;
+        for(int i=0;i<s.size()+1;i++){
+            if(i<s.size()){
+                if(s[i]=='{' || s[i]=='[') flag=1;
+                else if(s[i]=='}' || s[i]==']') flag=0;
+            }
+            if(i==s.size() || (flag==0 && s[i]==' ')){
+                if(temp.size()){
+                    if(temp[0]=='['){
+                        v.push_back(make_pair(temp.substr(1,temp.size()-2),p));
                         p++;
                     }
+                    else if(temp[0]=='{'){
+                        if(v.size() && temp.substr(1,temp.size()-2) == v[v.size()-1].first){
+                            k2.push_back(v[v.size()-1].first);
+                            v[v.size()-1].first+='S';
+                        }
+                        else{
+                            v.push_back(make_pair(to_string(check(temp)),p));
+                            p++;
+                        }
+                    }
+                    else v.push_back(make_pair(temp,-1));
+                    temp.clear();
                 }
-                else v.push_back(make_pair(temp,-1));
-                temp.clear();
             }
+            else temp.push_back(s[i]);
         }
-        else temp.push_back(s[i]);
-    }
-    for(int i=0;i<pow(2,p);i++){
-        if(i) cout<<"| ";
-        string x = bin(i,p);
-        string t;
-        for(int j=0;j<v.size();j++){
-            if(v[j].second < 0 || x[v[j].second]=='1'){
-                t+=v[j].first;
-                t.push_back(' ');
+        for(int i=0;i<pow(2,p);i++){
+            if(i) cout<<"| ";
+            string x = bin(i,p);
+            string t;
+            for(int j=0;j<v.size();j++){
+                if(v[j].second < 0 || x[v[j].second]=='1'){
+                    t+=v[j].first;
+                    t.push_back(' ');
+                }
             }
+            cout<<t<<endl;
         }
-        cout<<t<<endl;
+        cout<<"| ";
     }
     cout<<endl<<"ONE OR MORE"<<endl<<endl;
     for(int i=0;i<k2.size();i++) cout<<k2[i]+"S:"<<endl<<k2[i]+'S'<<" "<<k2[i]<<endl<<"| "<<k2[i]<<endl<<endl;

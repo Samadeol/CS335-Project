@@ -67,8 +67,6 @@ KEYWORD                     abstract|continue|for|new|switch|assert|default|if|p
 INTEGRAL_TYPE               byte|short|int|long|char
 FLOAT_POINT_TYPE            float|double
 BOOLEAN_TYPE                boolean
-SQUARE_LEFT                 \[
-SQUARE_RIGHT                \]
 TEXT_BLOCK_WHITE_SPACE      [ \t\f]
 TEXT_BLOCK                  \"\"\"{TEXT_BLOCK_WHITE_SPACE}*{LINE_TERMINATOR}([^\\\"]|\"([^\\\"])|\"\"([^\\\"]))*\"\"\"
 LITERAL                     {INTEGER_LITERAL}|{BOOLEAN_LITERAL}|{NULL_LITERAL}|{CHARACTER_LITERAL}|{STRING_LITERAL}|{FLOAT_LITERAL}|{TEXT_BLOCK}
@@ -103,6 +101,10 @@ SEMI_COLON                     ";"
 PUBLIC                         "public"
 PRIVATE                       "private"
 VOID                            "void"
+BRACKET_LEFT                   \(
+BRACKET_RIGHT                  \)
+SQUARE_LEFT                 \[
+SQUARE_RIGHT                \]
 
 
 %s newstate
