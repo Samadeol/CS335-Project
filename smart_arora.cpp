@@ -64,6 +64,7 @@ int main(){
         else temp.push_back(s[i]);
     }
     for(int i=0;i<pow(2,p);i++){
+        if(i) cout<<"| ";
         string x = bin(i,p);
         string t;
         for(int j=0;j<v.size();j++){
@@ -75,6 +76,6 @@ int main(){
         cout<<t<<endl;
     }
     cout<<endl<<"ONE OR MORE"<<endl<<endl;
-    for(int i=0;i<k2.size();i++) cout<<k2[i]+"S"<<endl<<k2[i]+'S'<<" "<<k2[i]<<endl<<k2[i]<<endl<<endl;
-    for(int i=0;i<k.size();i++) cout<<i<<endl<<i<<" "<<k[i]<<endl<<k[i]<<endl<<endl<<endl;
+    for(int i=0;i<k2.size();i++) cout<<k2[i]+"S"<<endl<<k2[i]+'S'<<" "<<k2[i]<<endl<<"| "<<k2[i]<<endl<<endl;
+    for(int i=0;i<k.size();i++) cout<<i<<endl<<i<<" "<<k[i]<<endl<<"| "<<k[i]<<endl<<endl<<endl;
 }
