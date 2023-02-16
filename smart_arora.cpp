@@ -48,11 +48,14 @@ int main(){
                     p++;
                 }
                 else if(temp[0]=='{'){
-                    if(temp.substr(1,temp.size()-2) == v[v.size()-1].first){
+                    if(v.size() && temp.substr(1,temp.size()-2) == v[v.size()-1].first){
                         k2.push_back(v[v.size()-1].first);
                         v[v.size()-1].first+='S';
                     }
-                    else v.push_back(make_pair(to_string(check(temp)),-1));
+                    else{
+                        v.push_back(make_pair(to_string(check(temp)),p));
+                        p++;
+                    }
                 }
                 else v.push_back(make_pair(temp,-1));
                 temp.clear();
@@ -73,6 +76,5 @@ int main(){
     }
     cout<<endl<<"ONE OR MORE"<<endl<<endl;
     for(int i=0;i<k2.size();i++) cout<<k2[i]+"S"<<endl<<k2[i]+'S'<<" "<<k2[i]<<endl<<k2[i]<<endl<<endl;
-    cout<<endl<<"ZERO OR MORE"<<endl<<endl;
-    for(int i=0;i<k.size();i++) cout<<i<<endl<<i<<" "<<k[i]<<endl<<k[i]<<endl<<"epsilon"<<endl<<endl;
+    for(int i=0;i<k.size();i++) cout<<i<<endl<<i<<" "<<k[i]<<endl<<k[i]<<endl<<endl<<endl;
 }
