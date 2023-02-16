@@ -115,6 +115,24 @@ DOT                          "."
 LEFT_BRACKET                 \(
 RIGHT_BRACKET                \)
 THIS                         "this"
+VAR                          "var"
+COLON                        ":"
+IF                           "if"
+ELSE                         "else"
+ASSERT                       "assert"
+WHILE                        "while"
+FOR                          "for"
+BREAK                         "break"
+YIELD                         "yield"
+CONTINUE                      "continue"
+RETURN                         "return"
+THROW                          "throw"
+SYNCHRONIZED                   "synchronized"
+TRY                            "try"
+CATCH                          "catch"
+BAR                            "|"
+FINALLY                        "finally"
+
 
 
 

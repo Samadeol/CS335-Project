@@ -13,7 +13,7 @@ void yyerror(const char* error){
 
 }
 
-%token<s> INTEGRAL_TYPE FLOAT_POINT_TYPE BOOLEAN_TYPE SQUARE_LEFT SQUARE_RIGHT TYPEIDENTIFIER AND LARROW RARROW QUESTION SUPER CLASS PUBLIC PRIVATE IMPLEMENTS PERMITS CURLY_LEFT CURLY_RIGHT SEMI_COLON COMMA EQUALS IDENTIFIER DOT VOID THIS FINAL THROWS STATIC LEFT_BRACKET RIGHT_BRACKET ENUM RECORD
+%token<s> INTEGRAL_TYPE FLOAT_POINT_TYPE BOOLEAN_TYPE SQUARE_LEFT SQUARE_RIGHT TYPEIDENTIFIER AND LARROW RARROW QUESTION SUPER CLASS PUBLIC PRIVATE IMPLEMENTS PERMITS CURLY_LEFT CURLY_RIGHT SEMI_COLON COMMA EQUALS IDENTIFIER DOT VOID THIS FINAL THROWS STATIC LEFT_BRACKET RIGHT_BRACKET ENUM RECORD VAR COLON IF ELSE ASSERT WHILE FOR BREAK YIELD CONTINUE RETURN THROW SYNCHRONIZED TRY CATCH BAR FINALLY
 
 
 %type<s> PrimitiveType NumericType Annotations Annotation ClassOrInterfaceType TypeVariable Dims  Dim
@@ -645,6 +645,304 @@ ClassBodyDeclaration
 CompactConstructorDeclaration:
 SimpleTypeName ConstructorBody
 | ConstructorModifiers SimpleTypeName ConstructorBody
+
+//----------------------BLOCK-----------------------------------------
+
+Block:
+CURLY_LEFT CURLY_RIGHT
+| CURLY_LEFT BlockStatements CURLY_RIGHT
+;
+
+BlockStatements:
+BlockStatementS 
+;
+
+BlockStatementS:
+BlockStatementS BlockStatement
+| BlockStatement 
+;
+
+BlockStatement:
+LocalClassOrInterfaceDeclaration
+| LocalVariableDeclarationStatement
+| Statement 
+;
+
+LocalClassOrInterfaceDeclaration:
+ClassDeclaration
+| NormalInterfaceDeclaration
+;
+
+LocalVariableDeclarationStatement:
+LocalVariableDeclaration SEMI_COLON
+;
+
+LocalVariableDeclaration:
+LocalVariableType VariableDeclaratorList 
+| VariableModifiers LocalVariableType VariableDeclaratorList 
+;
+
+LocalVariableType:
+UnannType
+| VAR
+;
+
+Statement:
+StatementWithoutTrailingSubstatement
+| LabeledStatement
+| IfThenStatement
+| IfThenElseStatement
+| WhileStatement
+| ForStatement
+;
+
+StatementNoShortIf:
+| StatementWithoutTrailingSubstatement
+| LabeledStatementNoShortIf
+| IfThenElseStatementNoShortIf
+| WhileStatementNoShortIf
+| ForStatementNoShortIf
+;
+
+StatementWithoutTrailingSubstatement:
+Block
+| EmptyStatement
+| ExpressionStatement
+| AssertStatement
+| BreakStatement
+| ContinueStatement
+| ReturnStatement
+| SynchronizedStatement
+| ThrowStatement
+| TryStatement
+| YieldStatement
+;
+
+EmptyStatement:
+SEMI_COLON
+;
+
+LabeledStatement:
+IDENTIFIER COLON Statement
+;
+
+LabeledStatementNoShortIf:
+IDENTIFIER COLON StatementNoShortIf
+;
+
+ExpressionStatement:
+StatementExpression SEMI_COLON
+;
+
+StatementExpression:
+Assignment
+| PreIncrementExpression
+| PreDecrementExpression
+| PostIncrementExpression
+| PostDecrementExpression
+| MethodInvocation
+| ClassInstanceCreationExpression
+;
+
+IfThenStatement:
+IF LEFT_BRACKET Expression RIGHT_BRACKET Statement
+;
+
+IfThenElseStatement:
+IF LEFT_BRACKET Expression RIGHT_BRACKET StatementNoShortIf ELSE Statement
+;
+
+IfThenElseStatementNoShortIf:
+IF LEFT_BRACKET Expression RIGHT_BRACKET StatementNoShortIf ELSE StatementNoShortIf
+;
+
+AssertStatement:
+ASSERT Expression SEMI_COLON
+ASSERT Expression COLON Expression SEMI_COLON
+;
+
+WhileStatement:
+WHILE LEFT_BRACKET Expression RIGHT_BRACKET Statement
+;
+
+WhileStatementNoShortIf:
+WHILE LEFT_BRACKET Expression RIGHT_BRACKET StatementNoShortIf
+;
+
+ForStatement:
+BasicForStatement
+| EnhancedForStatement
+;
+
+ForStatementNoShortIf:
+BasicForStatementNoShortIf
+| EnhancedForStatementNoShortIf
+;
+
+BasicForStatement:
+FOR LEFT_BRACKET SEMI_COLON SEMI_COLON RIGHT_BRACKET Statement 
+| FOR LEFT_BRACKET SEMI_COLON SEMI_COLON ForUpdate RIGHT_BRACKET Statement 
+| FOR LEFT_BRACKET SEMI_COLON Expression SEMI_COLON RIGHT_BRACKET Statement 
+| FOR LEFT_BRACKET SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_BRACKET Statement 
+| FOR LEFT_BRACKET ForInit SEMI_COLON SEMI_COLON RIGHT_BRACKET Statement 
+| FOR LEFT_BRACKET ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_BRACKET Statement 
+| FOR LEFT_BRACKET ForInit SEMI_COLON Expression SEMI_COLON RIGHT_BRACKET Statement 
+| FOR LEFT_BRACKET ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_BRACKET Statement
+;
+
+BasicForStatementNoShortIf:
+FOR LEFT_BRACKET SEMI_COLON SEMI_COLON RIGHT_BRACKET StatementNoShortIf 
+| FOR LEFT_BRACKET SEMI_COLON SEMI_COLON ForUpdate RIGHT_BRACKET StatementNoShortIf 
+| FOR LEFT_BRACKET SEMI_COLON Expression SEMI_COLON RIGHT_BRACKET StatementNoShortIf 
+| FOR LEFT_BRACKET SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_BRACKET StatementNoShortIf 
+| FOR LEFT_BRACKET ForInit SEMI_COLON SEMI_COLON RIGHT_BRACKET StatementNoShortIf 
+| FOR LEFT_BRACKET ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_BRACKET StatementNoShortIf 
+| FOR LEFT_BRACKET ForInit SEMI_COLON Expression SEMI_COLON RIGHT_BRACKET StatementNoShortIf 
+| FOR LEFT_BRACKET ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_BRACKET StatementNoShortIf
+;
+
+ForInit:
+StatementExpressionList
+| LocalVariableDeclaration
+;
+
+ForUpdate:
+StatementExpressionList
+;
+
+StatementExpressionList:
+StatementExpression 
+| StatementExpression CommaStatementExpression
+;
+
+CommaStatementExpression:
+CommaStatementExpression COMMA StatementExpression
+| COMMA StatementExpression
+;
+
+EnhancedForStatement:
+FOR LEFT_BRACKET LocalVariableDeclaration COLON Expression RIGHT_BRACKET Statement
+;
+
+EnhancedForStatementNoShortIf:
+FOR LEFT_BRACKET LocalVariableDeclaration COLON Expression RIGHT_BRACKET StatementNoShortIf
+;
+
+BreakStatement:
+BREAK SQUARE_LEFT IDENTIFIER RIGHT_BRACKET SEMI_COLON
+;
+
+YieldStatement:
+YIELD Expression SEMI_COLON
+;
+
+ContinueStatement:
+CONTINUE SQUARE_LEFT IDENTIFIER SQUARE_RIGHT SEMI_COLON
+;
+
+ReturnStatement:
+RETURN SQUARE_LEFT Expression SQUARE_RIGHT SEMI_COLON
+;
+
+ThrowStatement:
+THROW Expression
+;
+
+SynchronizedStatement:
+SYNCHRONIZED LEFT_BRACKET Expression RIGHT_BRACKET Block
+;
+
+TryStatement:
+TRY Block Catches
+| TRY Block Finally
+| TRY Block Catches Finally
+| TryWithResourcesStatement
+;
+
+Catches:
+CatchClauses
+;
+
+CatchClauses:
+CatchClauses CatchClause
+| CatchClause
+;
+
+CatchClause:
+CATCH LEFT_BRACKET CatchFormalParameter RIGHT_BRACKET Block
+;
+
+CatchFormalParameter:
+CatchType VariableDeclaratorId 
+| VariableModifiers CatchType VariableDeclaratorId 
+;
+
+CatchType:
+UnannClassType
+| UnannClassType BarClassType
+;
+
+BarClassType:
+BarClassType BAR ClassType
+| BAR ClassType
+;
+
+Finally:
+FINALLY Block
+;
+
+TryWithResourcesStatement:
+TRY ResourceSpecification Block 
+| TRY ResourceSpecification Block Finally 
+| TRY ResourceSpecification Block Catches 
+| TRY ResourceSpecification Block Catches Finally 
+;
+
+ResourceSpecification:
+LEFT_BRACKET ResourceList RIGHT_BRACKET
+| LEFT_BRACKET ResourceList SEMI_COLON RIGHT_BRACKET
+;
+
+ResourceList:
+Resource 
+| Resource SemiColonResource
+;
+
+SemiColonResource:
+SemiColonResource SEMI_COLON Resource
+| SEMI_COLON Resource
+;
+
+Resource:
+LocalVariableDeclaration
+| VariableAccess
+;
+
+Pattern:
+TypePattern
+;
+
+TypePattern:
+LocalVariableDeclaration
+;
+
+VariableAccess:
+ExpressionName
+| FieldAccess
+;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
