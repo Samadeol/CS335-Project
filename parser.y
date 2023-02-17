@@ -32,7 +32,7 @@ PrimitiveType:
 NumericType
 | Annotations NumericType 
 | BOOLEAN_TYPE
-| Annotations BOOLEAN_TYPE 
+| Annotations BOOLEAN
 ;
 
 Annotations:
