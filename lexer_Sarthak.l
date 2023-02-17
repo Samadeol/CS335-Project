@@ -64,9 +64,12 @@ CHARACTER_LITERAL           "'"{SINGLE_CHARACTER}"'"|"'"{ESCAPE_SEQUENCE}"'"
 STRING_LITERAL              \"{STRING_CHARACTER_BASIC}*\"
 NULL_LITERAL                null 
 KEYWORD                     abstract|continue|for|new|switch|assert|default|if|package|synchronized|boolean|do|goto|private|this|break|double|implements|protected|throw|byte|else|import|public|throws|case|enum|instanceof|return|transient|catch|extends|int|short|try|char|final|interface|static|void|class|finally|long|strictfp|volatile|const|float|native|super|while|_|exports|opens|requires|uses|module|permits|sealed|var|non-sealed|provides|to|with|open|record|transitive|yield
+<<<<<<< HEAD
 INTEGRAL_TYPE               byte|short|int|long|char
 FLOAT_POINT_TYPE            float|double
 BOOLEAN_TYPE                boolean
+=======
+>>>>>>> 14acec91bf8bec1e132a488a955f45399e9e30ca
 TEXT_BLOCK_WHITE_SPACE      [ \t\f]
 TEXT_BLOCK                  \"\"\"{TEXT_BLOCK_WHITE_SPACE}*{LINE_TERMINATOR}([^\\\"]|\"([^\\\"])|\"\"([^\\\"]))*\"\"\"
 LITERAL                     {INTEGER_LITERAL}|{BOOLEAN_LITERAL}|{NULL_LITERAL}|{CHARACTER_LITERAL}|{STRING_LITERAL}|{FLOAT_LITERAL}|{TEXT_BLOCK}
@@ -87,7 +90,13 @@ sp                          [ \t\n]
 IDENTIFIER                  [a-zA-Z_$][a-zA-Z0-9_$]*
 
 
+INTEGRAL_TYPE               byte|short|int|long|char
+FLOAT_POINT_TYPE            float|double
+BOOLEAN_TYPE                boolean
+SQUARE_LEFT                 \[
+SQUARE_RIGHT                \]
 EXTENDS                     "extends"
+<<<<<<< HEAD
 AND                          "&"
 LARRROW                        "<"
 RARROW                         ">"
@@ -105,6 +114,38 @@ BRACKET_LEFT                   \(
 BRACKET_RIGHT                  \)
 SQUARE_LEFT                 \[
 SQUARE_RIGHT                \]
+=======
+AND                         "&"
+LARRROW                     "<"
+RARROW                      ">"
+SUPER                       "super"
+CLASS                       "class"
+IMPLEMENTS                  "implements"
+PERMITS                      permits
+CURLY_LEFT                   \{
+CURLY_RIGHT                  \}
+SEMI_COLON                   ";"
+PUBLIC                       "public"
+PRIVATE                      "private"
+VOID                         "void"
+FINAL                        "final"
+THROWS                       "throws"
+STATIC                       "static"
+ENUM                         "enum"
+RECORD                       "record"
+QUESTION                     "?"
+COMMA                        ","
+EQUALS                       "="
+DOT                          "."
+LEFT_BRACKET                 \(
+RIGHT_BRACKET                \)
+THIS                         "this"
+
+
+
+
+
+>>>>>>> 14acec91bf8bec1e132a488a955f45399e9e30ca
 
 
 %s newstate
