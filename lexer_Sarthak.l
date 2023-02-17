@@ -96,25 +96,6 @@ BOOLEAN_TYPE                boolean
 SQUARE_LEFT                 \[
 SQUARE_RIGHT                \]
 EXTENDS                     "extends"
-<<<<<<< HEAD
-AND                          "&"
-LARRROW                        "<"
-RARROW                         ">"
-SUPER                         "super"
-CLASS                         "class"
-IMPLEMENTS                    "implements"
-PERMITS                        permits
-CURLY_LEFT                     \{
-CURLY_RIGHT                    \}
-SEMI_COLON                     ";"
-PUBLIC                         "public"
-PRIVATE                       "private"
-VOID                            "void"
-BRACKET_LEFT                   \(
-BRACKET_RIGHT                  \)
-SQUARE_LEFT                 \[
-SQUARE_RIGHT                \]
-=======
 AND                         "&"
 LARRROW                     "<"
 RARROW                      ">"
@@ -145,7 +126,6 @@ THIS                         "this"
 
 
 
->>>>>>> 14acec91bf8bec1e132a488a955f45399e9e30ca
 
 
 %s newstate
