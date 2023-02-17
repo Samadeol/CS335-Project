@@ -116,7 +116,7 @@ ENUM                         "enum"
 RECORD                       "record"
 QUESTION                     "?"
 COMMA                        ","
-EQUALS                       "="
+EQUAL                       "="
 DOT                          "."
 LEFT_BRACKET                 \(
 RIGHT_BRACKET                \)
