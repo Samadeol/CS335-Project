@@ -1,0 +1,488 @@
+State 11 conflicts: 1 shift/reduce
+State 15 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: input $end
+
+    1 input: Type
+
+    2 Type: PrimitiveType
+    3     | ReferenceType
+
+    4 PrimitiveType: NumericType
+    5              | BOOLEAN_TYPE
+
+    6 NumericType: INTEGRAL_TYPE
+    7            | FLOAT_POINT_TYPE
+
+    8 ReferenceType: ClassType
+    9              | ArrayType
+
+   10 ClassType: DotIdentifiers
+   11          | DotIdentifiers TypeArguments
+   12          | ClassType DOT IDENTIFIER
+   13          | ClassType DOT IDENTIFIER TypeArguments
+
+   14 DotIdentifiers: DotIdentifiers DOT IDENTIFIER
+   15               | IDENTIFIER
+
+   16 ArrayType: Type Dims
+
+   17 Dims: Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE
+   18     | LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE
+
+   19 TypeArguments: LESS_THAN TypeArgumentList GREATER_THAN
+
+   20 TypeArgumentList: TypeArgumentList COMMA TypeArgument
+   21                 | TypeArgument
+
+   22 TypeArgument: ReferenceType
+   23             | Wildcard
+
+   24 Wildcard: QUESTION EXTENDS ReferenceType
+   25         | QUESTION SUPER ReferenceType
+   26         | QUESTION
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    BOOLEAN_TYPE <str> (258) 5
+    COMMA <str> (259) 20
+    DOT <str> (260) 12 13 14
+    EXTENDS <str> (261) 24
+    FLOAT_POINT_TYPE <str> (262) 7
+    GREATER_THAN <str> (263) 19
+    IDENTIFIER <str> (264) 12 13 14 15
+    INTEGRAL_TYPE <str> (265) 6
+    LEFT_SQUARE_BRACE <str> (266) 17 18
+    LESS_THAN <str> (267) 19
+    QUESTION <str> (268) 24 25 26
+    RIGHT_SQUARE_BRACE <str> (269) 17 18
+    SUPER <str> (270) 25
+
+
+Nonterminals, with rules where they appear
+
+    $accept (16)
+        on left: 0
+    input (17)
+        on left: 1
+        on right: 0
+    Type <str> (18)
+        on left: 2 3
+        on right: 1 16
+    PrimitiveType <str> (19)
+        on left: 4 5
+        on right: 2
+    NumericType <str> (20)
+        on left: 6 7
+        on right: 4
+    ReferenceType <str> (21)
+        on left: 8 9
+        on right: 3 22 24 25
+    ClassType <str> (22)
+        on left: 10 11 12 13
+        on right: 8 12 13
+    DotIdentifiers <str> (23)
+        on left: 14 15
+        on right: 10 11 14
+    ArrayType <str> (24)
+        on left: 16
+        on right: 9
+    Dims <str> (25)
+        on left: 17 18
+        on right: 16 17
+    TypeArguments <str> (26)
+        on left: 19
+        on right: 11 13
+    TypeArgumentList <str> (27)
+        on left: 20 21
+        on right: 19 20
+    TypeArgument <str> (28)
+        on left: 22 23
+        on right: 20 21
+    Wildcard <str> (29)
+        on left: 24 25 26
+        on right: 23
+
+
+State 0
+
+    0 $accept: . input $end
+
+    BOOLEAN_TYPE      shift, and go to state 1
+    FLOAT_POINT_TYPE  shift, and go to state 2
+    IDENTIFIER        shift, and go to state 3
+    INTEGRAL_TYPE     shift, and go to state 4
+
+    input           go to state 5
+    Type            go to state 6
+    PrimitiveType   go to state 7
+    NumericType     go to state 8
+    ReferenceType   go to state 9
+    ClassType       go to state 10
+    DotIdentifiers  go to state 11
+    ArrayType       go to state 12
+
+
+State 1
+
+    5 PrimitiveType: BOOLEAN_TYPE .
+
+    $default  reduce using rule 5 (PrimitiveType)
+
+
+State 2
+
+    7 NumericType: FLOAT_POINT_TYPE .
+
+    $default  reduce using rule 7 (NumericType)
+
+
+State 3
+
+   15 DotIdentifiers: IDENTIFIER .
+
+    $default  reduce using rule 15 (DotIdentifiers)
+
+
+State 4
+
+    6 NumericType: INTEGRAL_TYPE .
+
+    $default  reduce using rule 6 (NumericType)
+
+
+State 5
+
+    0 $accept: input . $end
+
+    $end  shift, and go to state 13
+
+
+State 6
+
+    1 input: Type .
+   16 ArrayType: Type . Dims
+
+    LEFT_SQUARE_BRACE  shift, and go to state 14
+
+    $default  reduce using rule 1 (input)
+
+    Dims  go to state 15
+
+
+State 7
+
+    2 Type: PrimitiveType .
+
+    $default  reduce using rule 2 (Type)
+
+
+State 8
+
+    4 PrimitiveType: NumericType .
+
+    $default  reduce using rule 4 (PrimitiveType)
+
+
+State 9
+
+    3 Type: ReferenceType .
+
+    $default  reduce using rule 3 (Type)
+
+
+State 10
+
+    8 ReferenceType: ClassType .
+   12 ClassType: ClassType . DOT IDENTIFIER
+   13          | ClassType . DOT IDENTIFIER TypeArguments
+
+    DOT  shift, and go to state 16
+
+    $default  reduce using rule 8 (ReferenceType)
+
+
+State 11
+
+   10 ClassType: DotIdentifiers .
+   11          | DotIdentifiers . TypeArguments
+   14 DotIdentifiers: DotIdentifiers . DOT IDENTIFIER
+
+    DOT        shift, and go to state 17
+    LESS_THAN  shift, and go to state 18
+
+    DOT       [reduce using rule 10 (ClassType)]
+    $default  reduce using rule 10 (ClassType)
+
+    TypeArguments  go to state 19
+
+
+State 12
+
+    9 ReferenceType: ArrayType .
+
+    $default  reduce using rule 9 (ReferenceType)
+
+
+State 13
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+State 14
+
+   18 Dims: LEFT_SQUARE_BRACE . RIGHT_SQUARE_BRACE
+
+    RIGHT_SQUARE_BRACE  shift, and go to state 20
+
+
+State 15
+
+   16 ArrayType: Type Dims .
+   17 Dims: Dims . LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE
+
+    LEFT_SQUARE_BRACE  shift, and go to state 21
+
+    LEFT_SQUARE_BRACE  [reduce using rule 16 (ArrayType)]
+    $default           reduce using rule 16 (ArrayType)
+
+
+State 16
+
+   12 ClassType: ClassType DOT . IDENTIFIER
+   13          | ClassType DOT . IDENTIFIER TypeArguments
+
+    IDENTIFIER  shift, and go to state 22
+
+
+State 17
+
+   14 DotIdentifiers: DotIdentifiers DOT . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 23
+
+
+State 18
+
+   19 TypeArguments: LESS_THAN . TypeArgumentList GREATER_THAN
+
+    BOOLEAN_TYPE      shift, and go to state 1
+    FLOAT_POINT_TYPE  shift, and go to state 2
+    IDENTIFIER        shift, and go to state 3
+    INTEGRAL_TYPE     shift, and go to state 4
+    QUESTION          shift, and go to state 24
+
+    Type              go to state 25
+    PrimitiveType     go to state 7
+    NumericType       go to state 8
+    ReferenceType     go to state 26
+    ClassType         go to state 10
+    DotIdentifiers    go to state 11
+    ArrayType         go to state 12
+    TypeArgumentList  go to state 27
+    TypeArgument      go to state 28
+    Wildcard          go to state 29
+
+
+State 19
+
+   11 ClassType: DotIdentifiers TypeArguments .
+
+    $default  reduce using rule 11 (ClassType)
+
+
+State 20
+
+   18 Dims: LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE .
+
+    $default  reduce using rule 18 (Dims)
+
+
+State 21
+
+   17 Dims: Dims LEFT_SQUARE_BRACE . RIGHT_SQUARE_BRACE
+
+    RIGHT_SQUARE_BRACE  shift, and go to state 30
+
+
+State 22
+
+   12 ClassType: ClassType DOT IDENTIFIER .
+   13          | ClassType DOT IDENTIFIER . TypeArguments
+
+    LESS_THAN  shift, and go to state 18
+
+    $default  reduce using rule 12 (ClassType)
+
+    TypeArguments  go to state 31
+
+
+State 23
+
+   14 DotIdentifiers: DotIdentifiers DOT IDENTIFIER .
+
+    $default  reduce using rule 14 (DotIdentifiers)
+
+
+State 24
+
+   24 Wildcard: QUESTION . EXTENDS ReferenceType
+   25         | QUESTION . SUPER ReferenceType
+   26         | QUESTION .
+
+    EXTENDS  shift, and go to state 32
+    SUPER    shift, and go to state 33
+
+    $default  reduce using rule 26 (Wildcard)
+
+
+State 25
+
+   16 ArrayType: Type . Dims
+
+    LEFT_SQUARE_BRACE  shift, and go to state 14
+
+    Dims  go to state 15
+
+
+State 26
+
+    3 Type: ReferenceType .
+   22 TypeArgument: ReferenceType .
+
+    LEFT_SQUARE_BRACE  reduce using rule 3 (Type)
+    $default           reduce using rule 22 (TypeArgument)
+
+
+State 27
+
+   19 TypeArguments: LESS_THAN TypeArgumentList . GREATER_THAN
+   20 TypeArgumentList: TypeArgumentList . COMMA TypeArgument
+
+    COMMA         shift, and go to state 34
+    GREATER_THAN  shift, and go to state 35
+
+
+State 28
+
+   21 TypeArgumentList: TypeArgument .
+
+    $default  reduce using rule 21 (TypeArgumentList)
+
+
+State 29
+
+   23 TypeArgument: Wildcard .
+
+    $default  reduce using rule 23 (TypeArgument)
+
+
+State 30
+
+   17 Dims: Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE .
+
+    $default  reduce using rule 17 (Dims)
+
+
+State 31
+
+   13 ClassType: ClassType DOT IDENTIFIER TypeArguments .
+
+    $default  reduce using rule 13 (ClassType)
+
+
+State 32
+
+   24 Wildcard: QUESTION EXTENDS . ReferenceType
+
+    BOOLEAN_TYPE      shift, and go to state 1
+    FLOAT_POINT_TYPE  shift, and go to state 2
+    IDENTIFIER        shift, and go to state 3
+    INTEGRAL_TYPE     shift, and go to state 4
+
+    Type            go to state 25
+    PrimitiveType   go to state 7
+    NumericType     go to state 8
+    ReferenceType   go to state 36
+    ClassType       go to state 10
+    DotIdentifiers  go to state 11
+    ArrayType       go to state 12
+
+
+State 33
+
+   25 Wildcard: QUESTION SUPER . ReferenceType
+
+    BOOLEAN_TYPE      shift, and go to state 1
+    FLOAT_POINT_TYPE  shift, and go to state 2
+    IDENTIFIER        shift, and go to state 3
+    INTEGRAL_TYPE     shift, and go to state 4
+
+    Type            go to state 25
+    PrimitiveType   go to state 7
+    NumericType     go to state 8
+    ReferenceType   go to state 37
+    ClassType       go to state 10
+    DotIdentifiers  go to state 11
+    ArrayType       go to state 12
+
+
+State 34
+
+   20 TypeArgumentList: TypeArgumentList COMMA . TypeArgument
+
+    BOOLEAN_TYPE      shift, and go to state 1
+    FLOAT_POINT_TYPE  shift, and go to state 2
+    IDENTIFIER        shift, and go to state 3
+    INTEGRAL_TYPE     shift, and go to state 4
+    QUESTION          shift, and go to state 24
+
+    Type            go to state 25
+    PrimitiveType   go to state 7
+    NumericType     go to state 8
+    ReferenceType   go to state 26
+    ClassType       go to state 10
+    DotIdentifiers  go to state 11
+    ArrayType       go to state 12
+    TypeArgument    go to state 38
+    Wildcard        go to state 29
+
+
+State 35
+
+   19 TypeArguments: LESS_THAN TypeArgumentList GREATER_THAN .
+
+    $default  reduce using rule 19 (TypeArguments)
+
+
+State 36
+
+    3 Type: ReferenceType .
+   24 Wildcard: QUESTION EXTENDS ReferenceType .
+
+    LEFT_SQUARE_BRACE  reduce using rule 3 (Type)
+    $default           reduce using rule 24 (Wildcard)
+
+
+State 37
+
+    3 Type: ReferenceType .
+   25 Wildcard: QUESTION SUPER ReferenceType .
+
+    LEFT_SQUARE_BRACE  reduce using rule 3 (Type)
+    $default           reduce using rule 25 (Wildcard)
+
+
+State 38
+
+   20 TypeArgumentList: TypeArgumentList COMMA TypeArgument .
+
+    $default  reduce using rule 20 (TypeArgumentList)

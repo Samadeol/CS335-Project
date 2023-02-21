@@ -1,0 +1,2 @@
+%token <s> BOOLEAN_TYPE COMMA DOT EXTENDS FLOAT_POINT_TYPE GREATER_THAN IDENTIFIER INTEGRAL_TYPE LEFT_SQUARE_BRACE LESS_THAN QUESTION RIGHT_SQUARE_BRACE SUPER
+%type <s> ArrayType ClassType Dims DotIdentifiers NumericType PrimitiveType ReferenceType Type TypeArgument TypeArgumentList TypeArguments Wildcard

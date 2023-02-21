@@ -1,0 +1,62 @@
+Type:
+PrimitiveType
+| ReferenceType
+;
+
+PrimitiveType:
+NumericType
+| BOOLEAN_TYPE
+;
+
+NumericType:
+INTEGRAL_TYPE
+| FLOAT_POINT_TYPE
+;
+
+ReferenceType:
+ClassType
+| ArrayType
+;
+
+ClassType:
+IDENTIFIER 
+| IDENTIFIER TypeArguments 
+| DotIdentifiers DOT IDENTIFIER     //Package_Name -> DotIdentifiers
+| DotIdentifiers DOT IDENTIFIER TypeArguments 
+| ClassType DOT IDENTIFIER 
+| ClassType DOT IDENTIFIER TypeArguments 
+;
+
+DotIdentifiers:
+DotIdentifiers DOT IDENTIFIER
+| IDENTIFIER
+;
+
+ArrayType:
+Type Dims
+;
+
+Dims:
+Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE
+| LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE
+;
+
+TypeArguments:
+LESS_THAN TypeArgumentList GREATER_THAN
+;
+
+TypeArgumentList:
+TypeArgumentList COMMA TypeArgument
+| TypeArgument
+;
+
+TypeArgument:
+ReferenceType
+| Wildcard
+;
+
+Wildcard:
+QUESTION EXTENDS ReferenceType
+QUESTION SUPER ReferenceType
+QUESTION
+;
