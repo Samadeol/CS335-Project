@@ -99,7 +99,23 @@ ClassDeclaration:
 ;
 
 NormalClassDeclaration:
-CLASS IDENTIFIER [TypeParameters] [ClassExtends] [ClassImplements] [ClassPermits] ClassBody
+CLASS IDENTIFIER ClassBody 
+| CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER ClassImplements ClassBody 
+| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER ClassExtends ClassBody 
+| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 
+| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassBody 
+| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody
+;
 
 ClassModifiers:
 ClassModifiers ClassModifier
@@ -111,28 +127,104 @@ PUBLIC
 | PRIVATE
 ;
 
+TypeParameterList
+LESS_THAN IDENTIFIER GREATER_THAN 
+| LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 
+| LESS_THAN IDENTIFIER TypeBound GREATER_THAN 
+| LESS_THAN IDENTIFIER TypeBound TypeParameters GREATER_THAN 
+;
+
 TypeParameters:
-LESS_THAN TypeParameterList GREATER_THAN
+TypeParameters COMMA IDENTIFIER 
+| TypeParameters COMMA IDENTIFIER TypeBound 
+| COMMA IDENTIFIER 
+| COMMA IDENTIFIER TypeBound 
 ;
 
-TypeParameterList:
-TypeParameterList COMMA TypeParameter
-| TypeParameter
+ClassExtends:
+EXTENDS ClassType
 ;
-
-TypeParameter:
-
-Class
 
 TypeBound:
 EXTENDS IDENTIFIER
-| EXTENDS ClassTypes
+| ClassExtends
+| ClassExtends Additional_Bound
+;
+
+Additional_Bound:
+Additional_Bound AMPERSAND ClassType
+| AMPERSAND ClassType
+;
+
+ClassImplements:
+IMPLEMENTS ClassType
+IMPLEMENTS ClassType ClassTypes
 ;
 
 ClassTypes:
-ClassTypes ClassType
-| ClassType
+ClassTypes COMMA ClassType
+| COMMA ClassType
 ;
+
+ClassBody:
+LEFT_CURLY_BRACE RIGHT_SQUARE_BRACE
+| LEFT_CURLY_BRACE ClassBodyDeclarations RIGHT_SQUARE_BRACE
+;
+
+ClassBodyDeclarations:
+ClassBodyDeclarations ClassBodyDeclaration
+| ClassBodyDeclaration
+;
+
+ClassBodyDeclaration:
+FieldDeclaration
+MethodDeclaration
+ClassDeclaration
+InterfaceDeclaration
+SEMI_COLON
+
+//UnnanType -> Type
+
+FieldDeclaration:
+Type IDENTIFIER SEMI_COLON 
+| Type IDENTIFIER EQUALS VariableInitializer SEMI_COLON 
+| Type IDENTIFIER Dims SEMI_COLON 
+| Type IDENTIFIER Dims EQUALS VariableInitializer SEMI_COLON 
+| Type IDENTIFIER VariableDeclaratorList SEMI_COLON 
+| Type IDENTIFIER EQUALS VariableInitializer VariableDeclaratorList SEMI_COLON 
+| Type IDENTIFIER Dims VariableDeclaratorList SEMI_COLON 
+| Type IDENTIFIER Dims EQUALS VariableInitializer VariableDeclaratorList SEMI_COLON
+;
+
+VariableDeclaratorList:
+VariableDeclaratorList COMMA IDENTIFIER 
+| VariableDeclaratorList COMMA IDENTIFIER EQUALS VariableInitializer 
+| VariableDeclaratorList COMMA IDENTIFIER Dims 
+| VariableDeclaratorList COMMA IDENTIFIER Dims EQUALS VariableInitializer 
+| COMMA IDENTIFIER 
+| COMMA IDENTIFIER EQUALS VariableInitializer 
+| COMMA IDENTIFIER Dims 
+| COMMA IDENTIFIER Dims EQUALS VariableInitializer
+;
+
+MethodDeclaration:
+MethodHeader MethodBody
+| ClassModifiers MethodHeader MethodBody
+;
+
+//MethodModifier->ClassModifier
+
+MethodHeader:
+VOID MethodDeclarator [Throws]
+Type MethodDeclarator [Throws]
+TypeParameterList VOID MethodDeclarator [Throws]
+TypeParameterList Type MethodDeclarator [Throws]
+
+
+
+
+
+
 
 
 %%
