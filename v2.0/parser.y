@@ -99,39 +99,7 @@ ClassDeclaration:
 ;
 
 NormalClassDeclaration:
-CLASS TypeIdentifier ClassBody 
-| CLASS TypeIdentifier ClassPermits ClassBody 
-| CLASS TypeIdentifier ClassImplements ClassBody 
-| CLASS TypeIdentifier ClassImplements ClassPermits ClassBody 
-| CLASS TypeIdentifier ClassExtends ClassBody 
-| CLASS TypeIdentifier ClassExtends ClassPermits ClassBody 
-| CLASS TypeIdentifier ClassExtends ClassImplements ClassBody 
-| CLASS TypeIdentifier ClassExtends ClassImplements ClassPermits ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassPermits ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassImplements ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassImplements ClassPermits ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassExtends ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassExtends ClassPermits ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassExtends ClassImplements ClassBody 
-| CLASS TypeIdentifier TypeParameters ClassExtends ClassImplements ClassPermits ClassBody 
-| ClassModifiers CLASS TypeIdentifier ClassBody 
-| ClassModifiers CLASS TypeIdentifier ClassPermits ClassBody 
-| ClassModifiers CLASS TypeIdentifier ClassImplements ClassBody 
-| ClassModifiers CLASS TypeIdentifier ClassImplements ClassPermits ClassBody 
-| ClassModifiers CLASS TypeIdentifier ClassExtends ClassBody 
-| ClassModifiers CLASS TypeIdentifier ClassExtends ClassPermits ClassBody 
-| ClassModifiers CLASS TypeIdentifier ClassExtends ClassImplements ClassBody 
-| ClassModifiers CLASS TypeIdentifier ClassExtends ClassImplements ClassPermits ClassBody 
-| ClassModifiers CLASS TypeIdentifier TypeParameters ClassBody 
-| ClassModifiers CLASS TypeIdentifier TypeParameters ClassPermits ClassBody 
-| ClassModifiers CLASS TypeIdentifier TypeParameters ClassImplements ClassBody 
-| ClassModifiers CLASS TypeIdentifier TypeParameters ClassImplements ClassPermits ClassBody 
-| ClassModifiers CLASS TypeIdentifier TypeParameters ClassExtends ClassBody 
-| ClassModifiers CLASS TypeIdentifier TypeParameters ClassExtends ClassPermits ClassBody 
-| ClassModifiers CLASS TypeIdentifier TypeParameters ClassExtends ClassImplements ClassBody 
-| ClassModifiers CLASS TypeIdentifier TypeParameters ClassExtends ClassImplements ClassPermits ClassBody 
-;
+CLASS IDENTIFIER [TypeParameters] [ClassExtends] [ClassImplements] [ClassPermits] ClassBody
 
 ClassModifiers:
 ClassModifiers ClassModifier
@@ -153,6 +121,18 @@ TypeParameterList COMMA TypeParameter
 ;
 
 TypeParameter:
+
+Class
+
+TypeBound:
+EXTENDS IDENTIFIER
+| EXTENDS ClassTypes
+;
+
+ClassTypes:
+ClassTypes ClassType
+| ClassType
+;
 
 
 %%
