@@ -21,7 +21,7 @@ void yyerror(const char* error){
 }
 
 %token <s> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRY VAR VOID WHILE YIELD
-%type <s> Additional_Bound AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression AssignmentOperator BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression LeftHandSide Literal MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeBound TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement input
+%type <s> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression AssignmentOperator BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
 
 %start input
 
@@ -30,7 +30,7 @@ void yyerror(const char* error){
 input: CompiledStuff
 
 CompiledStuff:
-| TypeDeclarations 
+TypeDeclarations 
 | ImportDeclarations 
 | ImportDeclarations TypeDeclarations
 ;
@@ -95,9 +95,6 @@ ClassType
 
 ClassType:
 DotIdentifiers     //Package_Name -> DotIdentifiers
-| DotIdentifiers TypeArguments 
-| ClassType DOT IDENTIFIER 
-| ClassType DOT IDENTIFIER TypeArguments 
 ;
 
 DotIdentifiers:
@@ -106,7 +103,8 @@ DotIdentifiers DOT IDENTIFIER
 ;
 
 ArrayType:
-Type Dims
+DotIdentifiers Dims
+| PrimitiveType Dims
 ;
 
 Dims:
@@ -184,30 +182,15 @@ PUBLIC
 TypeParameterList:
 LESS_THAN IDENTIFIER GREATER_THAN 
 | LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 
-| LESS_THAN IDENTIFIER TypeBound GREATER_THAN 
-| LESS_THAN IDENTIFIER TypeBound TypeParameters GREATER_THAN 
 ;
 
 TypeParameters:
 TypeParameters COMMA IDENTIFIER 
-| TypeParameters COMMA IDENTIFIER TypeBound 
-| COMMA IDENTIFIER 
-| COMMA IDENTIFIER TypeBound 
+| COMMA IDENTIFIER
 ;
 
 ClassExtends:
 EXTENDS ClassType
-;
-
-TypeBound:
-EXTENDS IDENTIFIER
-| ClassExtends
-| ClassExtends Additional_Bound
-;
-
-Additional_Bound:
-Additional_Bound AMPERSAND ClassType
-| AMPERSAND ClassType
 ;
 
 ClassImplements:
@@ -332,15 +315,11 @@ STATIC Block
 
 ConstructorDeclaration:
 TypeParameterList Declarator ConstructorBody 
-| TypeParameterList Declarator Throws ConstructorBody 
-| TypeParameterList Declarator ConstructorBody 
-| TypeParameterList Declarator Throws ConstructorBody 
+| TypeParameterList Declarator Throws ConstructorBody
 | ClassModifiers TypeParameterList Declarator ConstructorBody 
 | ClassModifiers TypeParameterList Declarator Throws ConstructorBody
 | Declarator ConstructorBody 
-| Declarator Throws ConstructorBody 
-| Declarator ConstructorBody 
-| Declarator Throws ConstructorBody 
+| Declarator Throws ConstructorBody
 | ClassModifiers Declarator ConstructorBody 
 | ClassModifiers Declarator Throws ConstructorBody
 ;
@@ -656,22 +635,6 @@ NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS
 | NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
 | NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
 | NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
-| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
-| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
-| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS 
-| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
-| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
-| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
-| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS 
-| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
-| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
-| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
 ;
 
 FieldAccess:
@@ -681,10 +644,8 @@ Primary DOT IDENTIFIER
 ;
 
 ArrayAccess:
-DotIdentifiers 
-| DotIdentifiers Expression  
-| PrimaryNoNewArray 
-| PrimaryNoNewArray Expression
+DotIdentifiers LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE  
+| PrimaryNoNewArray LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE
 ;
 
 MethodInvocation:
@@ -755,13 +716,9 @@ ConditionalExpression
 ;
 
 Assignment:
-LeftHandSide AssignmentOperator Expression
-;
-
-LeftHandSide:
-DotIdentifiers
-| FieldAccess
-| ArrayAccess
+DotIdentifiers AssignmentOperator Expression
+| FieldAccess AssignmentOperator Expression
+| ArrayAccess AssignmentOperator Expression
 ;
 
 AssignmentOperator:
@@ -862,13 +819,13 @@ MINUS_MINUS UnaryExpression
 
 UnaryExpressionNotPlusMinus:
 PostfixExpression
+| DotIdentifiers
 | TILDA UnaryExpression
 | EXCLAIM UnaryExpression
 ;
 
 PostfixExpression:
 Primary
-| DotIdentifiers
 | PostIncrementExpression
 | PostDecrementExpression
 ;

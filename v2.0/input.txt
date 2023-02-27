@@ -1,4 +1,3 @@
-input: CompiledStuff
 
 CompiledStuff:
 | TypeDeclarations 
@@ -66,9 +65,6 @@ ClassType
 
 ClassType:
 DotIdentifiers
-| DotIdentifiers TypeArguments 
-| ClassType DOT IDENTIFIER 
-| ClassType DOT IDENTIFIER TypeArguments 
 ;
 
 DotIdentifiers:
@@ -77,7 +73,8 @@ DotIdentifiers DOT IDENTIFIER
 ;
 
 ArrayType:
-Type Dims
+DotIdentifiers Dims
+| PrimitiveType Dims
 ;
 
 Dims:
@@ -153,30 +150,15 @@ PUBLIC
 TypeParameterList:
 LESS_THAN IDENTIFIER GREATER_THAN 
 | LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 
-| LESS_THAN IDENTIFIER TypeBound GREATER_THAN 
-| LESS_THAN IDENTIFIER TypeBound TypeParameters GREATER_THAN 
 ;
 
 TypeParameters:
 TypeParameters COMMA IDENTIFIER 
-| TypeParameters COMMA IDENTIFIER TypeBound 
-| COMMA IDENTIFIER 
-| COMMA IDENTIFIER TypeBound 
+| COMMA IDENTIFIER
 ;
 
 ClassExtends:
 EXTENDS ClassType
-;
-
-TypeBound:
-EXTENDS IDENTIFIER
-| ClassExtends
-| ClassExtends Additional_Bound
-;
-
-Additional_Bound:
-Additional_Bound AMPERSAND ClassType
-| AMPERSAND ClassType
 ;
 
 ClassImplements:
@@ -297,15 +279,11 @@ STATIC Block
 
 ConstructorDeclaration:
 TypeParameterList Declarator ConstructorBody 
-| TypeParameterList Declarator Throws ConstructorBody 
-| TypeParameterList Declarator ConstructorBody 
-| TypeParameterList Declarator Throws ConstructorBody 
+| TypeParameterList Declarator Throws ConstructorBody
 | ClassModifiers TypeParameterList Declarator ConstructorBody 
 | ClassModifiers TypeParameterList Declarator Throws ConstructorBody
 | Declarator ConstructorBody 
-| Declarator Throws ConstructorBody 
-| Declarator ConstructorBody 
-| Declarator Throws ConstructorBody 
+| Declarator Throws ConstructorBody
 | ClassModifiers Declarator ConstructorBody 
 | ClassModifiers Declarator Throws ConstructorBody
 ;
@@ -621,22 +599,6 @@ NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS
 | NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
 | NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
 | NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
-| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
-| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
-| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS 
-| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
-| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
-| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
-| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS 
-| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
-| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
-| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
 ;
 
 FieldAccess:
@@ -646,10 +608,8 @@ Primary DOT IDENTIFIER
 ;
 
 ArrayAccess:
-DotIdentifiers 
-| DotIdentifiers Expression  
-| PrimaryNoNewArray 
-| PrimaryNoNewArray Expression
+DotIdentifiers LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE  
+| PrimaryNoNewArray LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE
 ;
 
 MethodInvocation:
@@ -720,13 +680,9 @@ ConditionalExpression
 ;
 
 Assignment:
-LeftHandSide AssignmentOperator Expression
-;
-
-LeftHandSide:
-DotIdentifiers
-| FieldAccess
-| ArrayAccess
+DotIdentifiers AssignmentOperator Expression
+| FieldAccess AssignmentOperator Expression
+| ArrayAccess AssignmentOperator Expression
 ;
 
 AssignmentOperator:
@@ -791,7 +747,7 @@ ShiftExpression
 
 ShiftExpression:
 AdditiveExpression
-ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression
+| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression
 | ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression
 | ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression
 ;
@@ -827,13 +783,13 @@ MINUS_MINUS UnaryExpression
 
 UnaryExpressionNotPlusMinus:
 PostfixExpression
+| DotIdentifiers
 | TILDA UnaryExpression
 | EXCLAIM UnaryExpression
 ;
 
 PostfixExpression:
 Primary
-| DotIdentifiers
 | PostIncrementExpression
 | PostDecrementExpression
 ;
