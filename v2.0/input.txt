@@ -1,3 +1,49 @@
+input: CompiledStuff
+
+CompiledStuff:
+| TypeDeclarations 
+| ImportDeclarations 
+| ImportDeclarations TypeDeclarations
+;
+
+ImportDeclarations:
+ImportDeclarations ImportDeclaration
+| ImportDeclaration
+;
+
+ImportDeclaration:
+SingleTypeImportDeclaration
+| TypeImportOnDemandDeclaration
+| SingleStaticImportDeclaration
+| StaticImportOnDemandDeclaration
+;
+
+SingleTypeImportDeclaration:
+IMPORT DotIdentifiers SEMI_COLON
+;
+
+TypeImportOnDemandDeclaration:
+IMPORT DotIdentifiers DOT STAR SEMI_COLON
+;
+
+SingleStaticImportDeclaration:
+IMPORT STATIC DotIdentifiers DOT IDENTIFIER SEMI_COLON
+;
+
+StaticImportOnDemandDeclaration:
+IMPORT STATIC DotIdentifiers DOT STAR SEMI_COLON
+;
+
+TypeDeclarations:
+TypeDeclarations TypeDeclaration
+| TypeDeclaration
+;
+
+TypeDeclaration:
+ClassDeclaration
+| InterfaceDeclaration
+;
+
 Type:
 PrimitiveType
 | ReferenceType
@@ -19,10 +65,8 @@ ClassType
 ;
 
 ClassType:
-IDENTIFIER 
-| IDENTIFIER TypeArguments 
-| DotIdentifiers DOT IDENTIFIER     //Package_Name -> DotIdentifiers
-| DotIdentifiers DOT IDENTIFIER TypeArguments 
+DotIdentifiers
+| DotIdentifiers TypeArguments 
 | ClassType DOT IDENTIFIER 
 | ClassType DOT IDENTIFIER TypeArguments 
 ;
@@ -57,6 +101,747 @@ ReferenceType
 
 Wildcard:
 QUESTION EXTENDS ReferenceType
-QUESTION SUPER ReferenceType
-QUESTION
+| QUESTION SUPER ReferenceType
+| QUESTION
+;
+
+ClassDeclaration:
+CLASS IDENTIFIER ClassBody 
+| CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER ClassImplements ClassBody 
+| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER ClassExtends ClassBody 
+| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 
+| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassBody 
+| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody
+| ClassModifiers CLASS IDENTIFIER ClassBody 
+| ClassModifiers CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 
+| ClassModifiers CLASS IDENTIFIER ClassImplements ClassBody 
+| ClassModifiers CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassBody 
+| ClassModifiers CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassBody 
+| ClassModifiers CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody
+;
+
+ClassModifiers:
+ClassModifiers ClassModifier
+| ClassModifier
+;
+
+ClassModifier:
+PUBLIC
+| PRIVATE
+;
+
+TypeParameterList:
+LESS_THAN IDENTIFIER GREATER_THAN 
+| LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 
+| LESS_THAN IDENTIFIER TypeBound GREATER_THAN 
+| LESS_THAN IDENTIFIER TypeBound TypeParameters GREATER_THAN 
+;
+
+TypeParameters:
+TypeParameters COMMA IDENTIFIER 
+| TypeParameters COMMA IDENTIFIER TypeBound 
+| COMMA IDENTIFIER 
+| COMMA IDENTIFIER TypeBound 
+;
+
+ClassExtends:
+EXTENDS ClassType
+;
+
+TypeBound:
+EXTENDS IDENTIFIER
+| ClassExtends
+| ClassExtends Additional_Bound
+;
+
+Additional_Bound:
+Additional_Bound AMPERSAND ClassType
+| AMPERSAND ClassType
+;
+
+ClassImplements:
+IMPLEMENTS ClassType
+IMPLEMENTS ClassType ClassTypes
+;
+
+ClassTypes:
+ClassTypes COMMA ClassType
+| COMMA ClassType
+;
+
+ClassBody:
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE
+| LEFT_CURLY_BRACE ClassBodyDeclarations RIGHT_CURLY_BRACE
+;
+
+ClassBodyDeclarations:
+ClassBodyDeclarations ClassBodyDeclaration
+| ClassBodyDeclaration
+;
+
+ClassBodyDeclaration:
+ClassMemberDeclaration
+| StaticInitializer
+| ConstructorDeclaration
+;
+
+ClassMemberDeclaration:
+FieldDeclaration
+| MethodDeclaration
+| SEMI_COLON
+;
+
+FieldDeclaration:
+Type IDENTIFIER SEMI_COLON 
+| Type IDENTIFIER EQUALS VariableInitializer SEMI_COLON 
+| Type IDENTIFIER Dims SEMI_COLON 
+| Type IDENTIFIER Dims EQUALS VariableInitializer SEMI_COLON 
+| Type IDENTIFIER VariableDeclaratorList SEMI_COLON 
+| Type IDENTIFIER EQUALS VariableInitializer VariableDeclaratorList SEMI_COLON 
+| Type IDENTIFIER Dims VariableDeclaratorList SEMI_COLON 
+| Type IDENTIFIER Dims EQUALS VariableInitializer VariableDeclaratorList SEMI_COLON
+;
+
+VariableDeclaratorList:
+VariableDeclaratorList COMMA IDENTIFIER 
+| VariableDeclaratorList COMMA IDENTIFIER EQUALS VariableInitializer 
+| VariableDeclaratorList COMMA IDENTIFIER Dims 
+| VariableDeclaratorList COMMA IDENTIFIER Dims EQUALS VariableInitializer 
+| COMMA IDENTIFIER 
+| COMMA IDENTIFIER EQUALS VariableInitializer 
+| COMMA IDENTIFIER Dims 
+| COMMA IDENTIFIER Dims EQUALS VariableInitializer
+;
+
+VariableInitializer:
+Expression
+| ArrayInitializer
+;
+
+
+MethodDeclaration:
+MethodHeader MethodBody
+| ClassModifiers MethodHeader MethodBody
+;
+
+MethodHeader:
+VOID MethodDeclarator 
+| VOID MethodDeclarator Throws 
+| Type MethodDeclarator 
+| Type MethodDeclarator Throws 
+| TypeParameterList VOID MethodDeclarator 
+| TypeParameterList VOID MethodDeclarator Throws 
+| TypeParameterList Type MethodDeclarator 
+| TypeParameterList Type MethodDeclarator Throws 
+;
+
+MethodDeclarator:
+Declarator
+| Declarator Dims
+;
+
+ReceiverParameter:
+Type THIS
+| Type IDENTIFIER DOT THIS
+;
+
+FormalParameterList:
+FormalParameterList COMMA FormalParameter
+| FormalParameter
+;
+
+FormalParameter:
+Type IDENTIFIER 
+| VariableModifiers Type IDENTIFIER 
+| Type IDENTIFIER Dims 
+| VariableModifiers Type IDENTIFIER Dims
+;
+
+VariableModifiers:
+VariableModifiers FINAL
+| FINAL
+;
+
+Throws:
+THROWS ClassTypes
+;
+
+MethodBody:
+Block
+| SEMI_COLON
+;
+
+StaticInitializer:
+STATIC Block
+;
+
+ConstructorDeclaration:
+TypeParameterList Declarator ConstructorBody 
+| TypeParameterList Declarator Throws ConstructorBody 
+| TypeParameterList Declarator ConstructorBody 
+| TypeParameterList Declarator Throws ConstructorBody 
+| ClassModifiers TypeParameterList Declarator ConstructorBody 
+| ClassModifiers TypeParameterList Declarator Throws ConstructorBody
+| Declarator ConstructorBody 
+| Declarator Throws ConstructorBody 
+| Declarator ConstructorBody 
+| Declarator Throws ConstructorBody 
+| ClassModifiers Declarator ConstructorBody 
+| ClassModifiers Declarator Throws ConstructorBody
+;
+
+Declarator:
+IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| IDENTIFIER LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS 
+| IDENTIFIER LEFT_PARANTHESIS ReceiverParameter COMMA RIGHT_PARANTHESIS 
+| IDENTIFIER LEFT_PARANTHESIS ReceiverParameter COMMA FormalParameterList RIGHT_PARANTHESIS 
+;
+
+ConstructorBody:
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE 
+| LEFT_CURLY_BRACE BlockStatements RIGHT_CURLY_BRACE 
+| LEFT_CURLY_BRACE ExplicitConstructorInvocation RIGHT_CURLY_BRACE 
+| LEFT_CURLY_BRACE ExplicitConstructorInvocation BlockStatements RIGHT_CURLY_BRACE
+;
+
+ExplicitConstructorInvocation:
+THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
+| THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 
+| TypeArguments THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
+| TypeArguments THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 
+| SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
+| SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 
+| TypeArguments SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
+| TypeArguments SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 
+| DotIdentifiers DOT SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
+| DotIdentifiers DOT SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 
+| DotIdentifiers DOT TypeArguments SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
+| DotIdentifiers DOT TypeArguments SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON
+;
+
+Expressions:
+Expressions COMMA Expression
+| Expression
+;
+
+InterfaceDeclaration:
+INTERFACE IDENTIFIER ClassBody 
+| INTERFACE IDENTIFIER ClassExtends ClassBody 
+| INTERFACE IDENTIFIER TypeParameterList ClassBody 
+| INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 
+| ClassModifiers INTERFACE IDENTIFIER ClassBody 
+| ClassModifiers INTERFACE IDENTIFIER ClassExtends ClassBody 
+| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassBody 
+| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 
+;
+
+ArrayInitializer:
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE 
+| LEFT_CURLY_BRACE COMMA RIGHT_CURLY_BRACE 
+| LEFT_CURLY_BRACE VariableInitializerList RIGHT_CURLY_BRACE 
+| LEFT_CURLY_BRACE VariableInitializerList COMMA RIGHT_CURLY_BRACE 
+;
+
+VariableInitializerList:
+VariableInitializerList COMMA VariableInitializer
+| VariableInitializer
+;
+
+Block:
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE
+| LEFT_CURLY_BRACE BlockStatements RIGHT_CURLY_BRACE
+;
+
+BlockStatements:
+BlockStatements BlockStatement
+| BlockStatement
+;
+
+BlockStatement:
+Type VariableDeclaratorList SEMI_COLON
+| VAR VariableDeclaratorList SEMI_COLON
+| VariableModifiers Type VariableDeclaratorList SEMI_COLON
+| VariableModifiers VAR VariableDeclaratorList SEMI_COLON
+| Statement
+;
+
+Statement:
+StatementWithoutTrailingSubstatement
+| LabeledStatement
+| IfThenStatement
+| IfThenElseStatement
+| WhileStatement
+| ForStatement
+;
+
+StatementNoShortIf:
+StatementWithoutTrailingSubstatement
+| LabeledStatementNoShortIf
+| IfThenElseStatementNoShortIf
+| WhileStatementNoShortIf
+| ForStatementNoShortIf
+;
+
+StatementWithoutTrailingSubstatement:
+Block
+| EmptyStatement
+| ExpressionStatement
+| AssertStatement
+| BreakStatement
+| ContinueStatement
+| ReturnStatement
+| SynchronizedStatement
+| ThrowStatement
+| TryStatement
+| YieldStatement
+;
+
+EmptyStatement:
+SEMI_COLON
+;
+
+LabeledStatement:
+IDENTIFIER COLON Statement
+;
+
+LabeledStatementNoShortIf:
+IDENTIFIER COLON StatementNoShortIf
+;
+
+ExpressionStatement:
+StatementExpression SEMI_COLON
+;
+
+StatementExpression:
+Assignment
+| PreIncrementExpression
+| PreDecrementExpression
+| PostIncrementExpression
+| PostDecrementExpression
+| MethodInvocation
+| ClassInstanceCreationExpression
+
+IfThenStatement:
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement
+;
+
+IfThenElseStatement:
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf ELSE Statement
+;
+
+IfThenElseStatementNoShortIf:
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf ELSE StatementNoShortIf
+;
+
+AssertStatement:
+ASSERT Expression SEMI_COLON
+| ASSERT Expression COLON Expression SEMI_COLON
+;
+
+WhileStatement:
+WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement
+;
+
+WhileStatementNoShortIf:
+WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf
+;
+
+ForStatement:
+BasicForStatement
+| EnhancedForStatement
+;
+
+ForStatementNoShortIf:
+BasicForStatementNoShortIf
+| EnhancedForStatementNoShortIf
+;
+
+BasicForStatement:
+FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement 
+| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement 
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement
+;
+
+BasicForStatementNoShortIf:
+FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 
+| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 
+;
+
+ForInit:
+StatementExpressionList
+| FormalParameter
+;
+
+ForUpdate:
+StatementExpressionList
+;
+
+StatementExpressionList:
+StatementExpressionList COMMA StatementExpression
+| StatementExpression
+;
+
+EnhancedForStatement:
+FOR LEFT_PARANTHESIS FormalParameter COLON Expression RIGHT_PARANTHESIS Statement
+;
+
+EnhancedForStatementNoShortIf:
+FOR LEFT_PARANTHESIS FormalParameter COLON Expression RIGHT_PARANTHESIS StatementNoShortIf
+;
+
+BreakStatement:
+BREAK SEMI_COLON
+| BREAK IDENTIFIER SEMI_COLON
+;
+
+YieldStatement:
+YIELD Expression SEMI_COLON
+;
+
+ContinueStatement:
+CONTINUE SEMI_COLON
+| CONTINUE IDENTIFIER SEMI_COLON
+;
+
+ReturnStatement:
+RETURN SEMI_COLON
+|  RETURN Expression SEMI_COLON
+;
+
+ThrowStatement:
+THROW Expression SEMI_COLON
+;
+
+SynchronizedStatement:
+SYNCHRONIZED LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Block
+;
+
+TryStatement:
+TRY Block Catches
+| TRY Block FINALLY Block
+| TRY Block Catches FINALLY Block
+;
+
+Catches:
+Catches CatchClause
+| CatchClause
+;
+
+CatchClause:
+CATCH LEFT_PARANTHESIS FormalParameter RIGHT_PARANTHESIS Block
+;
+
+Primary:
+PrimaryNoNewArray
+| ArrayCreationExpression
+;
+
+PrimaryNoNewArray:
+Literal
+| ClassLiteral
+| THIS
+| DotIdentifiers DOT THIS
+| LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS
+| ClassInstanceCreationExpression
+| FieldAccess
+| ArrayAccess
+| MethodInvocation
+| MethodReference
+;
+
+Literal:
+INTEGER_LITERAL
+| FLOATINGPOINT_LITERAL
+| BOOLEAN_LITERAL
+| CHARACTER_LITERAL
+| STRING_LITERAL
+| TEXTBLOCK
+| NULL_LITERAL
+;
+
+ClassLiteral:
+DotIdentifiers DOT CLASS 
+| DotIdentifiers Dims DOT CLASS 
+| PrimitiveType DOT CLASS 
+| PrimitiveType Dims DOT CLASS 
+| VOID DOT CLASS
+;
+
+ClassInstanceCreationExpression:
+UnqualifiedClassInstanceCreationExpression
+| DotIdentifiers DOT UnqualifiedClassInstanceCreationExpression
+| Primary DOT UnqualifiedClassInstanceCreationExpression
+;
+
+UnqualifiedClassInstanceCreationExpression:
+NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+;
+
+FieldAccess:
+Primary DOT IDENTIFIER
+| SUPER DOT IDENTIFIER
+| DotIdentifiers DOT SUPER DOT IDENTIFIER
+;
+
+ArrayAccess:
+DotIdentifiers 
+| DotIdentifiers Expression  
+| PrimaryNoNewArray 
+| PrimaryNoNewArray Expression
+;
+
+MethodInvocation:
+IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| Primary DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| Primary DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS
+;
+
+MethodReference:
+Primary DOUBLE_COLON IDENTIFIER 
+| Primary DOUBLE_COLON TypeArguments IDENTIFIER 
+| ReferenceType DOUBLE_COLON IDENTIFIER 
+| ReferenceType DOUBLE_COLON TypeArguments IDENTIFIER 
+| ReferenceType DOUBLE_COLON NEW 
+| ReferenceType DOUBLE_COLON TypeArguments NEW 
+| SUPER DOUBLE_COLON IDENTIFIER 
+| SUPER DOUBLE_COLON TypeArguments IDENTIFIER 
+| DotIdentifiers DOT SUPER DOUBLE_COLON IDENTIFIER 
+| DotIdentifiers DOT SUPER DOUBLE_COLON TypeArguments IDENTIFIER
+;
+
+ArrayCreationExpression:
+NEW PrimitiveType DimExprs 
+| NEW PrimitiveType DimExprs Dims 
+| NEW ClassType DimExprs 
+| NEW ClassType DimExprs Dims 
+| NEW PrimitiveType Dims ArrayInitializer 
+| NEW ClassType Dims ArrayInitializer 
+;
+
+DimExprs:
+DimExprs LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE
+| LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE
+;
+
+Expression:
+LambdaExpression
+| AssignmentExpression
+;
+
+LambdaExpression:
+LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS ARROW_RIGHT Block
+| LEFT_PARANTHESIS RIGHT_PARANTHESIS ARROW_RIGHT Block
+| IDENTIFIER ARROW_RIGHT Block
+| LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS ARROW_RIGHT Expression
+| LEFT_PARANTHESIS RIGHT_PARANTHESIS ARROW_RIGHT Expression
+| IDENTIFIER ARROW_RIGHT Expression
+;
+
+AssignmentExpression:
+ConditionalExpression
+| Assignment
+;
+
+Assignment:
+LeftHandSide AssignmentOperator Expression
+;
+
+LeftHandSide:
+DotIdentifiers
+| FieldAccess
+| ArrayAccess
+;
+
+AssignmentOperator:
+EQUALS
+| STAR_EQUALS
+| SLASH_EQUALS
+| PERCENT_EQUALS
+| PLUS_EQUALS
+| MINUS_EQUALS
+| LESS_THAN_LESS_THAN_EQUALS
+| GREATER_THAN_GREATER_THAN_EQUALS
+| GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS
+| AMPERSAND_EQUALS
+| POWER_EQUALS
+| BAR_EQUALS
+;
+
+ConditionalExpression:
+ConditionalOrExpression
+| ConditionalOrExpression QUESTION Expression COLON ConditionalExpression
+| ConditionalOrExpression QUESTION Expression COLON LambdaExpression
+;
+
+ConditionalOrExpression:
+ConditionalAndExpression
+| ConditionalOrExpression BAR_BAR ConditionalAndExpression
+;
+
+ConditionalAndExpression:
+InclusiveOrExpression
+| ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression
+;
+
+InclusiveOrExpression:
+ExclusiveOrExpression
+| InclusiveOrExpression BAR ExclusiveOrExpression
+;
+
+ExclusiveOrExpression:
+AndExpression
+| ExclusiveOrExpression POWER AndExpression
+;
+
+AndExpression:
+EqualityExpression
+| AndExpression AMPERSAND EqualityExpression
+;
+
+EqualityExpression:
+RelationalExpression
+| EqualityExpression EQUALS_EQUALS RelationalExpression
+| EqualityExpression EXCLAIM_EQUALS RelationalExpression
+;
+
+RelationalExpression:
+ShiftExpression
+| RelationalExpression LESS_THAN ShiftExpression
+| RelationalExpression GREATER_THAN ShiftExpression
+| RelationalExpression LESS_THAN_EQUALS ShiftExpression
+| RelationalExpression GREATER_THAN_EQUALS ShiftExpression
+;
+
+ShiftExpression:
+AdditiveExpression
+ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression
+| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression
+| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression
+;
+
+AdditiveExpression:
+MultiplicativeExpression
+| AdditiveExpression PLUS MultiplicativeExpression
+| AdditiveExpression MINUS MultiplicativeExpression
+;
+
+MultiplicativeExpression:
+UnaryExpression
+| MultiplicativeExpression STAR UnaryExpression
+| MultiplicativeExpression SLASH UnaryExpression
+| MultiplicativeExpression PERCENT UnaryExpression
+;
+
+UnaryExpression:
+PreIncrementExpression
+| PreDecrementExpression
+| PLUS UnaryExpression
+| MINUS UnaryExpression
+| UnaryExpressionNotPlusMinus
+;
+
+PreIncrementExpression:
+PLUS_PLUS UnaryExpression
+;
+
+PreDecrementExpression:
+MINUS_MINUS UnaryExpression
+;
+
+UnaryExpressionNotPlusMinus:
+PostfixExpression
+| TILDA UnaryExpression
+| EXCLAIM UnaryExpression
+;
+
+PostfixExpression:
+Primary
+| DotIdentifiers
+| PostIncrementExpression
+| PostDecrementExpression
+;
+
+PostIncrementExpression:
+PostfixExpression PLUS_PLUS
+;
+
+PostDecrementExpression:
+PostfixExpression MINUS_MINUS
 ;

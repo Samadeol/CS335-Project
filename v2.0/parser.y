@@ -20,14 +20,58 @@ void yyerror(const char* error){
     char[1000] str;
 }
 
-%token <str> BOOLEAN_TYPE COMMA DOT EXTENDS FLOAT_POINT_TYPE GREATER_THAN IDENTIFIER INTEGRAL_TYPE LEFT_SQUARE_BRACE LESS_THAN QUESTION RIGHT_SQUARE_BRACE SUPER
-%type <str> ArrayType ClassType Dims DotIdentifiers NumericType PrimitiveType ReferenceType Type TypeArgument TypeArgumentList TypeArguments Wildcard
+%token <s> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRY VAR VOID WHILE YIELD
+%type <s> Additional_Bound AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression AssignmentOperator BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression LeftHandSide Literal MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeBound TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement input
 
 %start input
 
 %%
 
-input: Type
+input: CompiledStuff
+
+CompiledStuff:
+| TypeDeclarations 
+| ImportDeclarations 
+| ImportDeclarations TypeDeclarations
+;
+
+ImportDeclarations:
+ImportDeclarations ImportDeclaration
+| ImportDeclaration
+;
+
+ImportDeclaration:
+SingleTypeImportDeclaration
+| TypeImportOnDemandDeclaration
+| SingleStaticImportDeclaration
+| StaticImportOnDemandDeclaration
+;
+
+SingleTypeImportDeclaration:
+IMPORT DotIdentifiers SEMI_COLON
+;
+
+TypeImportOnDemandDeclaration:
+IMPORT DotIdentifiers DOT STAR SEMI_COLON
+;
+
+SingleStaticImportDeclaration:
+IMPORT STATIC DotIdentifiers DOT IDENTIFIER SEMI_COLON
+;
+
+StaticImportOnDemandDeclaration:
+IMPORT STATIC DotIdentifiers DOT STAR SEMI_COLON
+;
+
+TypeDeclarations:
+TypeDeclarations TypeDeclaration
+| TypeDeclaration
+;
+
+TypeDeclaration:
+ClassDeclaration
+| InterfaceDeclaration
+;
 
 Type:
 PrimitiveType
@@ -137,7 +181,7 @@ PUBLIC
 | PRIVATE
 ;
 
-TypeParameterList
+TypeParameterList:
 LESS_THAN IDENTIFIER GREATER_THAN 
 | LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 
 | LESS_THAN IDENTIFIER TypeBound GREATER_THAN 
@@ -265,9 +309,7 @@ FormalParameter:
 Type IDENTIFIER 
 | VariableModifiers Type IDENTIFIER 
 | Type IDENTIFIER Dims 
-| VariableModifiers Type IDENTIFIER Dims 
-| Type TRIPLE_DOT IDENTIFIER 
-| VariableModifiers Type TRIPLE_DOT IDENTIFIER 
+| VariableModifiers Type IDENTIFIER Dims
 ;
 
 VariableModifiers:
@@ -317,7 +359,8 @@ LEFT_CURLY_BRACE RIGHT_CURLY_BRACE
 | LEFT_CURLY_BRACE ExplicitConstructorInvocation BlockStatements RIGHT_CURLY_BRACE
 ;
 
-ExplicitConstructorInvocation:THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
+ExplicitConstructorInvocation:
+THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
 | THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 
 | TypeArguments THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 
 | TypeArguments THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 
@@ -341,10 +384,10 @@ INTERFACE IDENTIFIER ClassBody
 | INTERFACE IDENTIFIER ClassExtends ClassBody 
 | INTERFACE IDENTIFIER TypeParameterList ClassBody 
 | INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 
-| ClassModifers INTERFACE IDENTIFIER ClassBody 
-| ClassModifers INTERFACE IDENTIFIER ClassExtends ClassBody 
-| ClassModifers INTERFACE IDENTIFIER TypeParameterList ClassBody 
-| ClassModifers INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 
+| ClassModifiers INTERFACE IDENTIFIER ClassBody 
+| ClassModifiers INTERFACE IDENTIFIER ClassExtends ClassBody 
+| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassBody 
+| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 
 ;
 
 ArrayInitializer:
@@ -492,7 +535,7 @@ FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf
 
 ForInit:
 StatementExpressionList
-| LocalVariableDeclaration
+| FormalParameter
 ;
 
 ForUpdate:
@@ -505,11 +548,11 @@ StatementExpressionList COMMA StatementExpression
 ;
 
 EnhancedForStatement:
-FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS Statement
+FOR LEFT_PARANTHESIS FormalParameter COLON Expression RIGHT_PARANTHESIS Statement
 ;
 
 EnhancedForStatementNoShortIf:
-FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS StatementNoShortIf
+FOR LEFT_PARANTHESIS FormalParameter COLON Expression RIGHT_PARANTHESIS StatementNoShortIf
 ;
 
 BreakStatement:
@@ -554,6 +597,289 @@ CatchClause:
 CATCH LEFT_PARANTHESIS FormalParameter RIGHT_PARANTHESIS Block
 ;
 
+Primary:
+PrimaryNoNewArray
+| ArrayCreationExpression
+;
+
+PrimaryNoNewArray:
+Literal
+| ClassLiteral
+| THIS
+| DotIdentifiers DOT THIS
+| LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS
+| ClassInstanceCreationExpression
+| FieldAccess
+| ArrayAccess
+| MethodInvocation
+| MethodReference
+;
+
+Literal:
+INTEGER_LITERAL
+| FLOATINGPOINT_LITERAL
+| BOOLEAN_LITERAL
+| CHARACTER_LITERAL
+| STRING_LITERAL
+| TEXTBLOCK
+| NULL_LITERAL
+;
+
+ClassLiteral:
+DotIdentifiers DOT CLASS 
+| DotIdentifiers Dims DOT CLASS 
+| PrimitiveType DOT CLASS 
+| PrimitiveType Dims DOT CLASS 
+| VOID DOT CLASS
+;
+
+ClassInstanceCreationExpression:
+UnqualifiedClassInstanceCreationExpression
+| DotIdentifiers DOT UnqualifiedClassInstanceCreationExpression
+| Primary DOT UnqualifiedClassInstanceCreationExpression
+;
+
+UnqualifiedClassInstanceCreationExpression:
+NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 
+| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| NEW TypeArguments DotIdentifiers TypeArguments LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 
+;
+
+FieldAccess:
+Primary DOT IDENTIFIER
+| SUPER DOT IDENTIFIER
+| DotIdentifiers DOT SUPER DOT IDENTIFIER
+;
+
+ArrayAccess:
+DotIdentifiers 
+| DotIdentifiers Expression  
+| PrimaryNoNewArray 
+| PrimaryNoNewArray Expression
+;
+
+MethodInvocation:
+IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| Primary DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| Primary DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 
+| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 
+| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS
+;
+
+MethodReference:
+Primary DOUBLE_COLON IDENTIFIER 
+| Primary DOUBLE_COLON TypeArguments IDENTIFIER 
+| ReferenceType DOUBLE_COLON IDENTIFIER 
+| ReferenceType DOUBLE_COLON TypeArguments IDENTIFIER 
+| ReferenceType DOUBLE_COLON NEW 
+| ReferenceType DOUBLE_COLON TypeArguments NEW 
+| SUPER DOUBLE_COLON IDENTIFIER 
+| SUPER DOUBLE_COLON TypeArguments IDENTIFIER 
+| DotIdentifiers DOT SUPER DOUBLE_COLON IDENTIFIER 
+| DotIdentifiers DOT SUPER DOUBLE_COLON TypeArguments IDENTIFIER
+;
+
+ArrayCreationExpression:
+NEW PrimitiveType DimExprs 
+| NEW PrimitiveType DimExprs Dims 
+| NEW ClassType DimExprs 
+| NEW ClassType DimExprs Dims 
+| NEW PrimitiveType Dims ArrayInitializer 
+| NEW ClassType Dims ArrayInitializer 
+;
+
+DimExprs:
+DimExprs LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE
+| LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE
+;
+
+Expression:
+LambdaExpression
+| AssignmentExpression
+;
+
+LambdaExpression:
+LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS ARROW_RIGHT Block
+| LEFT_PARANTHESIS RIGHT_PARANTHESIS ARROW_RIGHT Block
+| IDENTIFIER ARROW_RIGHT Block
+| LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS ARROW_RIGHT Expression
+| LEFT_PARANTHESIS RIGHT_PARANTHESIS ARROW_RIGHT Expression
+| IDENTIFIER ARROW_RIGHT Expression
+;
+
+AssignmentExpression:
+ConditionalExpression
+| Assignment
+;
+
+Assignment:
+LeftHandSide AssignmentOperator Expression
+;
+
+LeftHandSide:
+DotIdentifiers
+| FieldAccess
+| ArrayAccess
+;
+
+AssignmentOperator:
+EQUALS
+| STAR_EQUALS
+| SLASH_EQUALS
+| PERCENT_EQUALS
+| PLUS_EQUALS
+| MINUS_EQUALS
+| LESS_THAN_LESS_THAN_EQUALS
+| GREATER_THAN_GREATER_THAN_EQUALS
+| GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS
+| AMPERSAND_EQUALS
+| POWER_EQUALS
+| BAR_EQUALS
+;
+
+ConditionalExpression:
+ConditionalOrExpression
+| ConditionalOrExpression QUESTION Expression COLON ConditionalExpression
+| ConditionalOrExpression QUESTION Expression COLON LambdaExpression
+;
+
+ConditionalOrExpression:
+ConditionalAndExpression
+| ConditionalOrExpression BAR_BAR ConditionalAndExpression
+;
+
+ConditionalAndExpression:
+InclusiveOrExpression
+| ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression
+;
+
+InclusiveOrExpression:
+ExclusiveOrExpression
+| InclusiveOrExpression BAR ExclusiveOrExpression
+;
+
+ExclusiveOrExpression:
+AndExpression
+| ExclusiveOrExpression POWER AndExpression
+;
+
+AndExpression:
+EqualityExpression
+| AndExpression AMPERSAND EqualityExpression
+;
+
+EqualityExpression:
+RelationalExpression
+| EqualityExpression EQUALS_EQUALS RelationalExpression
+| EqualityExpression EXCLAIM_EQUALS RelationalExpression
+;
+
+RelationalExpression:
+ShiftExpression
+| RelationalExpression LESS_THAN ShiftExpression
+| RelationalExpression GREATER_THAN ShiftExpression
+| RelationalExpression LESS_THAN_EQUALS ShiftExpression
+| RelationalExpression GREATER_THAN_EQUALS ShiftExpression
+;
+
+ShiftExpression:
+AdditiveExpression
+| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression
+| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression
+| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression
+;
+
+AdditiveExpression:
+MultiplicativeExpression
+| AdditiveExpression PLUS MultiplicativeExpression
+| AdditiveExpression MINUS MultiplicativeExpression
+;
+
+MultiplicativeExpression:
+UnaryExpression
+| MultiplicativeExpression STAR UnaryExpression
+| MultiplicativeExpression SLASH UnaryExpression
+| MultiplicativeExpression PERCENT UnaryExpression
+;
+
+UnaryExpression:
+PreIncrementExpression
+| PreDecrementExpression
+| PLUS UnaryExpression
+| MINUS UnaryExpression
+| UnaryExpressionNotPlusMinus
+;
+
+PreIncrementExpression:
+PLUS_PLUS UnaryExpression
+;
+
+PreDecrementExpression:
+MINUS_MINUS UnaryExpression
+;
+
+UnaryExpressionNotPlusMinus:
+PostfixExpression
+| TILDA UnaryExpression
+| EXCLAIM UnaryExpression
+;
+
+PostfixExpression:
+Primary
+| DotIdentifiers
+| PostIncrementExpression
+| PostDecrementExpression
+;
+
+PostIncrementExpression:
+PostfixExpression PLUS_PLUS
+;
+
+PostDecrementExpression:
+PostfixExpression MINUS_MINUS
+;
 
 
 %%
