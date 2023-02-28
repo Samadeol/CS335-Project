@@ -16,21 +16,21 @@ void yyerror(const char* error){
     fprintf (stderr, "%s | %d\n",error,yylineno);
 }
 
-void func(string s, int k){
-    if(k){
-        fout<<"n"<<node_number<<"[label=\""<<s<<"\"]"<<endl;
-        int a[k]={0};
-        for(int i=k-1;i>=0 && !st.empty();i--){
+void func(string s, string p){
+    if(p=="0") return;
+    fout<<"n"<<node_number<<"[label=\""<<s<<"\"]"<<endl;
+    int a[k]={0};
+    for(int i=p.size()-1;i>=0;i--){
+        if(p[i]=='0'){
             int t = st.top();
             st.pop();
             a[i]=t;
         }
-        fout<<"n"<<node_number<<"->{";
-        for(int i=0;i<k;i++){
-            if(a[i]<0) fout<<"t"<<(-a[i]);
-            else fout<<"n"<<a[i];
-            if(i==k-1) fout<<"}"<<endl;
-            else fout<<",";
+        for(int i=0;i<p.size();i++){
+            if(p[i]>1) continue;
+            fout<<"n"<<node_number<<"->";
+            if(p[i]==0) fout<<"n"<<a[i]<<endl;
+            else fout<<"n"<<node_number<<","<<i+1<<endl;
         }
         st.push(node_number);
         node_number++;
