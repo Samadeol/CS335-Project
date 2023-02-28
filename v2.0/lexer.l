@@ -208,7 +208,7 @@ YIELD                        yield
 {TRY}                                           {strcpy(yylval.str,yytext); return TRY;}
 {TILDA}                                         {strcpy(yylval.str,yytext); return TILDA;}
 {INTEGER_LITERAL}                               {strcpy(yylval.str,yytext); return INTEGER_LITERAL;}
-{TEXTBLOCK}                                     {strcpy(yylval.str,yytext); return TEXT_BLOCK;}    
+{TEXTBLOCK}                                     {strcpy(yylval.str,yytext); return TEXTBLOCK;}    
 {THROWS}                                        {strcpy(yylval.str,yytext); return THROWS;}
 {THROW}                                         {strcpy(yylval.str,yytext); return THROW;}
 {THIS}                                          {strcpy(yylval.str,yytext); return THIS;}

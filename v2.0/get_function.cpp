@@ -18,7 +18,7 @@ void adding_separators(){
     seperator.insert("DOT");
     seperator.insert("TRIPLE_DOT");
     seperator.insert("LEFT_PARANTHESIS");
-    seperator.insert("RIGHT_PARENTHESIS");
+    seperator.insert("RIGHT_PARANTHESIS");
     seperator.insert("LEFT_CURLY_BRACE");
     seperator.insert("RIGHT_CURLY_BRACE");
     seperator.insert("LEFT_SQUARE_BRACE");
@@ -114,16 +114,20 @@ int main(){
                     else{
                         p.push_back('1');
                         string j = s.substr(k+1,i-k);
-                        if(seperator.find(j)!=seperator.end()) v.push_back("fout<<\"n\"<<node_number<<\",\"<<"+to_string(p.size())+"<<\"[label=Seperator_\"<<$"+to_string(p.size())+"\"]\"; ");
-                        else if(j=="IDENTIFIER") v.push_back("fout<<\"n\"<<node_number<<\",\"<<"+to_string(p.size())+"<<\"[label=Identifier_\"<<$"+to_string(p.size())+"\"]\"; ");
-                        else if(literal.find(j)!=literal.end()) v.push_back("fout<<\"n\"<<node_number<<\",\"<<"+to_string(p.size())+"<<\"[label=\"<<"+j+"_<<$"+to_string(p.size())+"\"]\"; ");
-                        else if(keyword.find(j)!=keyword.end()) v.push_back("fout<<\"n\"<<node_number<<\",\"<<"+to_string(p.size())+"<<\"[label=Keyword_\"<<$"+to_string(p.size())+"\"]\"; ");
+                        string please = "a";
+                        please[0]+=p.size()-1;
+                        if(seperator.find(j)!=seperator.end()) v.push_back("fout<<\"n\"<<node_number<<\""+please+"\"<<\"[label=\\\"Seperator_\"<<$"+to_string(p.size())+"<<\"\\\"]\"<<endl; ");
+                        else if(j=="IDENTIFIER") v.push_back("fout<<\"n\"<<node_number<<\""+please+"\"<<\"[label=\\\"Identifier_\"<<$"+to_string(p.size())+"<<\"\\\"]\"<<endl; ");
+                        else if(literal.find(j)!=literal.end()) v.push_back("fout<<\"n\"<<node_number<<\""+please+"\"<<\"[label=\\\""+j+"_\"<<$"+to_string(p.size())+"<<\"\\\"]\"<<endl; ");
+                        else if(keyword.find(j)!=keyword.end()) v.push_back("fout<<\"n\"<<node_number<<\""+please+"\"<<\"[label=\\\"Keyword_\"<<$"+to_string(p.size())+"<<\"\\\"]\"<<endl; ");
                         else p[p.size()-1]='2';
                     }
+                    f=1;
                 }
             }
-            s+="\t\t{func(\""+temp+"\", "+p+"); ";
+            s+="\t\t{ ";
             for(int i=0;i<v.size();i++) s+=v[i];
+            s+="func(\""+temp+"\", \""+p+"\");";
             s+="}";
         }
         fout<<s<<endl;   

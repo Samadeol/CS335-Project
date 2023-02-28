@@ -1,8 +1,5 @@
 class test {
-    public static gay(){
+    public dishay_gay(){
         int d=3;
-        if(d==3){
-            d=4;
-        }
     }
 }
