@@ -1,6 +1,5 @@
-
 CompiledStuff:
-| TypeDeclarations 
+TypeDeclarations 
 | ImportDeclarations 
 | ImportDeclarations TypeDeclarations
 ;
@@ -145,6 +144,9 @@ ClassModifiers ClassModifier
 ClassModifier:
 PUBLIC
 | PRIVATE
+| FINAL
+| STATIC
+| SYNCHRONIZED
 ;
 
 TypeParameterList:
@@ -194,25 +196,20 @@ FieldDeclaration
 ;
 
 FieldDeclaration:
-Type IDENTIFIER SEMI_COLON 
-| Type IDENTIFIER EQUALS VariableInitializer SEMI_COLON 
-| Type IDENTIFIER Dims SEMI_COLON 
-| Type IDENTIFIER Dims EQUALS VariableInitializer SEMI_COLON 
-| Type IDENTIFIER VariableDeclaratorList SEMI_COLON 
-| Type IDENTIFIER EQUALS VariableInitializer VariableDeclaratorList SEMI_COLON 
-| Type IDENTIFIER Dims VariableDeclaratorList SEMI_COLON 
-| Type IDENTIFIER Dims EQUALS VariableInitializer VariableDeclaratorList SEMI_COLON
+Type VariableDeclaratorList SEMI_COLON
+| ClassModifiers Type VariableDeclaratorList SEMI_COLON
 ;
 
 VariableDeclaratorList:
-VariableDeclaratorList COMMA IDENTIFIER 
-| VariableDeclaratorList COMMA IDENTIFIER EQUALS VariableInitializer 
-| VariableDeclaratorList COMMA IDENTIFIER Dims 
-| VariableDeclaratorList COMMA IDENTIFIER Dims EQUALS VariableInitializer 
-| COMMA IDENTIFIER 
-| COMMA IDENTIFIER EQUALS VariableInitializer 
-| COMMA IDENTIFIER Dims 
-| COMMA IDENTIFIER Dims EQUALS VariableInitializer
+VariableDeclaratorList COMMA VariableDeclarator
+| VariableDeclarator
+;
+
+VariableDeclarator:
+IDENTIFIER EQUALS VariableInitializer
+| IDENTIFIER Dims EQUALS VariableInitializer
+| IDENTIFIER
+| IDENTIFIER Dims
 ;
 
 VariableInitializer:
@@ -257,6 +254,8 @@ Type IDENTIFIER
 | VariableModifiers Type IDENTIFIER 
 | Type IDENTIFIER Dims 
 | VariableModifiers Type IDENTIFIER Dims
+| Type TRIPLE_DOT IDENTIFIER
+| VariableModifiers Type TRIPLE_DOT IDENTIFIER
 ;
 
 VariableModifiers:
@@ -478,7 +477,14 @@ FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf
 
 ForInit:
 StatementExpressionList
-| FormalParameter
+| LocalVariableDeclaration
+;
+
+LocalVariableDeclaration:
+Type VariableDeclaratorList
+| VariableModifiers Type VariableDeclaratorList
+| VAR VariableDeclaratorList
+| VariableModifiers VAR VariableDeclaratorList
 ;
 
 ForUpdate:
@@ -491,11 +497,11 @@ StatementExpressionList COMMA StatementExpression
 ;
 
 EnhancedForStatement:
-FOR LEFT_PARANTHESIS FormalParameter COLON Expression RIGHT_PARANTHESIS Statement
+FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS Statement
 ;
 
 EnhancedForStatementNoShortIf:
-FOR LEFT_PARANTHESIS FormalParameter COLON Expression RIGHT_PARANTHESIS StatementNoShortIf
+FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS StatementNoShortIf
 ;
 
 BreakStatement:
@@ -783,13 +789,13 @@ MINUS_MINUS UnaryExpression
 
 UnaryExpressionNotPlusMinus:
 PostfixExpression
-| DotIdentifiers
 | TILDA UnaryExpression
 | EXCLAIM UnaryExpression
 ;
 
 PostfixExpression:
 Primary
+| DotIdentifiers
 | PostIncrementExpression
 | PostDecrementExpression
 ;

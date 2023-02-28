@@ -1,54 +1,18 @@
-%{
-#include <bits/stdc++.h>
-using namespace std;
-
-extern int yylex();
-extern int yylineno;
-
-#define YYDEBUG 1
-
-void yyerror(const char* error){
-    fprintf (stderr, "%s | %d\n",error,yylineno);
-}
-
-void func(string s, int y){
-    return;
-}
-
-
-%}
-
-%define parse.error verbose
-%locations
-
-%union{
-    char str[1000];
-}
-
-%token <s> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
-%type <s> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression AssignmentOperator BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
-
-%start input
-
-%%
-
-input: CompiledStuff {cout<<"Done"<<endl;}
-
 CompiledStuff:
-TypeDeclarations 		                    {func("CompiledCode", 1);}
-| ImportDeclarations 		                {func("CompiledCode", 1);}
-| ImportDeclarations TypeDeclarations		{func("CompiledCode", 2);}
+TypeDeclarations 		{func("CompiledStuff", 1);}
+| ImportDeclarations 		{func("CompiledStuff", 1);}
+| ImportDeclarations TypeDeclarations		{func("CompiledStuff", 2);}
 ;
 
 ImportDeclarations:
 ImportDeclarations ImportDeclaration		{func("ImportDeclarations", 2);}
-| ImportDeclaration		                    {func("ImportDeclarations", 1);}
+| ImportDeclaration		{func("ImportDeclarations", 1);}
 ;
 
 ImportDeclaration:
-SingleTypeImportDeclaration		        {func("ImportDeclaration", 1);}
-| TypeImportOnDemandDeclaration		    {func("ImportDeclaration", 1);}
-| SingleStaticImportDeclaration		    {func("ImportDeclaration", 1);}
+SingleTypeImportDeclaration		{func("ImportDeclaration", 1);}
+| TypeImportOnDemandDeclaration		{func("ImportDeclaration", 1);}
+| SingleStaticImportDeclaration		{func("ImportDeclaration", 1);}
 | StaticImportOnDemandDeclaration		{func("ImportDeclaration", 1);}
 ;
 
@@ -70,11 +34,11 @@ IMPORT STATIC DotIdentifiers DOT STAR SEMI_COLON		{func("StaticImportOnDemandDec
 
 TypeDeclarations:
 TypeDeclarations TypeDeclaration		{func("TypeDeclarations", 2);}
-| TypeDeclaration		                {func("TypeDeclarations", 1);}
+| TypeDeclaration		{func("TypeDeclarations", 1);}
 ;
 
 TypeDeclaration:
-ClassDeclaration		    {func("TypeDeclaration", 1);}
+ClassDeclaration		{func("TypeDeclaration", 1);}
 | InterfaceDeclaration		{func("TypeDeclaration", 1);}
 ;
 
@@ -84,12 +48,12 @@ PrimitiveType		{func("Type", 1);}
 ;
 
 PrimitiveType:
-NumericType		    {func("PrimitiveType", 1);}
+NumericType		{func("PrimitiveType", 1);}
 | BOOLEAN_TYPE		{func("PrimitiveType", 1);}
 ;
 
 NumericType:
-INTEGRAL_TYPE		    {func("NumericType", 1);}
+INTEGRAL_TYPE		{func("NumericType", 1);}
 | FLOAT_POINT_TYPE		{func("NumericType", 1);}
 ;
 
@@ -104,17 +68,17 @@ DotIdentifiers		{func("ClassType", 1);}
 
 DotIdentifiers:
 DotIdentifiers DOT IDENTIFIER		{func("Name", 3);}
-| IDENTIFIER		                {func("Name", 1);}
+| IDENTIFIER		{func("Name", 1);}
 ;
 
 ArrayType:
-DotIdentifiers Dims		    {func("ArrayType", 2);}
+DotIdentifiers Dims		{func("ArrayType", 2);}
 | PrimitiveType Dims		{func("ArrayType", 2);}
 ;
 
 Dims:
-Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE	    {func("Dims", 3);}
-| LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		    {func("Dims", 2);}
+Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		{func("Dims", 3);}
+| LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		{func("Dims", 2);}
 ;
 
 TypeArguments:
@@ -123,76 +87,76 @@ LESS_THAN TypeArgumentList GREATER_THAN		{func("TypeArguments", 3);}
 
 TypeArgumentList:
 TypeArgumentList COMMA TypeArgument		{func("TypeArgumentList", 3);}
-| TypeArgument		                    {func("TypeArgumentList", 1);}
+| TypeArgument		{func("TypeArgumentList", 1);}
 ;
 
 TypeArgument:
 ReferenceType		{func("TypeArgument", 1);}
-| Wildcard		    {func("TypeArgument", 1);}
+| Wildcard		{func("TypeArgument", 1);}
 ;
 
 Wildcard:
 QUESTION EXTENDS ReferenceType		{func("Wildcard", 3);}
 | QUESTION SUPER ReferenceType		{func("Wildcard", 3);}
-| QUESTION		                    {func("Wildcard", 1);}
+| QUESTION		{func("Wildcard", 1);}
 ;
 
 ClassDeclaration:
-CLASS IDENTIFIER ClassBody 		                                                                                        {func("ClassDeclaration", 3);}
-| CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		                                                            {func("ClassDeclaration", 5);}
-| CLASS IDENTIFIER ClassImplements ClassBody 	                                                                    	{func("ClassDeclaration", 4);}
-| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		                                            {func("ClassDeclaration", 6);}
-| CLASS IDENTIFIER ClassExtends ClassBody 		                                                                        {func("ClassDeclaration", 4);}
-| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		                                                {func("ClassDeclaration", 6);}
-| CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		                                                        {func("ClassDeclaration", 5);}
-| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		                                {func("ClassDeclaration", 7);}
-| CLASS IDENTIFIER TypeParameterList ClassBody 		                                                                    {func("ClassDeclaration", 4);}
-| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		                                            {func("ClassDeclaration", 6);}
-| CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		                                                    {func("ClassDeclaration", 5);}
-| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		                            {func("ClassDeclaration", 7);}
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		                                                    {func("ClassDeclaration", 5);}
-| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		                                {func("ClassDeclaration", 7);}
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		                                    {func("ClassDeclaration", 6);}
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		                {func("ClassDeclaration", 8);}
-| ClassModifiers CLASS IDENTIFIER ClassBody 		                                                                    {func("ClassDeclaration", 4);}
-| ClassModifiers CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		                                                {func("ClassDeclaration", 6);}
-| ClassModifiers CLASS IDENTIFIER ClassImplements ClassBody 		                                                    {func("ClassDeclaration", 5);}
-| ClassModifiers CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		                                {func("ClassDeclaration", 7);}
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassBody 		                                                        {func("ClassDeclaration", 5);}
-| ClassModifiers CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		                                {func("ClassDeclaration", 7);}
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		                                        {func("ClassDeclaration", 6);}
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		                {func("ClassDeclaration", 8);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassBody 		                                                    {func("ClassDeclaration", 5);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		                            {func("ClassDeclaration", 7);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		                                    {func("ClassDeclaration", 6);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		            {func("ClassDeclaration", 8);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		                                        {func("ClassDeclaration", 6);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		                {func("ClassDeclaration", 8);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		                        {func("ClassDeclaration", 7);}
+CLASS IDENTIFIER ClassBody 		{func("ClassDeclaration", 3);}
+| CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 5);}
+| CLASS IDENTIFIER ClassImplements ClassBody 		{func("ClassDeclaration", 4);}
+| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 6);}
+| CLASS IDENTIFIER ClassExtends ClassBody 		{func("ClassDeclaration", 4);}
+| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 6);}
+| CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 5);}
+| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
+| CLASS IDENTIFIER TypeParameterList ClassBody 		{func("ClassDeclaration", 4);}
+| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 6);}
+| CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		{func("ClassDeclaration", 5);}
+| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("ClassDeclaration", 5);}
+| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 6);}
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		{func("ClassDeclaration", 8);}
+| ClassModifiers CLASS IDENTIFIER ClassBody 		{func("ClassDeclaration", 4);}
+| ClassModifiers CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 6);}
+| ClassModifiers CLASS IDENTIFIER ClassImplements ClassBody 		{func("ClassDeclaration", 5);}
+| ClassModifiers CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassBody 		{func("ClassDeclaration", 5);}
+| ClassModifiers CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 6);}
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 8);}
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassBody 		{func("ClassDeclaration", 5);}
+| ClassModifiers CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		{func("ClassDeclaration", 6);}
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 8);}
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("ClassDeclaration", 6);}
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 8);}
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 7);}
 | ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		{func("ClassDeclaration", 9);}
 ;
 
 ClassModifiers:
 ClassModifiers ClassModifier		{func("Modifiers", 2);}
-| ClassModifier		                {func("Modifiers", 1);}
+| ClassModifier		{func("Modifiers", 1);}
 ;
 
 ClassModifier:
-PUBLIC		        {func("Modifier", 1);}
-| PRIVATE		    {func("Modifier", 1);}
-| FINAL		        {func("Modifier", 1);}
-| STATIC		    {func("Modifier", 1);}
+PUBLIC		{func("Modifier", 1);}
+| PRIVATE		{func("Modifier", 1);}
+| FINAL		{func("Modifier", 1);}
+| STATIC		{func("Modifier", 1);}
 | SYNCHRONIZED		{func("Modifier", 1);}
 ;
 
 TypeParameterList:
-LESS_THAN IDENTIFIER GREATER_THAN 		                {func("TypeParameterList", 3);}
+LESS_THAN IDENTIFIER GREATER_THAN 		{func("TypeParameterList", 3);}
 | LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 		{func("TypeParameterList", 4);}
 ;
 
 TypeParameters:
 TypeParameters COMMA IDENTIFIER 		{func("TypeParameters", 3);}
-| COMMA IDENTIFIER		                {func("TypeParameters", 2);}
+| COMMA IDENTIFIER		{func("TypeParameters", 2);}
 ;
 
 ClassExtends:
@@ -200,52 +164,52 @@ EXTENDS ClassType		{func("ClassExtends", 2);}
 ;
 
 ClassImplements:
-IMPLEMENTS ClassType		        {func("ClassImplements", 2);}
+IMPLEMENTS ClassType		{func("ClassImplements", 2);}
 IMPLEMENTS ClassType ClassTypes		{func("ClassImplements", 3);}
 ;
 
 ClassTypes:
 ClassTypes COMMA ClassType		{func("ClassTypes", 3);}
-| COMMA ClassType		        {func("ClassTypes", 2);}
+| COMMA ClassType		{func("ClassTypes", 2);}
 ;
 
 ClassBody:
-LEFT_CURLY_BRACE RIGHT_CURLY_BRACE		                        {func("ClassBody", 2);}
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE		{func("ClassBody", 2);}
 | LEFT_CURLY_BRACE ClassBodyDeclarations RIGHT_CURLY_BRACE		{func("ClassBody", 3);}
 ;
 
 ClassBodyDeclarations:
 ClassBodyDeclarations ClassBodyDeclaration		{func("ClassBodyDeclarations", 2);}
-| ClassBodyDeclaration		                    {func("ClassBodyDeclarations", 1);}
+| ClassBodyDeclaration		{func("ClassBodyDeclarations", 1);}
 ;
 
 ClassBodyDeclaration:
-ClassMemberDeclaration		    {func("ClassBodyDeclaration", 1);}
-| StaticInitializer		        {func("ClassBodyDeclaration", 1);}
+ClassMemberDeclaration		{func("ClassBodyDeclaration", 1);}
+| StaticInitializer		{func("ClassBodyDeclaration", 1);}
 | ConstructorDeclaration		{func("ClassBodyDeclaration", 1);}
 ;
 
 ClassMemberDeclaration:
 FieldDeclaration		{func("ClassMemberDeclaration", 1);}
 | MethodDeclaration		{func("ClassMemberDeclaration", 1);}
-| SEMI_COLON		    {func("ClassMemberDeclaration", 1);}
+| SEMI_COLON		{func("ClassMemberDeclaration", 1);}
 ;
 
 FieldDeclaration:
-Type VariableDeclaratorList SEMI_COLON		                {func("FieldDeclaration", 3);}
+Type VariableDeclaratorList SEMI_COLON		{func("FieldDeclaration", 3);}
 | ClassModifiers Type VariableDeclaratorList SEMI_COLON		{func("FieldDeclaration", 4);}
 ;
 
 VariableDeclaratorList:
 VariableDeclaratorList COMMA VariableDeclarator		{func("VariableDeclaratorList", 3);}
-| VariableDeclarator		                        {func("VariableDeclaratorList", 1);}
+| VariableDeclarator		{func("VariableDeclaratorList", 1);}
 ;
 
 VariableDeclarator:
-IDENTIFIER EQUALS VariableInitializer		        {func("VariableDeclarator", 3);}
+IDENTIFIER EQUALS VariableInitializer		{func("VariableDeclarator", 3);}
 | IDENTIFIER Dims EQUALS VariableInitializer		{func("VariableDeclarator", 4);}
-| IDENTIFIER		                                {func("VariableDeclarator", 1);}
-| IDENTIFIER Dims		                            {func("VariableDeclarator", 2);}
+| IDENTIFIER		{func("VariableDeclarator", 1);}
+| IDENTIFIER Dims		{func("VariableDeclarator", 2);}
 ;
 
 VariableInitializer:
@@ -843,12 +807,3 @@ PostfixExpression PLUS_PLUS		{func("PostIncrementExpression", 2);}
 PostDecrementExpression:
 PostfixExpression MINUS_MINUS		{func("PostDecrementExpression", 2);}
 ;
-
-
-
-%%
-
-int main(){
-    yyparse();
-    exit(0);
-}
