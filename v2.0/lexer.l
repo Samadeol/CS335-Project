@@ -239,7 +239,7 @@ YIELD                        yield
 {BOOLEAN_TYPE}                                  {strcpy(yylval.str,yytext); return BOOLEAN_TYPE;}
 {BOOLEAN_LITERAL}                               {strcpy(yylval.str,yytext); return BOOLEAN_LITERAL;}
 {ASSERT}                                        {strcpy(yylval.str,yytext); return ASSERT;}
-{STRING_LITERAL}                                {strcpy(yylval.str,yytext); return STRING_LITERAL;}
+{STRING_LITERAL}                                {string s; for(int i=1;i<yyleng-1;i++) s.push_back(yytext[i]); strcpy(yylval.str,s.c_str()); return STRING_LITERAL;}
 {IDENTIFIER}                                    {strcpy(yylval.str,yytext); return IDENTIFIER;}
 {COMMENT}                                       {}
 <<EOF>> {yyterminate();}

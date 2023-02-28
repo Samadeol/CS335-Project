@@ -17,6 +17,7 @@ void yyerror(const char* error){
 
 void func(string q,string p){
     if(p=="0") return;
+    if(p[1]=='?') p="0";
     fout<<"n"<<node_number<<"[label=\""<<q<<"\"]"<<endl;
     int a[p.size()]={0};
     for(int i=p.size()-1;i>=0;i--){
@@ -55,12 +56,12 @@ void func(string q,string p){
 
 %%
 
-input: CompiledStuff {cout<<node_number<<endl;}
+input: CompiledStuff
 
 CompiledStuff:
-TypeDeclarations 		{ func("CompiledStuff", "0");}
-| ImportDeclarations 		{ func("CompiledStuff", "0");}
-| ImportDeclarations TypeDeclarations		{ func("CompiledStuff", "00");}
+TypeDeclarations 		{ func("CompiledUnit", "0?");}
+| ImportDeclarations 		{ func("CompiledUnit", "0?");}
+| ImportDeclarations TypeDeclarations		{ func("CompiledUnit", "00");}
 ;
 
 ImportDeclarations:
@@ -869,8 +870,9 @@ PostfixExpression MINUS_MINUS		{ func("--", "02");}
 
 %%
 
-int main(){
-    fout.open("ast.dot",ios::out);
+int main(int argc, char** argv){
+    string temp = argv[argc-1];
+    fout.open("dot_outputs/"+temp+".dot",ios::out);
     st.empty();
     node_number=1;
     // #if YYDEBUG

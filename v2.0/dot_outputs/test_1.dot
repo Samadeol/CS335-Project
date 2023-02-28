@@ -1,0 +1,6 @@
+digraph G{
+node[ordering=out]
+n1a[label="Keyword_static"]
+n1[label="Modifier"]
+n1->n1a
+}
