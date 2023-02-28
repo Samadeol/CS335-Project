@@ -8,10 +8,10 @@ using namespace std;
 %option yylineno
 %x comment
 
+TRIPLE_DOT                  "..."
 LINE_TERMINATOR             [\n\r]|"\r\n"
 WHITESPACE                  [ \t\f]
 COMMENT                     \/\/[^\f\n\r]*{LINE_TERMINATOR}?
-KEYWORD                     abstract|continue|for|new|switch|assert|default|if|package|synchronized|boolean|do|goto|private|this|break|double|implements|protected|throw|byte|else|import|public|throws|case|enum|instanceof|return|transient|catch|extends|int|short|try|char|final|interface|static|void|class|finally|long|strictfp|volatile|const|float|native|super|while|"_"
 INTEGER_TYPE_SUFFIX         "1"|"L"
 DIGIT                       [0-9]
 DIGITORUNDERSCORE           {DIGIT}|"_"
@@ -51,9 +51,7 @@ SINGLE_CHARACTER            [^\'\\]
 STRING_CHARACTER_BASIC      [^\"\\]|{ESCAPE_SEQUENCE}
 OCTAL_ESCAPE                \\{OCT_DIGIT}|\\{OCT_DIGIT}{OCT_DIGIT}|\\[0-3]{OCT_DIGIT}{OCT_DIGIT}
 ESCAPE_SEQUENCE             "\b"|"\s"|"\t"|"\n"|"\f"|"\r"|"\\"|"\'"|\\\"|{OCTAL_ESCAPE}|\\{LINE_TERMINATOR}
-STRING_CHARACTER            {STRING_CHARACTER_BASIC}|{ESCAPE_SEQUENCE}
 TEXT_BLOCK_WHITE_SPACE      [ \t\f]
-LITERAL                     {INTEGER_LITERAL}|{BOOLEAN_LITERAL}|{NULL_LITERAL}|{CHARACTER_LITERAL}|{STRING_LITERAL}|{FLOAT_LITERAL}|{TEXT_BLOCK}
 AMPERSAND                  "&"
 AMPERSAND_AMPERSAND        "&&" 
 AMPERSAND_EQUALS           "&=" 
@@ -137,7 +135,7 @@ TEXTBLOCK                    \"\"\"{TEXT_BLOCK_WHITE_SPACE}*{LINE_TERMINATOR}([^
 THIS                         this
 THROW                        throw 
 THROWS                       throws 
-TILDA                        ~
+TILDA                        "~"
 TRY                          try
 VAR                          var 
 VOID                         void
@@ -153,6 +151,7 @@ YIELD                        yield
 
 {WHITESPACE}                                    {}        
 {LINE_TERMINATOR}                               {}
+{TRIPLE_DOT}                                    {strcpy(yylval.str,yytext); return TRIPLE_DOT;}
 {AMPERSAND}                                     {strcpy(yylval.str,yytext); return AMPERSAND;} 
 {AMPERSAND_AMPERSAND}                           {strcpy(yylval.str,yytext); return AMPERSAND_AMPERSAND;}
 {AMPERSAND_EQUALS}                              {strcpy(yylval.str,yytext); return AMPERSAND_EQUALS;} 
@@ -209,7 +208,7 @@ YIELD                        yield
 {TRY}                                           {strcpy(yylval.str,yytext); return TRY;}
 {TILDA}                                         {strcpy(yylval.str,yytext); return TILDA;}
 {INTEGER_LITERAL}                               {strcpy(yylval.str,yytext); return INTEGER_LITERAL;}
-{TEXT_BLOCK}                                    {strcpy(yylval.str,yytext); return TEXT_BLOCK;}    
+{TEXTBLOCK}                                    {strcpy(yylval.str,yytext); return TEXTBLOCK;}    
 {THROWS}                                        {strcpy(yylval.str,yytext); return THROWS;}
 {THROW}                                         {strcpy(yylval.str,yytext); return THROW;}
 {THIS}                                          {strcpy(yylval.str,yytext); return THIS;}
@@ -242,8 +241,8 @@ YIELD                        yield
 {ASSERT}                                        {strcpy(yylval.str,yytext); return ASSERT;}
 {STRING_LITERAL}                                {strcpy(yylval.str,yytext); return STRING_LITERAL;}
 {IDENTIFIER}                                    {strcpy(yylval.str,yytext); return IDENTIFIER;}
-
-
+{COMMENT}                                       {}
+<<EOF>> {yyterminate();}
 
 
 

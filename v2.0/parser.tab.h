@@ -133,11 +133,12 @@ extern int yydebug;
     THROW = 339,
     THROWS = 340,
     TILDA = 341,
-    TRY = 342,
-    VAR = 343,
-    VOID = 344,
-    WHILE = 345,
-    YIELD = 346
+    TRIPLE_DOT = 342,
+    TRY = 343,
+    VAR = 344,
+    VOID = 345,
+    WHILE = 346,
+    YIELD = 347
   };
 #endif
 
@@ -145,11 +146,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 19 "parser.y"
+#line 20 "parser.y"
 
-    char[1000] str;
+    char str[1000];
 
-#line 153 "parser.tab.h"
+#line 154 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -1,33 +1,34 @@
 %{
 #include <bits/stdc++.h>
 using namespace std;
-int yylex();
 
 extern int yylex();
 extern int yylineno;
+
 #define YYDEBUG 1
 
 void yyerror(const char* error){
-    fprintf (stderr, "%s | %d\n",s,yylineno);
-    return 0;
+    fprintf (stderr, "%s | %d\n",error,yylineno);
 }
+
+
 %}
 
 %define parse.error verbose
 %locations
 
 %union{
-    char[1000] str;
+    char str[1000];
 }
 
-%token <s> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRY VAR VOID WHILE YIELD
-%type <s> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression AssignmentOperator BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
+%token <s> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
+%type <s> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression AssignmentOperator BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
 
 %start input
 
 %%
 
-input: CompiledStuff
+input: CompiledStuff {cout<<"Done"<<endl;}
 
 CompiledStuff:
 TypeDeclarations 
@@ -177,6 +178,9 @@ ClassModifiers ClassModifier
 ClassModifier:
 PUBLIC
 | PRIVATE
+| FINAL
+| STATIC
+| SYNCHRONIZED
 ;
 
 TypeParameterList:
@@ -228,25 +232,20 @@ FieldDeclaration
 //UnnanType -> Type
 
 FieldDeclaration:
-Type IDENTIFIER SEMI_COLON 
-| Type IDENTIFIER EQUALS VariableInitializer SEMI_COLON 
-| Type IDENTIFIER Dims SEMI_COLON 
-| Type IDENTIFIER Dims EQUALS VariableInitializer SEMI_COLON 
-| Type IDENTIFIER VariableDeclaratorList SEMI_COLON 
-| Type IDENTIFIER EQUALS VariableInitializer VariableDeclaratorList SEMI_COLON 
-| Type IDENTIFIER Dims VariableDeclaratorList SEMI_COLON 
-| Type IDENTIFIER Dims EQUALS VariableInitializer VariableDeclaratorList SEMI_COLON
+Type VariableDeclaratorList SEMI_COLON
+| ClassModifiers Type VariableDeclaratorList SEMI_COLON
 ;
 
 VariableDeclaratorList:
-VariableDeclaratorList COMMA IDENTIFIER 
-| VariableDeclaratorList COMMA IDENTIFIER EQUALS VariableInitializer 
-| VariableDeclaratorList COMMA IDENTIFIER Dims 
-| VariableDeclaratorList COMMA IDENTIFIER Dims EQUALS VariableInitializer 
-| COMMA IDENTIFIER 
-| COMMA IDENTIFIER EQUALS VariableInitializer 
-| COMMA IDENTIFIER Dims 
-| COMMA IDENTIFIER Dims EQUALS VariableInitializer
+VariableDeclaratorList COMMA VariableDeclarator
+| VariableDeclarator
+;
+
+VariableDeclarator:
+IDENTIFIER EQUALS VariableInitializer
+| IDENTIFIER Dims EQUALS VariableInitializer
+| IDENTIFIER
+| IDENTIFIER Dims
 ;
 
 VariableInitializer:
@@ -293,6 +292,8 @@ Type IDENTIFIER
 | VariableModifiers Type IDENTIFIER 
 | Type IDENTIFIER Dims 
 | VariableModifiers Type IDENTIFIER Dims
+| Type TRIPLE_DOT IDENTIFIER
+| VariableModifiers Type TRIPLE_DOT IDENTIFIER
 ;
 
 VariableModifiers:
@@ -514,7 +515,14 @@ FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf
 
 ForInit:
 StatementExpressionList
-| FormalParameter
+| LocalVariableDeclaration
+;
+
+LocalVariableDeclaration:
+Type VariableDeclaratorList
+| VariableModifiers Type VariableDeclaratorList
+| VAR VariableDeclaratorList
+| VariableModifiers VAR VariableDeclaratorList
 ;
 
 ForUpdate:
@@ -527,11 +535,11 @@ StatementExpressionList COMMA StatementExpression
 ;
 
 EnhancedForStatement:
-FOR LEFT_PARANTHESIS FormalParameter COLON Expression RIGHT_PARANTHESIS Statement
+FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS Statement
 ;
 
 EnhancedForStatementNoShortIf:
-FOR LEFT_PARANTHESIS FormalParameter COLON Expression RIGHT_PARANTHESIS StatementNoShortIf
+FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS StatementNoShortIf
 ;
 
 BreakStatement:
@@ -819,13 +827,13 @@ MINUS_MINUS UnaryExpression
 
 UnaryExpressionNotPlusMinus:
 PostfixExpression
-| DotIdentifiers
 | TILDA UnaryExpression
 | EXCLAIM UnaryExpression
 ;
 
 PostfixExpression:
 Primary
+| DotIdentifiers
 | PostIncrementExpression
 | PostDecrementExpression
 ;
@@ -842,8 +850,6 @@ PostfixExpression MINUS_MINUS
 %%
 
 int main(){
-    #if YYDEBUG
-        yydebug = 1;
-    #endif
     yyparse();
+    exit(0);
 }
