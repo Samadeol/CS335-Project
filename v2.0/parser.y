@@ -7,11 +7,34 @@ extern int yylineno;
 
 #define YYDEBUG 1
 
+fstream fout;
+stack<int> st;
+int node_number=1;
+int leaf_number=0;
+
 void yyerror(const char* error){
     fprintf (stderr, "%s | %d\n",error,yylineno);
 }
 
-void func(string s, int y){
+void func(string s, int k){
+    if(k){
+        fout<<"n"<<node_number<<"[label=\""<<s<<"\"]"<<endl;
+        int a[k]={0};
+        for(int i=k-1;i>=0 && !st.empty();i--){
+            int t = st.top();
+            st.pop();
+            a[i]=t;
+        }
+        fout<<"n"<<node_number<<"->{";
+        for(int i=0;i<k;i++){
+            if(a[i]<0) fout<<"t"<<(-a[i]);
+            else fout<<"n"<<a[i];
+            if(i==k-1) fout<<"}"<<endl;
+            else fout<<",";
+        }
+        st.push(node_number);
+        node_number++;
+    }
     return;
 }
 
@@ -32,7 +55,7 @@ void func(string s, int y){
 
 %%
 
-input: CompiledStuff {cout<<"Done"<<endl;}
+input: CompiledStuff {cout<<node_number<<endl;}
 
 CompiledStuff:
 TypeDeclarations 		                    {func("CompiledCode", 1);}
@@ -453,7 +476,8 @@ Assignment		{func("StatementExpression", 1);}
 | PostDecrementExpression		{func("StatementExpression", 1);}
 | MethodInvocation		{func("StatementExpression", 1);}
 | ClassInstanceCreationExpression		{func("StatementExpression", 1);}
-		{func("StatementExpression", 0);}
+;
+
 IfThenStatement:
 IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement		{func("IfThenStatement", 5);}
 ;
@@ -849,6 +873,15 @@ PostfixExpression MINUS_MINUS		{func("PostDecrementExpression", 2);}
 %%
 
 int main(){
+    fout.open("ast.dot",ios::out);
+    st.empty();
+    node_number=1;
+    leaf_number=0;
+    #if YYDEBUG
+        yydebug=1;
+    #endif
+    fout<<"digraph G{"<<endl;
     yyparse();
+    fout<<"}"<<endl;
     exit(0);
 }
