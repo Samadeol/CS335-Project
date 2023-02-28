@@ -165,7 +165,7 @@ EXTENDS ClassType
 
 ClassImplements:
 IMPLEMENTS ClassType
-IMPLEMENTS ClassType ClassTypes
+| IMPLEMENTS ClassType ClassTypes
 ;
 
 ClassTypes:
@@ -216,7 +216,6 @@ VariableInitializer:
 Expression
 | ArrayInitializer
 ;
-
 
 MethodDeclaration:
 MethodHeader MethodBody

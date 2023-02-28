@@ -1,809 +1,808 @@
 CompiledStuff:
-TypeDeclarations 		{func("CompiledStuff", 1);}
-| ImportDeclarations 		{func("CompiledStuff", 1);}
-| ImportDeclarations TypeDeclarations		{func("CompiledStuff", 2);}
+TypeDeclarations 		{func("CompiledStuff", 0); }
+| ImportDeclarations 		{func("CompiledStuff", 0); }
+| ImportDeclarations TypeDeclarations		{func("CompiledStuff", 00); }
 ;
 
 ImportDeclarations:
-ImportDeclarations ImportDeclaration		{func("ImportDeclarations", 2);}
-| ImportDeclaration		{func("ImportDeclarations", 1);}
+ImportDeclarations ImportDeclaration		{func("ImportDeclarations", 00); }
+| ImportDeclaration		{func("ImportDeclarations", 0); }
 ;
 
 ImportDeclaration:
-SingleTypeImportDeclaration		{func("ImportDeclaration", 1);}
-| TypeImportOnDemandDeclaration		{func("ImportDeclaration", 1);}
-| SingleStaticImportDeclaration		{func("ImportDeclaration", 1);}
-| StaticImportOnDemandDeclaration		{func("ImportDeclaration", 1);}
+SingleTypeImportDeclaration		{func("ImportDeclaration", 0); }
+| TypeImportOnDemandDeclaration		{func("ImportDeclaration", 0); }
+| SingleStaticImportDeclaration		{func("ImportDeclaration", 0); }
+| StaticImportOnDemandDeclaration		{func("ImportDeclaration", 0); }
 ;
 
 SingleTypeImportDeclaration:
-IMPORT DotIdentifiers SEMI_COLON		{func("SingleTypeImportDeclaration", 3);}
+IMPORT DotIdentifiers SEMI_COLON		{func("SingleTypeImportDeclaration", 200); }
 ;
 
 TypeImportOnDemandDeclaration:
-IMPORT DotIdentifiers DOT STAR SEMI_COLON		{func("TypeImportOnDemandDeclaration", 5);}
+IMPORT DotIdentifiers DOT STAR SEMI_COLON		{func("TypeImportOnDemandDeclaration", 20000); }
 ;
 
 SingleStaticImportDeclaration:
-IMPORT STATIC DotIdentifiers DOT IDENTIFIER SEMI_COLON		{func("SingleStaticImportDeclaration", 6);}
+IMPORT STATIC DotIdentifiers DOT IDENTIFIER SEMI_COLON		{func("SingleStaticImportDeclaration", 220000); }
 ;
 
 StaticImportOnDemandDeclaration:
-IMPORT STATIC DotIdentifiers DOT STAR SEMI_COLON		{func("StaticImportOnDemandDeclaration", 6);}
+IMPORT STATIC DotIdentifiers DOT STAR SEMI_COLON		{func("StaticImportOnDemandDeclaration", 220000); }
 ;
 
 TypeDeclarations:
-TypeDeclarations TypeDeclaration		{func("TypeDeclarations", 2);}
-| TypeDeclaration		{func("TypeDeclarations", 1);}
+TypeDeclarations TypeDeclaration		{func("TypeDeclarations", 00); }
+| TypeDeclaration		{func("TypeDeclarations", 0); }
 ;
 
 TypeDeclaration:
-ClassDeclaration		{func("TypeDeclaration", 1);}
-| InterfaceDeclaration		{func("TypeDeclaration", 1);}
+ClassDeclaration		{func("TypeDeclaration", 0); }
+| InterfaceDeclaration		{func("TypeDeclaration", 0); }
 ;
 
 Type:
-PrimitiveType		{func("Type", 1);}
-| ReferenceType		{func("Type", 1);}
+PrimitiveType		{func("Type", 0); }
+| ReferenceType		{func("Type", 0); }
 ;
 
 PrimitiveType:
-NumericType		{func("PrimitiveType", 1);}
-| BOOLEAN_TYPE		{func("PrimitiveType", 1);}
+NumericType		{func("PrimitiveType", 0); }
+| BOOLEAN_TYPE		{func("PrimitiveType", 2); }
 ;
 
 NumericType:
-INTEGRAL_TYPE		{func("NumericType", 1);}
-| FLOAT_POINT_TYPE		{func("NumericType", 1);}
+INTEGRAL_TYPE		{func("NumericType", 2); }
+| FLOAT_POINT_TYPE		{func("NumericType", 2); }
 ;
 
 ReferenceType:
-ClassType		{func("ReferenceType", 1);}
-| ArrayType		{func("ReferenceType", 1);}
+ClassType		{func("ReferenceType", 0); }
+| ArrayType		{func("ReferenceType", 0); }
 ;
 
 ClassType:
-DotIdentifiers		{func("ClassType", 1);}
+DotIdentifiers		{func("ClassType", 0); }
 ;
 
 DotIdentifiers:
-DotIdentifiers DOT IDENTIFIER		{func("Name", 3);}
-| IDENTIFIER		{func("Name", 1);}
+DotIdentifiers DOT IDENTIFIER		{func("Name", 000); }
+| IDENTIFIER		{func("Name", 1); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
 ;
 
 ArrayType:
-DotIdentifiers Dims		{func("ArrayType", 2);}
-| PrimitiveType Dims		{func("ArrayType", 2);}
+DotIdentifiers Dims		{func("ArrayType", 00); }
+| PrimitiveType Dims		{func("ArrayType", 00); }
 ;
 
 Dims:
-Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		{func("Dims", 3);}
-| LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		{func("Dims", 2);}
+Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		{func("Dims", 000); }
+| LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		{func("Dims", 22); }
 ;
 
 TypeArguments:
-LESS_THAN TypeArgumentList GREATER_THAN		{func("TypeArguments", 3);}
+LESS_THAN TypeArgumentList GREATER_THAN		{func("TypeArguments", 200); }
 ;
 
 TypeArgumentList:
-TypeArgumentList COMMA TypeArgument		{func("TypeArgumentList", 3);}
-| TypeArgument		{func("TypeArgumentList", 1);}
+TypeArgumentList COMMA TypeArgument		{func("TypeArgumentList", 000); }
+| TypeArgument		{func("TypeArgumentList", 0); }
 ;
 
 TypeArgument:
-ReferenceType		{func("TypeArgument", 1);}
-| Wildcard		{func("TypeArgument", 1);}
+ReferenceType		{func("TypeArgument", 0); }
+| Wildcard		{func("TypeArgument", 0); }
 ;
 
 Wildcard:
-QUESTION EXTENDS ReferenceType		{func("Wildcard", 3);}
-| QUESTION SUPER ReferenceType		{func("Wildcard", 3);}
-| QUESTION		{func("Wildcard", 1);}
+QUESTION EXTENDS ReferenceType		{func("Wildcard", 220); }
+| QUESTION SUPER ReferenceType		{func("Wildcard", 220); }
+| QUESTION		{func("Wildcard", 2); }
 ;
 
 ClassDeclaration:
-CLASS IDENTIFIER ClassBody 		{func("ClassDeclaration", 3);}
-| CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 5);}
-| CLASS IDENTIFIER ClassImplements ClassBody 		{func("ClassDeclaration", 4);}
-| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 6);}
-| CLASS IDENTIFIER ClassExtends ClassBody 		{func("ClassDeclaration", 4);}
-| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 6);}
-| CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 5);}
-| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
-| CLASS IDENTIFIER TypeParameterList ClassBody 		{func("ClassDeclaration", 4);}
-| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 6);}
-| CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		{func("ClassDeclaration", 5);}
-| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("ClassDeclaration", 5);}
-| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 6);}
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		{func("ClassDeclaration", 8);}
-| ClassModifiers CLASS IDENTIFIER ClassBody 		{func("ClassDeclaration", 4);}
-| ClassModifiers CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 6);}
-| ClassModifiers CLASS IDENTIFIER ClassImplements ClassBody 		{func("ClassDeclaration", 5);}
-| ClassModifiers CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassBody 		{func("ClassDeclaration", 5);}
-| ClassModifiers CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 6);}
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 8);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassBody 		{func("ClassDeclaration", 5);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 7);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		{func("ClassDeclaration", 6);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 8);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("ClassDeclaration", 6);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 8);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 7);}
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		{func("ClassDeclaration", 9);}
+CLASS IDENTIFIER ClassBody 		{func("ClassDeclaration", 210); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 21200); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER ClassImplements ClassBody 		{func("ClassDeclaration", 2100); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 210000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER ClassExtends ClassBody 		{func("ClassDeclaration", 2100); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 210000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 21000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 2100000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER TypeParameterList ClassBody 		{func("ClassDeclaration", 2100); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 210000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		{func("ClassDeclaration", 21000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 2100000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("ClassDeclaration", 21000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 2100000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 210000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		{func("ClassDeclaration", 21000000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| ClassModifiers CLASS IDENTIFIER ClassBody 		{func("ClassDeclaration", 0000); }
+| ClassModifiers CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 000000); }
+| ClassModifiers CLASS IDENTIFIER ClassImplements ClassBody 		{func("ClassDeclaration", 00000); }
+| ClassModifiers CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 0000000); }
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassBody 		{func("ClassDeclaration", 00000); }
+| ClassModifiers CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 0000000); }
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 000000); }
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 00000000); }
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassBody 		{func("ClassDeclaration", 00000); }
+| ClassModifiers CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 0000000); }
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		{func("ClassDeclaration", 000000); }
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 00000000); }
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("ClassDeclaration", 000000); }
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		{func("ClassDeclaration", 00000000); }
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		{func("ClassDeclaration", 0000000); }
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		{func("ClassDeclaration", 000000000); }
 ;
 
 ClassModifiers:
-ClassModifiers ClassModifier		{func("Modifiers", 2);}
-| ClassModifier		{func("Modifiers", 1);}
+ClassModifiers ClassModifier		{func("Modifiers", 00); }
+| ClassModifier		{func("Modifiers", 0); }
 ;
 
 ClassModifier:
-PUBLIC		{func("Modifier", 1);}
-| PRIVATE		{func("Modifier", 1);}
-| FINAL		{func("Modifier", 1);}
-| STATIC		{func("Modifier", 1);}
-| SYNCHRONIZED		{func("Modifier", 1);}
+PUBLIC		{func("Modifier", 2); }
+| PRIVATE		{func("Modifier", 2); }
+| FINAL		{func("Modifier", 2); }
+| STATIC		{func("Modifier", 2); }
+| SYNCHRONIZED		{func("Modifier", 2); }
 ;
 
 TypeParameterList:
-LESS_THAN IDENTIFIER GREATER_THAN 		{func("TypeParameterList", 3);}
-| LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 		{func("TypeParameterList", 4);}
+LESS_THAN IDENTIFIER GREATER_THAN 		{func("TypeParameterList", 212); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 		{func("TypeParameterList", 2100); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
 ;
 
 TypeParameters:
-TypeParameters COMMA IDENTIFIER 		{func("TypeParameters", 3);}
-| COMMA IDENTIFIER		{func("TypeParameters", 2);}
+TypeParameters COMMA IDENTIFIER 		{func("TypeParameters", 000); }
+| COMMA IDENTIFIER		{func("TypeParameters", 21); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
 ;
 
 ClassExtends:
-EXTENDS ClassType		{func("ClassExtends", 2);}
+EXTENDS ClassType		{func("ClassExtends", 20); }
 ;
 
 ClassImplements:
-IMPLEMENTS ClassType		{func("ClassImplements", 2);}
-IMPLEMENTS ClassType ClassTypes		{func("ClassImplements", 3);}
+IMPLEMENTS ClassType		{func("ClassImplements", 20); }
+| IMPLEMENTS ClassType ClassTypes		{func("ClassImplements", 200); }
 ;
 
 ClassTypes:
-ClassTypes COMMA ClassType		{func("ClassTypes", 3);}
-| COMMA ClassType		{func("ClassTypes", 2);}
+ClassTypes COMMA ClassType		{func("ClassTypes", 000); }
+| COMMA ClassType		{func("ClassTypes", 20); }
 ;
 
 ClassBody:
-LEFT_CURLY_BRACE RIGHT_CURLY_BRACE		{func("ClassBody", 2);}
-| LEFT_CURLY_BRACE ClassBodyDeclarations RIGHT_CURLY_BRACE		{func("ClassBody", 3);}
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE		{func("ClassBody", 22); }
+| LEFT_CURLY_BRACE ClassBodyDeclarations RIGHT_CURLY_BRACE		{func("ClassBody", 200); }
 ;
 
 ClassBodyDeclarations:
-ClassBodyDeclarations ClassBodyDeclaration		{func("ClassBodyDeclarations", 2);}
-| ClassBodyDeclaration		{func("ClassBodyDeclarations", 1);}
+ClassBodyDeclarations ClassBodyDeclaration		{func("ClassBodyDeclarations", 00); }
+| ClassBodyDeclaration		{func("ClassBodyDeclarations", 0); }
 ;
 
 ClassBodyDeclaration:
-ClassMemberDeclaration		{func("ClassBodyDeclaration", 1);}
-| StaticInitializer		{func("ClassBodyDeclaration", 1);}
-| ConstructorDeclaration		{func("ClassBodyDeclaration", 1);}
+ClassMemberDeclaration		{func("ClassBodyDeclaration", 0); }
+| StaticInitializer		{func("ClassBodyDeclaration", 0); }
+| ConstructorDeclaration		{func("ClassBodyDeclaration", 0); }
 ;
 
 ClassMemberDeclaration:
-FieldDeclaration		{func("ClassMemberDeclaration", 1);}
-| MethodDeclaration		{func("ClassMemberDeclaration", 1);}
-| SEMI_COLON		{func("ClassMemberDeclaration", 1);}
+FieldDeclaration		{func("ClassMemberDeclaration", 0); }
+| MethodDeclaration		{func("ClassMemberDeclaration", 0); }
+| SEMI_COLON		{func("ClassMemberDeclaration", 2); }
 ;
 
 FieldDeclaration:
-Type VariableDeclaratorList SEMI_COLON		{func("FieldDeclaration", 3);}
-| ClassModifiers Type VariableDeclaratorList SEMI_COLON		{func("FieldDeclaration", 4);}
+Type VariableDeclaratorList SEMI_COLON		{func("FieldDeclaration", 000); }
+| ClassModifiers Type VariableDeclaratorList SEMI_COLON		{func("FieldDeclaration", 0000); }
 ;
 
 VariableDeclaratorList:
-VariableDeclaratorList COMMA VariableDeclarator		{func("VariableDeclaratorList", 3);}
-| VariableDeclarator		{func("VariableDeclaratorList", 1);}
+VariableDeclaratorList COMMA VariableDeclarator		{func("VariableDeclaratorList", 000); }
+| VariableDeclarator		{func("VariableDeclaratorList", 0); }
 ;
 
 VariableDeclarator:
-IDENTIFIER EQUALS VariableInitializer		{func("VariableDeclarator", 3);}
-| IDENTIFIER Dims EQUALS VariableInitializer		{func("VariableDeclarator", 4);}
-| IDENTIFIER		{func("VariableDeclarator", 1);}
-| IDENTIFIER Dims		{func("VariableDeclarator", 2);}
+IDENTIFIER EQUALS VariableInitializer		{func("VariableDeclarator", 120); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| IDENTIFIER Dims EQUALS VariableInitializer		{func("VariableDeclarator", 1000); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| IDENTIFIER		{func("VariableDeclarator", 1); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| IDENTIFIER Dims		{func("VariableDeclarator", 10); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
 ;
 
 VariableInitializer:
-Expression		{func("VariableInitializer", 1);}
-| ArrayInitializer		{func("VariableInitializer", 1);}
+Expression		{func("VariableInitializer", 0); }
+| ArrayInitializer		{func("VariableInitializer", 0); }
 ;
 
-
 MethodDeclaration:
-MethodHeader MethodBody		{func("MethodDeclaration", 2);}
-| ClassModifiers MethodHeader MethodBody		{func("MethodDeclaration", 3);}
+MethodHeader MethodBody		{func("MethodDeclaration", 00); }
+| ClassModifiers MethodHeader MethodBody		{func("MethodDeclaration", 000); }
 ;
 
 MethodHeader:
-VOID MethodDeclarator 		{func("MethodHeader", 2);}
-| VOID MethodDeclarator Throws 		{func("MethodHeader", 3);}
-| Type MethodDeclarator 		{func("MethodHeader", 2);}
-| Type MethodDeclarator Throws 		{func("MethodHeader", 3);}
-| TypeParameterList VOID MethodDeclarator 		{func("MethodHeader", 3);}
-| TypeParameterList VOID MethodDeclarator Throws 		{func("MethodHeader", 4);}
-| TypeParameterList Type MethodDeclarator 		{func("MethodHeader", 3);}
-| TypeParameterList Type MethodDeclarator Throws 		{func("MethodHeader", 4);}
+VOID MethodDeclarator 		{func("MethodHeader", 20); }
+| VOID MethodDeclarator Throws 		{func("MethodHeader", 200); }
+| Type MethodDeclarator 		{func("MethodHeader", 00); }
+| Type MethodDeclarator Throws 		{func("MethodHeader", 000); }
+| TypeParameterList VOID MethodDeclarator 		{func("MethodHeader", 000); }
+| TypeParameterList VOID MethodDeclarator Throws 		{func("MethodHeader", 0000); }
+| TypeParameterList Type MethodDeclarator 		{func("MethodHeader", 000); }
+| TypeParameterList Type MethodDeclarator Throws 		{func("MethodHeader", 0000); }
 ;
 
 MethodDeclarator:
-Declarator		{func("MethodDeclarator", 1);}
-| Declarator Dims		{func("MethodDeclarator", 2);}
+Declarator		{func("MethodDeclarator", 0); }
+| Declarator Dims		{func("MethodDeclarator", 00); }
 ;
 
 ReceiverParameter:
-Type THIS		{func("ReceiverParameter", 2);}
-| Type IDENTIFIER DOT THIS		{func("ReceiverParameter", 4);}
+Type THIS		{func("ReceiverParameter", 00); }
+| Type IDENTIFIER DOT THIS		{func("ReceiverParameter", 0000); }
 ;
 
 FormalParameterList:
-FormalParameterList COMMA FormalParameter		{func("ParameterList", 3);}
-| FormalParameter		{func("ParameterList", 1);}
+FormalParameterList COMMA FormalParameter		{func("ParameterList", 000); }
+| FormalParameter		{func("ParameterList", 0); }
 ;
 
 FormalParameter:
-Type IDENTIFIER 		{func("Parameter", 2);}
-| VariableModifiers Type IDENTIFIER 		{func("Parameter", 3);}
-| Type IDENTIFIER Dims 		{func("Parameter", 3);}
-| VariableModifiers Type IDENTIFIER Dims		{func("Parameter", 4);}
-| Type TRIPLE_DOT IDENTIFIER		{func("Parameter", 3);}
-| VariableModifiers Type TRIPLE_DOT IDENTIFIER		{func("Parameter", 4);}
+Type IDENTIFIER 		{func("Parameter", 00); }
+| VariableModifiers Type IDENTIFIER 		{func("Parameter", 000); }
+| Type IDENTIFIER Dims 		{func("Parameter", 000); }
+| VariableModifiers Type IDENTIFIER Dims		{func("Parameter", 0000); }
+| Type TRIPLE_DOT IDENTIFIER		{func("Parameter", 000); }
+| VariableModifiers Type TRIPLE_DOT IDENTIFIER		{func("Parameter", 0000); }
 ;
 
 VariableModifiers:
-VariableModifiers FINAL		{func("VariableModifiers", 2);}
-| FINAL		{func("VariableModifiers", 1);}
+VariableModifiers FINAL		{func("VariableModifiers", 00); }
+| FINAL		{func("VariableModifiers", 2); }
 ;
 
 Throws:
-THROWS ClassTypes		{func("Throws", 2);}
+THROWS ClassTypes		{func("Throws", 20); }
 ;
 
 MethodBody:
-Block		{func("MethodBody", 1);}
-| SEMI_COLON		{func("MethodBody", 1);}
+Block		{func("MethodBody", 0); }
+| SEMI_COLON		{func("MethodBody", 2); }
 ;
 
 StaticInitializer:
-STATIC Block		{func("StaticInitializer", 2);}
+STATIC Block		{func("StaticInitializer", 20); }
 ;
 
 ConstructorDeclaration:
-TypeParameterList Declarator ConstructorBody 		{func("ConstructorDeclaration", 3);}
-| TypeParameterList Declarator Throws ConstructorBody		{func("ConstructorDeclaration", 4);}
-| ClassModifiers TypeParameterList Declarator ConstructorBody 		{func("ConstructorDeclaration", 4);}
-| ClassModifiers TypeParameterList Declarator Throws ConstructorBody		{func("ConstructorDeclaration", 5);}
-| Declarator ConstructorBody 		{func("ConstructorDeclaration", 2);}
-| Declarator Throws ConstructorBody		{func("ConstructorDeclaration", 3);}
-| ClassModifiers Declarator ConstructorBody 		{func("ConstructorDeclaration", 3);}
-| ClassModifiers Declarator Throws ConstructorBody		{func("ConstructorDeclaration", 4);}
+TypeParameterList Declarator ConstructorBody 		{func("ConstructorDeclaration", 000); }
+| TypeParameterList Declarator Throws ConstructorBody		{func("ConstructorDeclaration", 0000); }
+| ClassModifiers TypeParameterList Declarator ConstructorBody 		{func("ConstructorDeclaration", 0000); }
+| ClassModifiers TypeParameterList Declarator Throws ConstructorBody		{func("ConstructorDeclaration", 00000); }
+| Declarator ConstructorBody 		{func("ConstructorDeclaration", 00); }
+| Declarator Throws ConstructorBody		{func("ConstructorDeclaration", 000); }
+| ClassModifiers Declarator ConstructorBody 		{func("ConstructorDeclaration", 000); }
+| ClassModifiers Declarator Throws ConstructorBody		{func("ConstructorDeclaration", 0000); }
 ;
 
 Declarator:
-IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("Declarator", 3);}
-| IDENTIFIER LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS 		{func("Declarator", 4);}
-| IDENTIFIER LEFT_PARANTHESIS ReceiverParameter COMMA RIGHT_PARANTHESIS 		{func("Declarator", 5);}
-| IDENTIFIER LEFT_PARANTHESIS ReceiverParameter COMMA FormalParameterList RIGHT_PARANTHESIS 		{func("Declarator", 6);}
+IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("Declarator", 122); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| IDENTIFIER LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS 		{func("Declarator", 1200); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| IDENTIFIER LEFT_PARANTHESIS ReceiverParameter COMMA RIGHT_PARANTHESIS 		{func("Declarator", 12000); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| IDENTIFIER LEFT_PARANTHESIS ReceiverParameter COMMA FormalParameterList RIGHT_PARANTHESIS 		{func("Declarator", 120000); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
 ;
 
 ConstructorBody:
-LEFT_CURLY_BRACE RIGHT_CURLY_BRACE 		{func("ConstructorBody", 2);}
-| LEFT_CURLY_BRACE BlockStatements RIGHT_CURLY_BRACE 		{func("ConstructorBody", 3);}
-| LEFT_CURLY_BRACE ExplicitConstructorInvocation RIGHT_CURLY_BRACE 		{func("ConstructorBody", 3);}
-| LEFT_CURLY_BRACE ExplicitConstructorInvocation BlockStatements RIGHT_CURLY_BRACE		{func("ConstructorBody", 4);}
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE 		{func("ConstructorBody", 22); }
+| LEFT_CURLY_BRACE BlockStatements RIGHT_CURLY_BRACE 		{func("ConstructorBody", 200); }
+| LEFT_CURLY_BRACE ExplicitConstructorInvocation RIGHT_CURLY_BRACE 		{func("ConstructorBody", 200); }
+| LEFT_CURLY_BRACE ExplicitConstructorInvocation BlockStatements RIGHT_CURLY_BRACE		{func("ConstructorBody", 2000); }
 ;
 
 ExplicitConstructorInvocation:
-THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 4);}
-| THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 5);}
-| TypeArguments THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 5);}
-| TypeArguments THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 6);}
-| SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 4);}
-| SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 5);}
-| TypeArguments SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 5);}
-| TypeArguments SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 6);}
-| DotIdentifiers DOT SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 6);}
-| DotIdentifiers DOT SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 7);}
-| DotIdentifiers DOT TypeArguments SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 7);}
-| DotIdentifiers DOT TypeArguments SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON		{func("ExplicitConstructorInvocation", 8);}
+THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 2222); }
+| THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 22000); }
+| TypeArguments THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 00000); }
+| TypeArguments THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 000000); }
+| SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 2222); }
+| SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 22000); }
+| TypeArguments SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 00000); }
+| TypeArguments SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 000000); }
+| DotIdentifiers DOT SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 000000); }
+| DotIdentifiers DOT SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 0000000); }
+| DotIdentifiers DOT TypeArguments SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		{func("ExplicitConstructorInvocation", 0000000); }
+| DotIdentifiers DOT TypeArguments SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON		{func("ExplicitConstructorInvocation", 00000000); }
 ;
 
 Expressions:
-Expressions COMMA Expression		{func("Expressions", 3);}
-| Expression		{func("Expressions", 1);}
+Expressions COMMA Expression		{func("Expressions", 000); }
+| Expression		{func("Expressions", 0); }
 ;
 
 InterfaceDeclaration:
-INTERFACE IDENTIFIER ClassBody 		{func("InterfaceDeclaration", 3);}
-| INTERFACE IDENTIFIER ClassExtends ClassBody 		{func("InterfaceDeclaration", 4);}
-| INTERFACE IDENTIFIER TypeParameterList ClassBody 		{func("InterfaceDeclaration", 4);}
-| INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("InterfaceDeclaration", 5);}
-| ClassModifiers INTERFACE IDENTIFIER ClassBody 		{func("InterfaceDeclaration", 4);}
-| ClassModifiers INTERFACE IDENTIFIER ClassExtends ClassBody 		{func("InterfaceDeclaration", 5);}
-| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassBody 		{func("InterfaceDeclaration", 5);}
-| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("InterfaceDeclaration", 6);}
+INTERFACE IDENTIFIER ClassBody 		{func("InterfaceDeclaration", 210); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| INTERFACE IDENTIFIER ClassExtends ClassBody 		{func("InterfaceDeclaration", 2100); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| INTERFACE IDENTIFIER TypeParameterList ClassBody 		{func("InterfaceDeclaration", 2100); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("InterfaceDeclaration", 21000); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
+| ClassModifiers INTERFACE IDENTIFIER ClassBody 		{func("InterfaceDeclaration", 0000); }
+| ClassModifiers INTERFACE IDENTIFIER ClassExtends ClassBody 		{func("InterfaceDeclaration", 00000); }
+| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassBody 		{func("InterfaceDeclaration", 00000); }
+| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 		{func("InterfaceDeclaration", 000000); }
 ;
 
 ArrayInitializer:
-LEFT_CURLY_BRACE RIGHT_CURLY_BRACE 		{func("ArrayInitializer", 2);}
-| LEFT_CURLY_BRACE COMMA RIGHT_CURLY_BRACE 		{func("ArrayInitializer", 3);}
-| LEFT_CURLY_BRACE VariableInitializerList RIGHT_CURLY_BRACE 		{func("ArrayInitializer", 3);}
-| LEFT_CURLY_BRACE VariableInitializerList COMMA RIGHT_CURLY_BRACE 		{func("ArrayInitializer", 4);}
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE 		{func("ArrayInitializer", 22); }
+| LEFT_CURLY_BRACE COMMA RIGHT_CURLY_BRACE 		{func("ArrayInitializer", 222); }
+| LEFT_CURLY_BRACE VariableInitializerList RIGHT_CURLY_BRACE 		{func("ArrayInitializer", 200); }
+| LEFT_CURLY_BRACE VariableInitializerList COMMA RIGHT_CURLY_BRACE 		{func("ArrayInitializer", 2000); }
 ;
 
 VariableInitializerList:
-VariableInitializerList COMMA VariableInitializer		{func("VariableInitializerList", 3);}
-| VariableInitializer		{func("VariableInitializerList", 1);}
+VariableInitializerList COMMA VariableInitializer		{func("VariableInitializerList", 000); }
+| VariableInitializer		{func("VariableInitializerList", 0); }
 ;
 
 Block:
-LEFT_CURLY_BRACE RIGHT_CURLY_BRACE		{func("Block", 2);}
-| LEFT_CURLY_BRACE BlockStatements RIGHT_CURLY_BRACE		{func("Block", 3);}
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE		{func("Block", 22); }
+| LEFT_CURLY_BRACE BlockStatements RIGHT_CURLY_BRACE		{func("Block", 200); }
 ;
 
 BlockStatements:
-BlockStatements BlockStatement		{func("BlockStatements", 2);}
-| BlockStatement		{func("BlockStatements", 1);}
+BlockStatements BlockStatement		{func("BlockStatements", 00); }
+| BlockStatement		{func("BlockStatements", 0); }
 ;
 
 BlockStatement:
-Type VariableDeclaratorList SEMI_COLON		{func("BlockStatement", 3);}
-| VAR VariableDeclaratorList SEMI_COLON		{func("BlockStatement", 3);}
-| VariableModifiers Type VariableDeclaratorList SEMI_COLON		{func("BlockStatement", 4);}
-| VariableModifiers VAR VariableDeclaratorList SEMI_COLON		{func("BlockStatement", 4);}
-| Statement		{func("BlockStatement", 1);}
+Type VariableDeclaratorList SEMI_COLON		{func("BlockStatement", 000); }
+| VAR VariableDeclaratorList SEMI_COLON		{func("BlockStatement", 200); }
+| VariableModifiers Type VariableDeclaratorList SEMI_COLON		{func("BlockStatement", 0000); }
+| VariableModifiers VAR VariableDeclaratorList SEMI_COLON		{func("BlockStatement", 0000); }
+| Statement		{func("BlockStatement", 0); }
 ;
 
 Statement:
-StatementWithoutTrailingSubstatement		{func("Statement", 1);}
-| LabeledStatement		{func("Statement", 1);}
-| IfThenStatement		{func("Statement", 1);}
-| IfThenElseStatement		{func("Statement", 1);}
-| WhileStatement		{func("Statement", 1);}
-| ForStatement		{func("Statement", 1);}
+StatementWithoutTrailingSubstatement		{func("Statement", 0); }
+| LabeledStatement		{func("Statement", 0); }
+| IfThenStatement		{func("Statement", 0); }
+| IfThenElseStatement		{func("Statement", 0); }
+| WhileStatement		{func("Statement", 0); }
+| ForStatement		{func("Statement", 0); }
 ;
 
 StatementNoShortIf:
-StatementWithoutTrailingSubstatement		{func("StatementNoShortIf", 1);}
-| LabeledStatementNoShortIf		{func("StatementNoShortIf", 1);}
-| IfThenElseStatementNoShortIf		{func("StatementNoShortIf", 1);}
-| WhileStatementNoShortIf		{func("StatementNoShortIf", 1);}
-| ForStatementNoShortIf		{func("StatementNoShortIf", 1);}
+StatementWithoutTrailingSubstatement		{func("StatementNoShortIf", 0); }
+| LabeledStatementNoShortIf		{func("StatementNoShortIf", 0); }
+| IfThenElseStatementNoShortIf		{func("StatementNoShortIf", 0); }
+| WhileStatementNoShortIf		{func("StatementNoShortIf", 0); }
+| ForStatementNoShortIf		{func("StatementNoShortIf", 0); }
 ;
 
 StatementWithoutTrailingSubstatement:
-Block		{func("StatementWithoutTrailingSubstatement", 1);}
-| EmptyStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| ExpressionStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| AssertStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| BreakStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| ContinueStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| ReturnStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| SynchronizedStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| ThrowStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| TryStatement		{func("StatementWithoutTrailingSubstatement", 1);}
-| YieldStatement		{func("StatementWithoutTrailingSubstatement", 1);}
+Block		{func("StatementWithoutTrailingSubstatement", 0); }
+| EmptyStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| ExpressionStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| AssertStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| BreakStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| ContinueStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| ReturnStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| SynchronizedStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| ThrowStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| TryStatement		{func("StatementWithoutTrailingSubstatement", 0); }
+| YieldStatement		{func("StatementWithoutTrailingSubstatement", 0); }
 ;
 
 EmptyStatement:
-SEMI_COLON		{func("EmptyStatement", 1);}
+SEMI_COLON		{func("EmptyStatement", 2); }
 ;
 
 LabeledStatement:
-IDENTIFIER COLON Statement		{func("LabeledStatement", 3);}
+IDENTIFIER COLON Statement		{func("LabeledStatement", 120); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
 ;
 
 LabeledStatementNoShortIf:
-IDENTIFIER COLON StatementNoShortIf		{func("LabeledStatementNoShortIf", 3);}
+IDENTIFIER COLON StatementNoShortIf		{func("LabeledStatementNoShortIf", 120); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
 ;
 
 ExpressionStatement:
-StatementExpression SEMI_COLON		{func("ExpressionStatement", 2);}
+StatementExpression SEMI_COLON		{func("ExpressionStatement", 00); }
 ;
 
 StatementExpression:
-Assignment		{func("StatementExpression", 1);}
-| PreIncrementExpression		{func("StatementExpression", 1);}
-| PreDecrementExpression		{func("StatementExpression", 1);}
-| PostIncrementExpression		{func("StatementExpression", 1);}
-| PostDecrementExpression		{func("StatementExpression", 1);}
-| MethodInvocation		{func("StatementExpression", 1);}
-| ClassInstanceCreationExpression		{func("StatementExpression", 1);}
-		{func("StatementExpression", 0);}
+Assignment		{func("StatementExpression", 0); }
+| PreIncrementExpression		{func("StatementExpression", 0); }
+| PreDecrementExpression		{func("StatementExpression", 0); }
+| PostIncrementExpression		{func("StatementExpression", 0); }
+| PostDecrementExpression		{func("StatementExpression", 0); }
+| MethodInvocation		{func("StatementExpression", 0); }
+| ClassInstanceCreationExpression		{func("StatementExpression", 0); }
+		{func("StatementExpression", ); }
 IfThenStatement:
-IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement		{func("IfThenStatement", 5);}
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement		{func("IfThenStatement", 22000); }
 ;
 
 IfThenElseStatement:
-IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf ELSE Statement		{func("IfThenElseStatement", 7);}
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf ELSE Statement		{func("IfThenElseStatement", 2200000); }
 ;
 
 IfThenElseStatementNoShortIf:
-IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf ELSE StatementNoShortIf		{func("IfThenElseStatementNoShortIf", 7);}
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf ELSE StatementNoShortIf		{func("IfThenElseStatementNoShortIf", 2200000); }
 ;
 
 AssertStatement:
-ASSERT Expression SEMI_COLON		{func("AssertStatement", 3);}
-| ASSERT Expression COLON Expression SEMI_COLON		{func("AssertStatement", 5);}
+ASSERT Expression SEMI_COLON		{func("AssertStatement", 200); }
+| ASSERT Expression COLON Expression SEMI_COLON		{func("AssertStatement", 20000); }
 ;
 
 WhileStatement:
-WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement		{func("WhileStatement", 5);}
+WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement		{func("WhileStatement", 22000); }
 ;
 
 WhileStatementNoShortIf:
-WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf		{func("WhileStatementNoShortIf", 5);}
+WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf		{func("WhileStatementNoShortIf", 22000); }
 ;
 
 ForStatement:
-BasicForStatement		{func("ForStatement", 1);}
-| EnhancedForStatement		{func("ForStatement", 1);}
+BasicForStatement		{func("ForStatement", 0); }
+| EnhancedForStatement		{func("ForStatement", 0); }
 ;
 
 ForStatementNoShortIf:
-BasicForStatementNoShortIf		{func("ForStatementNoShortIf", 1);}
-| EnhancedForStatementNoShortIf		{func("ForStatementNoShortIf", 1);}
+BasicForStatementNoShortIf		{func("ForStatementNoShortIf", 0); }
+| EnhancedForStatementNoShortIf		{func("ForStatementNoShortIf", 0); }
 ;
 
 BasicForStatement:
-FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 6);}
-| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 7);}
-| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 7);}
-| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 8);}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 7);}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 8);}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 8);}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement		{func("BasicForStatement", 9);}
+FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 222220); }
+| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 2222000); }
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 2220000); }
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 22200000); }
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 2200000); }
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 22000000); }
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 		{func("BasicForStatement", 22000000); }
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement		{func("BasicForStatement", 220000000); }
 ;
 
 BasicForStatementNoShortIf:
-FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 6);}
-| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 7);}
-| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 7);}
-| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 8);}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 7);}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 8);}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 8);}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 9);}
+FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 222220); }
+| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 2222000); }
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 2220000); }
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 22200000); }
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 2200000); }
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 22000000); }
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 22000000); }
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{func("BasicForStatementNoShortIf", 220000000); }
 ;
 
 ForInit:
-StatementExpressionList		{func("ForInit", 1);}
-| LocalVariableDeclaration		{func("ForInit", 1);}
+StatementExpressionList		{func("ForInit", 0); }
+| LocalVariableDeclaration		{func("ForInit", 0); }
 ;
 
 LocalVariableDeclaration:
-Type VariableDeclaratorList		{func("LocalVariableDeclaration", 2);}
-| VariableModifiers Type VariableDeclaratorList		{func("LocalVariableDeclaration", 3);}
-| VAR VariableDeclaratorList		{func("LocalVariableDeclaration", 2);}
-| VariableModifiers VAR VariableDeclaratorList		{func("LocalVariableDeclaration", 3);}
+Type VariableDeclaratorList		{func("LocalVariableDeclaration", 00); }
+| VariableModifiers Type VariableDeclaratorList		{func("LocalVariableDeclaration", 000); }
+| VAR VariableDeclaratorList		{func("LocalVariableDeclaration", 20); }
+| VariableModifiers VAR VariableDeclaratorList		{func("LocalVariableDeclaration", 000); }
 ;
 
 ForUpdate:
-StatementExpressionList		{func("ForUpdate", 1);}
+StatementExpressionList		{func("ForUpdate", 0); }
 ;
 
 StatementExpressionList:
-StatementExpressionList COMMA StatementExpression		{func("StatementExpressionList", 3);}
-| StatementExpression		{func("StatementExpressionList", 1);}
+StatementExpressionList COMMA StatementExpression		{func("StatementExpressionList", 000); }
+| StatementExpression		{func("StatementExpressionList", 0); }
 ;
 
 EnhancedForStatement:
-FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS Statement		{func("EnhancedForStatement", 7);}
+FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS Statement		{func("EnhancedForStatement", 2200000); }
 ;
 
 EnhancedForStatementNoShortIf:
-FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS StatementNoShortIf		{func("EnhancedForStatementNoShortIf", 7);}
+FOR LEFT_PARANTHESIS LocalVariableDeclaration COLON Expression RIGHT_PARANTHESIS StatementNoShortIf		{func("EnhancedForStatementNoShortIf", 2200000); }
 ;
 
 BreakStatement:
-BREAK SEMI_COLON		{func("BreakStatement", 2);}
-| BREAK IDENTIFIER SEMI_COLON		{func("BreakStatement", 3);}
+BREAK SEMI_COLON		{func("BreakStatement", 22); }
+| BREAK IDENTIFIER SEMI_COLON		{func("BreakStatement", 212); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
 ;
 
 YieldStatement:
-YIELD Expression SEMI_COLON		{func("YieldStatement", 3);}
+YIELD Expression SEMI_COLON		{func("YieldStatement", 200); }
 ;
 
 ContinueStatement:
-CONTINUE SEMI_COLON		{func("ContinueStatement", 2);}
-| CONTINUE IDENTIFIER SEMI_COLON		{func("ContinueStatement", 3);}
+CONTINUE SEMI_COLON		{func("ContinueStatement", 22); }
+| CONTINUE IDENTIFIER SEMI_COLON		{func("ContinueStatement", 212); fout<<"n"<<node_number<<","<<2<<"[label=Identifier_"<<$2"]"; }
 ;
 
 ReturnStatement:
-RETURN SEMI_COLON		{func("ReturnStatement", 2);}
-|  RETURN Expression SEMI_COLON		{func("ReturnStatement", 3);}
+RETURN SEMI_COLON		{func("ReturnStatement", 22); }
+|  RETURN Expression SEMI_COLON		{func("ReturnStatement", 200); }
 ;
 
 ThrowStatement:
-THROW Expression SEMI_COLON		{func("ThrowStatement", 3);}
+THROW Expression SEMI_COLON		{func("ThrowStatement", 200); }
 ;
 
 SynchronizedStatement:
-SYNCHRONIZED LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Block		{func("SynchronizedStatement", 5);}
+SYNCHRONIZED LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Block		{func("SynchronizedStatement", 22000); }
 ;
 
 TryStatement:
-TRY Block Catches		{func("TryStatement", 3);}
-| TRY Block FINALLY Block		{func("TryStatement", 4);}
-| TRY Block Catches FINALLY Block		{func("TryStatement", 5);}
+TRY Block Catches		{func("TryStatement", 200); }
+| TRY Block FINALLY Block		{func("TryStatement", 2000); }
+| TRY Block Catches FINALLY Block		{func("TryStatement", 20000); }
 ;
 
 Catches:
-Catches CatchClause		{func("Catches", 2);}
-| CatchClause		{func("Catches", 1);}
+Catches CatchClause		{func("Catches", 00); }
+| CatchClause		{func("Catches", 0); }
 ;
 
 CatchClause:
-CATCH LEFT_PARANTHESIS FormalParameter RIGHT_PARANTHESIS Block		{func("CatchClause", 5);}
+CATCH LEFT_PARANTHESIS FormalParameter RIGHT_PARANTHESIS Block		{func("CatchClause", 22000); }
 ;
 
 Primary:
-PrimaryNoNewArray		{func("Primary", 1);}
-| ArrayCreationExpression		{func("Primary", 1);}
+PrimaryNoNewArray		{func("Primary", 0); }
+| ArrayCreationExpression		{func("Primary", 0); }
 ;
 
 PrimaryNoNewArray:
-Literal		{func("PrimaryNoNewArray", 1);}
-| ClassLiteral		{func("PrimaryNoNewArray", 1);}
-| THIS		{func("PrimaryNoNewArray", 1);}
-| DotIdentifiers DOT THIS		{func("PrimaryNoNewArray", 3);}
-| LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS		{func("PrimaryNoNewArray", 3);}
-| ClassInstanceCreationExpression		{func("PrimaryNoNewArray", 1);}
-| FieldAccess		{func("PrimaryNoNewArray", 1);}
-| ArrayAccess		{func("PrimaryNoNewArray", 1);}
-| MethodInvocation		{func("PrimaryNoNewArray", 1);}
-| MethodReference		{func("PrimaryNoNewArray", 1);}
+Literal		{func("PrimaryNoNewArray", 0); }
+| ClassLiteral		{func("PrimaryNoNewArray", 0); }
+| THIS		{func("PrimaryNoNewArray", 2); }
+| DotIdentifiers DOT THIS		{func("PrimaryNoNewArray", 000); }
+| LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS		{func("PrimaryNoNewArray", 200); }
+| ClassInstanceCreationExpression		{func("PrimaryNoNewArray", 0); }
+| FieldAccess		{func("PrimaryNoNewArray", 0); }
+| ArrayAccess		{func("PrimaryNoNewArray", 0); }
+| MethodInvocation		{func("PrimaryNoNewArray", 0); }
+| MethodReference		{func("PrimaryNoNewArray", 0); }
 ;
 
 Literal:
-INTEGER_LITERAL		{func("Literal", 1);}
-| FLOATINGPOINT_LITERAL		{func("Literal", 1);}
-| BOOLEAN_LITERAL		{func("Literal", 1);}
-| CHARACTER_LITERAL		{func("Literal", 1);}
-| STRING_LITERAL		{func("Literal", 1);}
-| TEXTBLOCK		{func("Literal", 1);}
-| NULL_LITERAL		{func("Literal", 1);}
+INTEGER_LITERAL		{func("Literal", 2); }
+| FLOATINGPOINT_LITERAL		{func("Literal", 2); }
+| BOOLEAN_LITERAL		{func("Literal", 2); }
+| CHARACTER_LITERAL		{func("Literal", 2); }
+| STRING_LITERAL		{func("Literal", 2); }
+| TEXTBLOCK		{func("Literal", 2); }
+| NULL_LITERAL		{func("Literal", 2); }
 ;
 
 ClassLiteral:
-DotIdentifiers DOT CLASS 		{func("ClassLiteral", 3);}
-| DotIdentifiers Dims DOT CLASS 		{func("ClassLiteral", 4);}
-| PrimitiveType DOT CLASS 		{func("ClassLiteral", 3);}
-| PrimitiveType Dims DOT CLASS 		{func("ClassLiteral", 4);}
-| VOID DOT CLASS		{func("ClassLiteral", 3);}
+DotIdentifiers DOT CLASS 		{func("ClassLiteral", 000); }
+| DotIdentifiers Dims DOT CLASS 		{func("ClassLiteral", 0000); }
+| PrimitiveType DOT CLASS 		{func("ClassLiteral", 000); }
+| PrimitiveType Dims DOT CLASS 		{func("ClassLiteral", 0000); }
+| VOID DOT CLASS		{func("ClassLiteral", 222); }
 ;
 
 ClassInstanceCreationExpression:
-UnqualifiedClassInstanceCreationExpression		{func("ClassInstanceCreationExpression", 1);}
-| DotIdentifiers DOT UnqualifiedClassInstanceCreationExpression		{func("ClassInstanceCreationExpression", 3);}
-| Primary DOT UnqualifiedClassInstanceCreationExpression		{func("ClassInstanceCreationExpression", 3);}
+UnqualifiedClassInstanceCreationExpression		{func("ClassInstanceCreationExpression", 0); }
+| DotIdentifiers DOT UnqualifiedClassInstanceCreationExpression		{func("ClassInstanceCreationExpression", 000); }
+| Primary DOT UnqualifiedClassInstanceCreationExpression		{func("ClassInstanceCreationExpression", 000); }
 ;
 
 UnqualifiedClassInstanceCreationExpression:
-NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 4);}
-| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 5);}
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 5);}
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 6);}
-| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 6);}
-| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 7);}
-| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 7);}
-| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 8);}
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 5);}
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 6);}
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 6);}
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 7);}
-| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 7);}
-| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 8);}
-| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 8);}
-| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 9);}
+NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 2000); }
+| NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 20000); }
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 20000); }
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 200000); }
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 200000); }
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 2000000); }
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 2000000); }
+| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 20000000); }
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 20000); }
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 200000); }
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 200000); }
+| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 2000000); }
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 2000000); }
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 20000000); }
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("UnqualifiedClassInstanceCreationExpression", 20000000); }
+| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		{func("UnqualifiedClassInstanceCreationExpression", 200000000); }
 ;
 
 FieldAccess:
-Primary DOT IDENTIFIER		{func("FieldAccess", 3);}
-| SUPER DOT IDENTIFIER		{func("FieldAccess", 3);}
-| DotIdentifiers DOT SUPER DOT IDENTIFIER		{func("FieldAccess", 5);}
+Primary DOT IDENTIFIER		{func("FieldAccess", 000); }
+| SUPER DOT IDENTIFIER		{func("FieldAccess", 221); fout<<"n"<<node_number<<","<<3<<"[label=Identifier_"<<$3"]"; }
+| DotIdentifiers DOT SUPER DOT IDENTIFIER		{func("FieldAccess", 00000); }
 ;
 
 ArrayAccess:
-DotIdentifiers LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE  		{func("ArrayAccess", 4);}
-| PrimaryNoNewArray LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		{func("ArrayAccess", 4);}
+DotIdentifiers LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE  		{func("ArrayAccess", 0000); }
+| PrimaryNoNewArray LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		{func("ArrayAccess", 0000); }
 ;
 
 MethodInvocation:
-IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 3);}
-| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 4);}
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 5);}
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 6);}
-| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 6);}
-| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 7);}
-| Primary DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 5);}
-| Primary DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 6);}
-| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 6);}
-| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 7);}
-| SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 5);}
-| SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 6);}
-| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 6);}
-| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 7);}
-| DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 7);}
-| DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 8);}
-| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 8);}
-| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS		{func("MethodInvocation", 9);}
+IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 122); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 1200); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 00000); }
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 000000); }
+| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 000000); }
+| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 0000000); }
+| Primary DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 00000); }
+| Primary DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 000000); }
+| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 000000); }
+| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 0000000); }
+| SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 22122); fout<<"n"<<node_number<<","<<3<<"[label=Identifier_"<<$3"]"; }
+| SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 221200); fout<<"n"<<node_number<<","<<3<<"[label=Identifier_"<<$3"]"; }
+| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 220000); }
+| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 2200000); }
+| DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 0000000); }
+| DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{func("MethodInvocation", 00000000); }
+| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{func("MethodInvocation", 00000000); }
+| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS		{func("MethodInvocation", 000000000); }
 ;
 
 MethodReference:
-Primary DOUBLE_COLON IDENTIFIER 		{func("MethodReference", 3);}
-| Primary DOUBLE_COLON TypeArguments IDENTIFIER 		{func("MethodReference", 4);}
-| ReferenceType DOUBLE_COLON IDENTIFIER 		{func("MethodReference", 3);}
-| ReferenceType DOUBLE_COLON TypeArguments IDENTIFIER 		{func("MethodReference", 4);}
-| ReferenceType DOUBLE_COLON NEW 		{func("MethodReference", 3);}
-| ReferenceType DOUBLE_COLON TypeArguments NEW 		{func("MethodReference", 4);}
-| SUPER DOUBLE_COLON IDENTIFIER 		{func("MethodReference", 3);}
-| SUPER DOUBLE_COLON TypeArguments IDENTIFIER 		{func("MethodReference", 4);}
-| DotIdentifiers DOT SUPER DOUBLE_COLON IDENTIFIER 		{func("MethodReference", 5);}
-| DotIdentifiers DOT SUPER DOUBLE_COLON TypeArguments IDENTIFIER		{func("MethodReference", 6);}
+Primary DOUBLE_COLON IDENTIFIER 		{func("MethodReference", 000); }
+| Primary DOUBLE_COLON TypeArguments IDENTIFIER 		{func("MethodReference", 0000); }
+| ReferenceType DOUBLE_COLON IDENTIFIER 		{func("MethodReference", 000); }
+| ReferenceType DOUBLE_COLON TypeArguments IDENTIFIER 		{func("MethodReference", 0000); }
+| ReferenceType DOUBLE_COLON NEW 		{func("MethodReference", 000); }
+| ReferenceType DOUBLE_COLON TypeArguments NEW 		{func("MethodReference", 0000); }
+| SUPER DOUBLE_COLON IDENTIFIER 		{func("MethodReference", 221); fout<<"n"<<node_number<<","<<3<<"[label=Identifier_"<<$3"]"; }
+| SUPER DOUBLE_COLON TypeArguments IDENTIFIER 		{func("MethodReference", 2200); }
+| DotIdentifiers DOT SUPER DOUBLE_COLON IDENTIFIER 		{func("MethodReference", 00000); }
+| DotIdentifiers DOT SUPER DOUBLE_COLON TypeArguments IDENTIFIER		{func("MethodReference", 000000); }
 ;
 
 ArrayCreationExpression:
-NEW PrimitiveType DimExprs 		{func("ArrayCreationExpression", 3);}
-| NEW PrimitiveType DimExprs Dims 		{func("ArrayCreationExpression", 4);}
-| NEW ClassType DimExprs 		{func("ArrayCreationExpression", 3);}
-| NEW ClassType DimExprs Dims 		{func("ArrayCreationExpression", 4);}
-| NEW PrimitiveType Dims ArrayInitializer 		{func("ArrayCreationExpression", 4);}
-| NEW ClassType Dims ArrayInitializer 		{func("ArrayCreationExpression", 4);}
+NEW PrimitiveType DimExprs 		{func("ArrayCreationExpression", 200); }
+| NEW PrimitiveType DimExprs Dims 		{func("ArrayCreationExpression", 2000); }
+| NEW ClassType DimExprs 		{func("ArrayCreationExpression", 200); }
+| NEW ClassType DimExprs Dims 		{func("ArrayCreationExpression", 2000); }
+| NEW PrimitiveType Dims ArrayInitializer 		{func("ArrayCreationExpression", 2000); }
+| NEW ClassType Dims ArrayInitializer 		{func("ArrayCreationExpression", 2000); }
 ;
 
 DimExprs:
-DimExprs LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		{func("DimExprs", 4);}
-| LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		{func("DimExprs", 3);}
+DimExprs LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		{func("DimExprs", 0000); }
+| LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		{func("DimExprs", 200); }
 ;
 
 Expression:
-LambdaExpression		{func("Expression", 1);}
-| AssignmentExpression		{func("Expression", 1);}
+LambdaExpression		{func("Expression", 0); }
+| AssignmentExpression		{func("Expression", 0); }
 ;
 
 LambdaExpression:
-LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS ARROW_RIGHT Block		{func("LambdaExpression", 5);}
-| LEFT_PARANTHESIS RIGHT_PARANTHESIS ARROW_RIGHT Block		{func("LambdaExpression", 4);}
-| IDENTIFIER ARROW_RIGHT Block		{func("LambdaExpression", 3);}
-| LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS ARROW_RIGHT Expression		{func("LambdaExpression", 5);}
-| LEFT_PARANTHESIS RIGHT_PARANTHESIS ARROW_RIGHT Expression		{func("LambdaExpression", 4);}
-| IDENTIFIER ARROW_RIGHT Expression		{func("LambdaExpression", 3);}
+LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS ARROW_RIGHT Block		{func("LambdaExpression", 20000); }
+| LEFT_PARANTHESIS RIGHT_PARANTHESIS ARROW_RIGHT Block		{func("LambdaExpression", 2220); }
+| IDENTIFIER ARROW_RIGHT Block		{func("LambdaExpression", 120); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
+| LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS ARROW_RIGHT Expression		{func("LambdaExpression", 20000); }
+| LEFT_PARANTHESIS RIGHT_PARANTHESIS ARROW_RIGHT Expression		{func("LambdaExpression", 2220); }
+| IDENTIFIER ARROW_RIGHT Expression		{func("LambdaExpression", 120); fout<<"n"<<node_number<<","<<1<<"[label=Identifier_"<<$1"]"; }
 ;
 
 AssignmentExpression:
-ConditionalExpression		{func("AssignmentExpression", 1);}
-| Assignment		{func("AssignmentExpression", 1);}
+ConditionalExpression		{func("AssignmentExpression", 0); }
+| Assignment		{func("AssignmentExpression", 0); }
 ;
 
 Assignment:
-DotIdentifiers AssignmentOperator Expression		{func("Assignment", 3);}
-| FieldAccess AssignmentOperator Expression		{func("Assignment", 3);}
-| ArrayAccess AssignmentOperator Expression		{func("Assignment", 3);}
+DotIdentifiers AssignmentOperator Expression		{func("Assignment", 000); }
+| FieldAccess AssignmentOperator Expression		{func("Assignment", 000); }
+| ArrayAccess AssignmentOperator Expression		{func("Assignment", 000); }
 ;
 
 AssignmentOperator:
-EQUALS		{func("AssignmentOperator", 1);}
-| STAR_EQUALS		{func("AssignmentOperator", 1);}
-| SLASH_EQUALS		{func("AssignmentOperator", 1);}
-| PERCENT_EQUALS		{func("AssignmentOperator", 1);}
-| PLUS_EQUALS		{func("AssignmentOperator", 1);}
-| MINUS_EQUALS		{func("AssignmentOperator", 1);}
-| LESS_THAN_LESS_THAN_EQUALS		{func("AssignmentOperator", 1);}
-| GREATER_THAN_GREATER_THAN_EQUALS		{func("AssignmentOperator", 1);}
-| GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS		{func("AssignmentOperator", 1);}
-| AMPERSAND_EQUALS		{func("AssignmentOperator", 1);}
-| POWER_EQUALS		{func("AssignmentOperator", 1);}
-| BAR_EQUALS		{func("AssignmentOperator", 1);}
+EQUALS		{func("AssignmentOperator", 2); }
+| STAR_EQUALS		{func("AssignmentOperator", 2); }
+| SLASH_EQUALS		{func("AssignmentOperator", 2); }
+| PERCENT_EQUALS		{func("AssignmentOperator", 2); }
+| PLUS_EQUALS		{func("AssignmentOperator", 2); }
+| MINUS_EQUALS		{func("AssignmentOperator", 2); }
+| LESS_THAN_LESS_THAN_EQUALS		{func("AssignmentOperator", 2); }
+| GREATER_THAN_GREATER_THAN_EQUALS		{func("AssignmentOperator", 2); }
+| GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS		{func("AssignmentOperator", 2); }
+| AMPERSAND_EQUALS		{func("AssignmentOperator", 2); }
+| POWER_EQUALS		{func("AssignmentOperator", 2); }
+| BAR_EQUALS		{func("AssignmentOperator", 2); }
 ;
 
 ConditionalExpression:
-ConditionalOrExpression		{func("ConditionalExpression", 1);}
-| ConditionalOrExpression QUESTION Expression COLON ConditionalExpression		{func("ConditionalExpression", 5);}
-| ConditionalOrExpression QUESTION Expression COLON LambdaExpression		{func("ConditionalExpression", 5);}
+ConditionalOrExpression		{func("ConditionalExpression", 0); }
+| ConditionalOrExpression QUESTION Expression COLON ConditionalExpression		{func("ConditionalExpression", 00000); }
+| ConditionalOrExpression QUESTION Expression COLON LambdaExpression		{func("ConditionalExpression", 00000); }
 ;
 
 ConditionalOrExpression:
-ConditionalAndExpression		{func("ConditionalOrExpression", 1);}
-| ConditionalOrExpression BAR_BAR ConditionalAndExpression		{func("ConditionalOrExpression", 3);}
+ConditionalAndExpression		{func("ConditionalOrExpression", 0); }
+| ConditionalOrExpression BAR_BAR ConditionalAndExpression		{func("ConditionalOrExpression", 000); }
 ;
 
 ConditionalAndExpression:
-InclusiveOrExpression		{func("ConditionalAndExpression", 1);}
-| ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression		{func("ConditionalAndExpression", 3);}
+InclusiveOrExpression		{func("ConditionalAndExpression", 0); }
+| ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression		{func("ConditionalAndExpression", 000); }
 ;
 
 InclusiveOrExpression:
-ExclusiveOrExpression		{func("InclusiveOrExpression", 1);}
-| InclusiveOrExpression BAR ExclusiveOrExpression		{func("InclusiveOrExpression", 3);}
+ExclusiveOrExpression		{func("InclusiveOrExpression", 0); }
+| InclusiveOrExpression BAR ExclusiveOrExpression		{func("InclusiveOrExpression", 000); }
 ;
 
 ExclusiveOrExpression:
-AndExpression		{func("ExclusiveOrExpression", 1);}
-| ExclusiveOrExpression POWER AndExpression		{func("ExclusiveOrExpression", 3);}
+AndExpression		{func("ExclusiveOrExpression", 0); }
+| ExclusiveOrExpression POWER AndExpression		{func("ExclusiveOrExpression", 000); }
 ;
 
 AndExpression:
-EqualityExpression		{func("AndExpression", 1);}
-| AndExpression AMPERSAND EqualityExpression		{func("AndExpression", 3);}
+EqualityExpression		{func("AndExpression", 0); }
+| AndExpression AMPERSAND EqualityExpression		{func("AndExpression", 000); }
 ;
 
 EqualityExpression:
-RelationalExpression		{func("EqualityExpression", 1);}
-| EqualityExpression EQUALS_EQUALS RelationalExpression		{func("EqualityExpression", 3);}
-| EqualityExpression EXCLAIM_EQUALS RelationalExpression		{func("EqualityExpression", 3);}
+RelationalExpression		{func("EqualityExpression", 0); }
+| EqualityExpression EQUALS_EQUALS RelationalExpression		{func("EqualityExpression", 000); }
+| EqualityExpression EXCLAIM_EQUALS RelationalExpression		{func("EqualityExpression", 000); }
 ;
 
 RelationalExpression:
-ShiftExpression		{func("RelationalExpression", 1);}
-| RelationalExpression LESS_THAN ShiftExpression		{func("RelationalExpression", 3);}
-| RelationalExpression GREATER_THAN ShiftExpression		{func("RelationalExpression", 3);}
-| RelationalExpression LESS_THAN_EQUALS ShiftExpression		{func("RelationalExpression", 3);}
-| RelationalExpression GREATER_THAN_EQUALS ShiftExpression		{func("RelationalExpression", 3);}
+ShiftExpression		{func("RelationalExpression", 0); }
+| RelationalExpression LESS_THAN ShiftExpression		{func("RelationalExpression", 000); }
+| RelationalExpression GREATER_THAN ShiftExpression		{func("RelationalExpression", 000); }
+| RelationalExpression LESS_THAN_EQUALS ShiftExpression		{func("RelationalExpression", 000); }
+| RelationalExpression GREATER_THAN_EQUALS ShiftExpression		{func("RelationalExpression", 000); }
 ;
 
 ShiftExpression:
-AdditiveExpression		{func("ShiftExpression", 1);}
-| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression		{func("ShiftExpression", 3);}
-| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression		{func("ShiftExpression", 3);}
-| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression		{func("ShiftExpression", 3);}
+AdditiveExpression		{func("ShiftExpression", 0); }
+| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression		{func("ShiftExpression", 000); }
+| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression		{func("ShiftExpression", 000); }
+| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression		{func("ShiftExpression", 000); }
 ;
 
 AdditiveExpression:
-MultiplicativeExpression		{func("AdditiveExpression", 1);}
-| AdditiveExpression PLUS MultiplicativeExpression		{func("AdditiveExpression", 3);}
-| AdditiveExpression MINUS MultiplicativeExpression		{func("AdditiveExpression", 3);}
+MultiplicativeExpression		{func("AdditiveExpression", 0); }
+| AdditiveExpression PLUS MultiplicativeExpression		{func("AdditiveExpression", 000); }
+| AdditiveExpression MINUS MultiplicativeExpression		{func("AdditiveExpression", 000); }
 ;
 
 MultiplicativeExpression:
-UnaryExpression		{func("MultiplicativeExpression", 1);}
-| MultiplicativeExpression STAR UnaryExpression		{func("MultiplicativeExpression", 3);}
-| MultiplicativeExpression SLASH UnaryExpression		{func("MultiplicativeExpression", 3);}
-| MultiplicativeExpression PERCENT UnaryExpression		{func("MultiplicativeExpression", 3);}
+UnaryExpression		{func("MultiplicativeExpression", 0); }
+| MultiplicativeExpression STAR UnaryExpression		{func("MultiplicativeExpression", 000); }
+| MultiplicativeExpression SLASH UnaryExpression		{func("MultiplicativeExpression", 000); }
+| MultiplicativeExpression PERCENT UnaryExpression		{func("MultiplicativeExpression", 000); }
 ;
 
 UnaryExpression:
-PreIncrementExpression		{func("UnaryExpression", 1);}
-| PreDecrementExpression		{func("UnaryExpression", 1);}
-| PLUS UnaryExpression		{func("UnaryExpression", 2);}
-| MINUS UnaryExpression		{func("UnaryExpression", 2);}
-| UnaryExpressionNotPlusMinus		{func("UnaryExpression", 1);}
+PreIncrementExpression		{func("UnaryExpression", 0); }
+| PreDecrementExpression		{func("UnaryExpression", 0); }
+| PLUS UnaryExpression		{func("UnaryExpression", 20); }
+| MINUS UnaryExpression		{func("UnaryExpression", 20); }
+| UnaryExpressionNotPlusMinus		{func("UnaryExpression", 0); }
 ;
 
 PreIncrementExpression:
-PLUS_PLUS UnaryExpression		{func("PreIncrementExpression", 2);}
+PLUS_PLUS UnaryExpression		{func("PreIncrementExpression", 20); }
 ;
 
 PreDecrementExpression:
-MINUS_MINUS UnaryExpression		{func("PreDecrementExpression", 2);}
+MINUS_MINUS UnaryExpression		{func("PreDecrementExpression", 20); }
 ;
 
 UnaryExpressionNotPlusMinus:
-PostfixExpression		{func("UnaryExpressionNotPlusMinus", 1);}
-| TILDA UnaryExpression		{func("UnaryExpressionNotPlusMinus", 2);}
-| EXCLAIM UnaryExpression		{func("UnaryExpressionNotPlusMinus", 2);}
+PostfixExpression		{func("UnaryExpressionNotPlusMinus", 0); }
+| TILDA UnaryExpression		{func("UnaryExpressionNotPlusMinus", 20); }
+| EXCLAIM UnaryExpression		{func("UnaryExpressionNotPlusMinus", 20); }
 ;
 
 PostfixExpression:
-Primary		{func("PostfixExpression", 1);}
-| DotIdentifiers		{func("PostfixExpression", 1);}
-| PostIncrementExpression		{func("PostfixExpression", 1);}
-| PostDecrementExpression		{func("PostfixExpression", 1);}
+Primary		{func("PostfixExpression", 0); }
+| DotIdentifiers		{func("PostfixExpression", 0); }
+| PostIncrementExpression		{func("PostfixExpression", 0); }
+| PostDecrementExpression		{func("PostfixExpression", 0); }
 ;
 
 PostIncrementExpression:
-PostfixExpression PLUS_PLUS		{func("PostIncrementExpression", 2);}
+PostfixExpression PLUS_PLUS		{func("PostIncrementExpression", 00); }
 ;
 
 PostDecrementExpression:
-PostfixExpression MINUS_MINUS		{func("PostDecrementExpression", 2);}
+PostfixExpression MINUS_MINUS		{func("PostDecrementExpression", 00); }
 ;
