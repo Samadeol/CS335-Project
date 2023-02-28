@@ -2,10 +2,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #include "parser.tab.h"
-extern int leaf_number;
-extern fstream fout;
-extern stack<int> st;
-string s;
 
 %}
 
@@ -155,98 +151,98 @@ YIELD                        yield
 
 {WHITESPACE}                                    {}        
 {LINE_TERMINATOR}                               {}
-{TRIPLE_DOT}                                    {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return TRIPLE_DOT;}
-{AMPERSAND}                                     {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return AMPERSAND;} 
-{AMPERSAND_AMPERSAND}                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return AMPERSAND_AMPERSAND;}
-{AMPERSAND_EQUALS}                              {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return AMPERSAND_EQUALS;} 
-{ARROW_RIGHT}                                   {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return ARROW_RIGHT;}  
-{BAR}                                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return BAR;}  
-{BAR_BAR}                                       {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return BAR_BAR;}
-{BAR_EQUALS}                                    {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return BAR_EQUALS;}
-{CHARACTER_LITERAL}                             {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return CHARACTER_LITERAL;}
-{COLON}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return COLON;}
-{COMMA}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return COMMA;}   
-{DOT}                                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return DOT;}   
-{DOUBLE_COLON}                                  {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return DOUBLE_COLON;} 
-{EQUALS}                                        {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return EQUALS;} 
-{EQUALS_EQUALS}                                 {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return EQUALS_EQUALS;}
-{EXCLAIM}                                       {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return EXCLAIM;}
-{EXCLAIM_EQUALS}                                {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return EXCLAIM_EQUALS;}
-{FLOATINGPOINT_LITERAL}                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return FLOATINGPOINT_LITERAL;}
-{GREATER_THAN}                                  {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return GREATER_THAN;} 
-{GREATER_THAN_EQUALS}                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return GREATER_THAN_EQUALS;}
-{GREATER_THAN_GREATER_THAN}                     {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return GREATER_THAN_GREATER_THAN;}
-{GREATER_THAN_GREATER_THAN_EQUALS}              {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return GREATER_THAN_GREATER_THAN_EQUALS;} 
-{GREATER_THAN_GREATER_THAN_GREATER_THAN}        {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return GREATER_THAN_GREATER_THAN_GREATER_THAN;} 
-{GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS} {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS;}
-{LEFT_CURLY_BRACE}                              {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return LEFT_CURLY_BRACE;}
-{LEFT_PARANTHESIS}                              {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return LEFT_PARANTHESIS;}
-{LEFT_SQUARE_BRACE}                             {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return LEFT_SQUARE_BRACE;}
-{LESS_THAN}                                     {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return LESS_THAN;}
-{LESS_THAN_EQUALS}                              {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return LESS_THAN_EQUALS;}
-{LESS_THAN_LESS_THAN}                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return LESS_THAN_LESS_THAN;}
-{LESS_THAN_LESS_THAN_EQUALS}                    {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return LESS_THAN_LESS_THAN_EQUALS;}
-{MINUS}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return MINUS;}
-{MINUS_EQUALS}                                  {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return MINUS_EQUALS;}  
-{MINUS_MINUS}                                   {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return MINUS_MINUS;}
-{PERCENT}                                       {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return PERCENT;} 
-{PERCENT_EQUALS}                                {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return PERCENT_EQUALS;}
-{PLUS}                                          {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return PLUS;}           
-{PLUS_EQUALS}                                   {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return PLUS_EQUALS;}  
-{PLUS_PLUS}                                     {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return PLUS_PLUS;}   
-{POWER}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return POWER;}   
-{POWER_EQUALS}                                  {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return POWER_EQUALS;}   
-{QUESTION}                                      {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return QUESTION;}   
-{RIGHT_CURLY_BRACE}                             {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return RIGHT_CURLY_BRACE;}   
-{RIGHT_PARANTHESIS}                             {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return RIGHT_PARANTHESIS;}   
-{RIGHT_SQUARE_BRACE}                            {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return RIGHT_SQUARE_BRACE;}
-{SEMI_COLON}                                    {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return SEMI_COLON;}
-{SLASH}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return SLASH;}
-{SLASH_EQUALS}                                  {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return SLASH_EQUALS;}
-{STAR}                                          {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return STAR;}    
-{STAR_EQUALS}                                   {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return STAR_EQUALS;}
-{YIELD}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return YIELD;}    
-{WHILE}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return WHILE;}    
-{VOID}                                          {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return VOID;}
-{VAR}                                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return VAR;}
-{TRY}                                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return TRY;}
-{TILDA}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return TILDA;}
-{INTEGER_LITERAL}                               {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return INTEGER_LITERAL;}
-{TEXTBLOCK}                                     {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return TEXTBLOCK;}    
-{THROWS}                                        {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return THROWS;}
-{THROW}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return THROW;}
-{THIS}                                          {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return THIS;}
-{SYNCHRONIZED}                                  {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return SYNCHRONIZED;}    
-{SUPER}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return SUPER;}
-{STATIC}                                        {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return STATIC;}
-{RETURN}                                        {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return RETURN;}
-{PUBLIC}                                        {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return PUBLIC;}
-{PRIVATE}                                       {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return PRIVATE;}
-{PERMITS}                                       {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return PERMITS;}
-{NULL_LITERAL}                                  {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return NULL_LITERAL;}    
-{NEW}                                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return NEW;}
-{INTERFACE}                                     {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return INTERFACE;}
-{INTEGRAL_TYPE}                                 {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return INTEGRAL_TYPE;}
-{IMPORT}                                        {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return IMPORT;}
-{IMPLEMENTS}                                    {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return IMPLEMENTS;}    
-{IF}                                            {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return IF;}    
-{FOR}                                           {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return FOR;}
-{FLOAT_POINT_TYPE}                              {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return FLOAT_POINT_TYPE;}
-{FINALLY}                                       {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return FINALLY;}
-{FINAL}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return FINAL;}
-{EXTENDS}                                       {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return EXTENDS;}
-{ELSE}                                          {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return ELSE;}
-{CONTINUE}                                      {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return CONTINUE;}
-{CLASS}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return CLASS;}
-{CATCH}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return CATCH;}
-{BREAK}                                         {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return BREAK;}
-{BOOLEAN_TYPE}                                  {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return BOOLEAN_TYPE;}
-{BOOLEAN_LITERAL}                               {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return BOOLEAN_LITERAL;}
-{ASSERT}                                        {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return ASSERT;}
-{STRING_LITERAL}                                {fout<<"t"<<leaf_number<<"[label="<<yytext<<"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return STRING_LITERAL;}
-{IDENTIFIER}                                    {fout<<"t"<<leaf_number<<"[label=\""<<yytext<<"\"]"<<endl; if(leaf_number) st.push(1-leaf_number);  leaf_number++; return IDENTIFIER;}
+{TRIPLE_DOT}                                    {strcpy(yylval.str,yytext); return TRIPLE_DOT;}
+{AMPERSAND}                                     {strcpy(yylval.str,yytext); return AMPERSAND;} 
+{AMPERSAND_AMPERSAND}                           {strcpy(yylval.str,yytext); return AMPERSAND_AMPERSAND;}
+{AMPERSAND_EQUALS}                              {strcpy(yylval.str,yytext); return AMPERSAND_EQUALS;} 
+{ARROW_RIGHT}                                   {strcpy(yylval.str,yytext); return ARROW_RIGHT;}  
+{BAR}                                           {strcpy(yylval.str,yytext); return BAR;}  
+{BAR_BAR}                                       {strcpy(yylval.str,yytext); return BAR_BAR;}
+{BAR_EQUALS}                                    {strcpy(yylval.str,yytext); return BAR_EQUALS;}
+{CHARACTER_LITERAL}                             {strcpy(yylval.str,yytext); return CHARACTER_LITERAL;}
+{COLON}                                         {strcpy(yylval.str,yytext); return COLON;}
+{COMMA}                                         {strcpy(yylval.str,yytext); return COMMA;}   
+{DOT}                                           {strcpy(yylval.str,yytext); return DOT;}   
+{DOUBLE_COLON}                                  {strcpy(yylval.str,yytext); return DOUBLE_COLON;} 
+{EQUALS}                                        {strcpy(yylval.str,yytext); return EQUALS;} 
+{EQUALS_EQUALS}                                 {strcpy(yylval.str,yytext); return EQUALS_EQUALS;}
+{EXCLAIM}                                       {strcpy(yylval.str,yytext); return EXCLAIM;}
+{EXCLAIM_EQUALS}                                {strcpy(yylval.str,yytext); return EXCLAIM_EQUALS;}
+{FLOATINGPOINT_LITERAL}                         {strcpy(yylval.str,yytext); return FLOATINGPOINT_LITERAL;}
+{GREATER_THAN}                                  {strcpy(yylval.str,yytext); return GREATER_THAN;} 
+{GREATER_THAN_EQUALS}                           {strcpy(yylval.str,yytext); return GREATER_THAN_EQUALS;}
+{GREATER_THAN_GREATER_THAN}                     {strcpy(yylval.str,yytext); return GREATER_THAN_GREATER_THAN;}
+{GREATER_THAN_GREATER_THAN_EQUALS}              {strcpy(yylval.str,yytext); return GREATER_THAN_GREATER_THAN_EQUALS;} 
+{GREATER_THAN_GREATER_THAN_GREATER_THAN}        {strcpy(yylval.str,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN;} 
+{GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS} {strcpy(yylval.str,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS;}
+{LEFT_CURLY_BRACE}                              {strcpy(yylval.str,yytext); return LEFT_CURLY_BRACE;}
+{LEFT_PARANTHESIS}                              {strcpy(yylval.str,yytext); return LEFT_PARANTHESIS;}
+{LEFT_SQUARE_BRACE}                             {strcpy(yylval.str,yytext); return LEFT_SQUARE_BRACE;}
+{LESS_THAN}                                     {strcpy(yylval.str,yytext); return LESS_THAN;}
+{LESS_THAN_EQUALS}                              {strcpy(yylval.str,yytext); return LESS_THAN_EQUALS;}
+{LESS_THAN_LESS_THAN}                           {strcpy(yylval.str,yytext); return LESS_THAN_LESS_THAN;}
+{LESS_THAN_LESS_THAN_EQUALS}                    {strcpy(yylval.str,yytext); return LESS_THAN_LESS_THAN_EQUALS;}
+{MINUS}                                         {strcpy(yylval.str,yytext); return MINUS;}
+{MINUS_EQUALS}                                  {strcpy(yylval.str,yytext); return MINUS_EQUALS;}  
+{MINUS_MINUS}                                   {strcpy(yylval.str,yytext); return MINUS_MINUS;}
+{PERCENT}                                       {strcpy(yylval.str,yytext); return PERCENT;} 
+{PERCENT_EQUALS}                                {strcpy(yylval.str,yytext); return PERCENT_EQUALS;}
+{PLUS}                                          {strcpy(yylval.str,yytext); return PLUS;}           
+{PLUS_EQUALS}                                   {strcpy(yylval.str,yytext); return PLUS_EQUALS;}  
+{PLUS_PLUS}                                     {strcpy(yylval.str,yytext); return PLUS_PLUS;}   
+{POWER}                                         {strcpy(yylval.str,yytext); return POWER;}   
+{POWER_EQUALS}                                  {strcpy(yylval.str,yytext); return POWER_EQUALS;}   
+{QUESTION}                                      {strcpy(yylval.str,yytext); return QUESTION;}   
+{RIGHT_CURLY_BRACE}                             {strcpy(yylval.str,yytext); return RIGHT_CURLY_BRACE;}   
+{RIGHT_PARANTHESIS}                             {strcpy(yylval.str,yytext); return RIGHT_PARANTHESIS;}   
+{RIGHT_SQUARE_BRACE}                            {strcpy(yylval.str,yytext); return RIGHT_SQUARE_BRACE;}
+{SEMI_COLON}                                    {strcpy(yylval.str,yytext); return SEMI_COLON;}
+{SLASH}                                         {strcpy(yylval.str,yytext); return SLASH;}
+{SLASH_EQUALS}                                  {strcpy(yylval.str,yytext); return SLASH_EQUALS;}
+{STAR}                                          {strcpy(yylval.str,yytext); return STAR;}    
+{STAR_EQUALS}                                   {strcpy(yylval.str,yytext); return STAR_EQUALS;}
+{YIELD}                                         {strcpy(yylval.str,yytext); return YIELD;}    
+{WHILE}                                         {strcpy(yylval.str,yytext); return WHILE;}    
+{VOID}                                          {strcpy(yylval.str,yytext); return VOID;}
+{VAR}                                           {strcpy(yylval.str,yytext); return VAR;}
+{TRY}                                           {strcpy(yylval.str,yytext); return TRY;}
+{TILDA}                                         {strcpy(yylval.str,yytext); return TILDA;}
+{INTEGER_LITERAL}                               {strcpy(yylval.str,yytext); return INTEGER_LITERAL;}
+{TEXTBLOCK}                                     {strcpy(yylval.str,yytext); return TEXT_BLOCK;}    
+{THROWS}                                        {strcpy(yylval.str,yytext); return THROWS;}
+{THROW}                                         {strcpy(yylval.str,yytext); return THROW;}
+{THIS}                                          {strcpy(yylval.str,yytext); return THIS;}
+{SYNCHRONIZED}                                  {strcpy(yylval.str,yytext); return SYNCHRONIZED;}    
+{SUPER}                                         {strcpy(yylval.str,yytext); return SUPER;}
+{STATIC}                                        {strcpy(yylval.str,yytext); return STATIC;}
+{RETURN}                                        {strcpy(yylval.str,yytext); return RETURN;}
+{PUBLIC}                                        {strcpy(yylval.str,yytext); return PUBLIC;}
+{PRIVATE}                                       {strcpy(yylval.str,yytext); return PRIVATE;}
+{PERMITS}                                       {strcpy(yylval.str,yytext); return PERMITS;}
+{NULL_LITERAL}                                  {strcpy(yylval.str,yytext); return NULL_LITERAL;}    
+{NEW}                                           {strcpy(yylval.str,yytext); return NEW;}
+{INTERFACE}                                     {strcpy(yylval.str,yytext); return INTERFACE;}
+{INTEGRAL_TYPE}                                 {strcpy(yylval.str,yytext); return INTEGRAL_TYPE;}
+{IMPORT}                                        {strcpy(yylval.str,yytext); return IMPORT;}
+{IMPLEMENTS}                                    {strcpy(yylval.str,yytext); return IMPLEMENTS;}    
+{IF}                                            {strcpy(yylval.str,yytext); return IF;}    
+{FOR}                                           {strcpy(yylval.str,yytext); return FOR;}
+{FLOAT_POINT_TYPE}                              {strcpy(yylval.str,yytext); return FLOAT_POINT_TYPE;}
+{FINALLY}                                       {strcpy(yylval.str,yytext); return FINALLY;}
+{FINAL}                                         {strcpy(yylval.str,yytext); return FINAL;}
+{EXTENDS}                                       {strcpy(yylval.str,yytext); return EXTENDS;}
+{ELSE}                                          {strcpy(yylval.str,yytext); return ELSE;}
+{CONTINUE}                                      {strcpy(yylval.str,yytext); return CONTINUE;}
+{CLASS}                                         {strcpy(yylval.str,yytext); return CLASS;}
+{CATCH}                                         {strcpy(yylval.str,yytext); return CATCH;}
+{BREAK}                                         {strcpy(yylval.str,yytext); return BREAK;}
+{BOOLEAN_TYPE}                                  {strcpy(yylval.str,yytext); return BOOLEAN_TYPE;}
+{BOOLEAN_LITERAL}                               {strcpy(yylval.str,yytext); return BOOLEAN_LITERAL;}
+{ASSERT}                                        {strcpy(yylval.str,yytext); return ASSERT;}
+{STRING_LITERAL}                                {strcpy(yylval.str,yytext); return STRING_LITERAL;}
+{IDENTIFIER}                                    {strcpy(yylval.str,yytext); return IDENTIFIER;}
 {COMMENT}                                       {}
-<<EOF>> {st.push(1-leaf_number); yyterminate();}
+<<EOF>> {yyterminate();}
 
 
 
