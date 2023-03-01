@@ -27,8 +27,8 @@ class GFG {
 			// Printing the file name present in given path
 			else {
 				// Getting the file name
-				System.out.println("File: "
-								+ filename.getName());
+				// System.out.println("File: "
+				// 				+ filename.getName());
 			}
 		}
 	}
