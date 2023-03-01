@@ -14,3 +14,4 @@ clean:
 	rm -r parser.tab.h
 	rm -r parser.output
 	rm -r lex.yy.c
+	rm -r output
