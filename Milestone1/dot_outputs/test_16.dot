@@ -1,0 +1,306 @@
+digraph G{
+node[ordering=out]
+n1a[label="Keyword ( public )"]
+n1[label="Modifier"]
+n1->n1a
+n2a[label="Keyword ( static )"]
+n2[label="Modifier"]
+n2->n2a
+n3[label="Modifiers"]
+n3->n1
+n3->n2
+n4a[label="Keyword ( String )"]
+n4[label="PrimitiveType"]
+n4->n4a
+n5a[label="Seperator ( [ )"]
+n5b[label="Seperator ( ] )"]
+n5[label="Dims"]
+n5->n5a
+n5->n5b
+n6b[label="Identifier ( args )"]
+n6[label="Parameter"]
+n6->n4
+n6->n6b
+n6->n5
+n7a[label="Identifier ( main )"]
+n7b[label="Seperator ( ( )"]
+n7d[label="Seperator ( ) )"]
+n7[label="Declarator"]
+n7->n7a
+n7->n7b
+n7->n6
+n7->n7d
+n8a[label="Keyword ( void )"]
+n8[label="MethodHeader"]
+n8->n8a
+n8->n7
+n9a[label="Keyword ( int )"]
+n9[label="NumericType"]
+n9->n9a
+n10a[label="Identifier ( r )"]
+n10[label="VariableDeclarator"]
+n10->n10a
+n11a[label="INTEGER_LITERAL ( 0 )"]
+n11[label="Literal"]
+n11->n11a
+n12a[label="Identifier ( sum )"]
+n12[label="="]
+n12->n12a
+n12->n11
+n13b[label="Seperator ( , )"]
+n13[label="VariableDeclaratorList"]
+n13->n10
+n13->n13b
+n13->n12
+n14a[label="Identifier ( temp )"]
+n14[label="VariableDeclarator"]
+n14->n14a
+n15b[label="Seperator ( , )"]
+n15[label="VariableDeclaratorList"]
+n15->n13
+n15->n15b
+n15->n14
+n16c[label="Seperator ( ; )"]
+n16[label="BlockStatement"]
+n16->n9
+n16->n15
+n16->n16c
+n17a[label="Keyword ( int )"]
+n17[label="NumericType"]
+n17->n17a
+n18a[label="INTEGER_LITERAL ( 454 )"]
+n18[label="Literal"]
+n18->n18a
+n19a[label="Identifier ( n )"]
+n19[label="="]
+n19->n19a
+n19->n18
+n20c[label="Seperator ( ; )"]
+n20[label="BlockStatement"]
+n20->n17
+n20->n19
+n20->n20c
+n21[label="BlockStatements"]
+n21->n16
+n21->n20
+n22a[label="Identifier ( temp )"]
+n22[label="Name"]
+n22->n22a
+n23a[label="Identifier ( n )"]
+n23[label="Name"]
+n23->n23a
+n24[label="="]
+n24->n22
+n24->n23
+n25b[label="Seperator ( ; )"]
+n25[label="ExpressionStatement"]
+n25->n24
+n25->n25b
+n26[label="BlockStatements"]
+n26->n21
+n26->n25
+n27a[label="Identifier ( n )"]
+n27[label="Name"]
+n27->n27a
+n28a[label="INTEGER_LITERAL ( 0 )"]
+n28[label="Literal"]
+n28->n28a
+n29[label=">"]
+n29->n27
+n29->n28
+n30a[label="Identifier ( r )"]
+n30[label="Name"]
+n30->n30a
+n31a[label="Identifier ( n )"]
+n31[label="Name"]
+n31->n31a
+n32a[label="INTEGER_LITERAL ( 10 )"]
+n32[label="Literal"]
+n32->n32a
+n33[label="%"]
+n33->n31
+n33->n32
+n34[label="="]
+n34->n30
+n34->n33
+n35b[label="Seperator ( ; )"]
+n35[label="ExpressionStatement"]
+n35->n34
+n35->n35b
+n36a[label="Identifier ( sum )"]
+n36[label="Name"]
+n36->n36a
+n37a[label="Identifier ( sum )"]
+n37[label="Name"]
+n37->n37a
+n38a[label="INTEGER_LITERAL ( 10 )"]
+n38[label="Literal"]
+n38->n38a
+n39[label="*"]
+n39->n37
+n39->n38
+n40a[label="Seperator ( ( )"]
+n40c[label="Seperator ( ) )"]
+n40[label="PrimaryNoNewArray"]
+n40->n40a
+n40->n39
+n40->n40c
+n41a[label="Identifier ( r )"]
+n41[label="Name"]
+n41->n41a
+n42[label="+"]
+n42->n40
+n42->n41
+n43[label="="]
+n43->n36
+n43->n42
+n44b[label="Seperator ( ; )"]
+n44[label="ExpressionStatement"]
+n44->n43
+n44->n44b
+n45[label="BlockStatements"]
+n45->n35
+n45->n44
+n46a[label="Identifier ( n )"]
+n46[label="Name"]
+n46->n46a
+n47a[label="Identifier ( n )"]
+n47[label="Name"]
+n47->n47a
+n48a[label="INTEGER_LITERAL ( 10 )"]
+n48[label="Literal"]
+n48->n48a
+n49[label="/"]
+n49->n47
+n49->n48
+n50[label="="]
+n50->n46
+n50->n49
+n51b[label="Seperator ( ; )"]
+n51[label="ExpressionStatement"]
+n51->n50
+n51->n51b
+n52[label="BlockStatements"]
+n52->n45
+n52->n51
+n53a[label="Seperator ( { )"]
+n53c[label="Seperator ( } )"]
+n53[label="Block"]
+n53->n53a
+n53->n52
+n53->n53c
+n54a[label="Keyword ( while )"]
+n54b[label="Seperator ( ( )"]
+n54d[label="Seperator ( ) )"]
+n54[label="WhileStatement"]
+n54->n54a
+n54->n54b
+n54->n29
+n54->n54d
+n54->n53
+n55[label="BlockStatements"]
+n55->n26
+n55->n54
+n56a[label="Identifier ( temp )"]
+n56[label="Name"]
+n56->n56a
+n57a[label="Identifier ( sum )"]
+n57[label="Name"]
+n57->n57a
+n58[label="=="]
+n58->n56
+n58->n57
+n59a[label="Identifier ( System )"]
+n59[label="Name"]
+n59->n59a
+n60b[label="Seperator ( . )"]
+n60c[label="Identifier ( out )"]
+n60[label="Name"]
+n60->n59
+n60->n60b
+n60->n60c
+n61a[label="STRING_LITERAL ( palindrome number  )"]
+n61[label="Literal"]
+n61->n61a
+n62b[label="Seperator ( . )"]
+n62c[label="Identifier ( println )"]
+n62d[label="Seperator ( ( )"]
+n62f[label="Seperator ( ) )"]
+n62[label="MethodInvocation"]
+n62->n60
+n62->n62b
+n62->n62c
+n62->n62d
+n62->n61
+n62->n62f
+n63b[label="Seperator ( ; )"]
+n63[label="ExpressionStatement"]
+n63->n62
+n63->n63b
+n64a[label="Identifier ( System )"]
+n64[label="Name"]
+n64->n64a
+n65b[label="Seperator ( . )"]
+n65c[label="Identifier ( out )"]
+n65[label="Name"]
+n65->n64
+n65->n65b
+n65->n65c
+n66a[label="STRING_LITERAL ( not palindrome )"]
+n66[label="Literal"]
+n66->n66a
+n67b[label="Seperator ( . )"]
+n67c[label="Identifier ( println )"]
+n67d[label="Seperator ( ( )"]
+n67f[label="Seperator ( ) )"]
+n67[label="MethodInvocation"]
+n67->n65
+n67->n67b
+n67->n67c
+n67->n67d
+n67->n66
+n67->n67f
+n68b[label="Seperator ( ; )"]
+n68[label="ExpressionStatement"]
+n68->n67
+n68->n68b
+n69a[label="Keyword ( if )"]
+n69b[label="Seperator ( ( )"]
+n69d[label="Seperator ( ) )"]
+n69f[label="Keyword ( else )"]
+n69[label="IfThenElseStatement"]
+n69->n69a
+n69->n69b
+n69->n58
+n69->n69d
+n69->n63
+n69->n69f
+n69->n68
+n70[label="BlockStatements"]
+n70->n55
+n70->n69
+n71a[label="Seperator ( { )"]
+n71c[label="Seperator ( } )"]
+n71[label="Block"]
+n71->n71a
+n71->n70
+n71->n71c
+n72[label="MethodDeclaration"]
+n72->n3
+n72->n8
+n72->n71
+n73a[label="Seperator ( { )"]
+n73c[label="Seperator ( } )"]
+n73[label="ClassBody"]
+n73->n73a
+n73->n72
+n73->n73c
+n74a[label="Keyword ( class )"]
+n74b[label="Identifier ( PalindromeExample )"]
+n74[label="ClassDeclaration"]
+n74->n74a
+n74->n74b
+n74->n73
+n75[label="CompiledUnit"]
+n75->n74
+}

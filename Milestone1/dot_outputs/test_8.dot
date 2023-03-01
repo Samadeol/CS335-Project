@@ -1,0 +1,492 @@
+digraph G{
+node[ordering=out]
+n1a[label="Identifier ( java )"]
+n1[label="Name"]
+n1->n1a
+n2b[label="Seperator ( . )"]
+n2c[label="Identifier ( util )"]
+n2[label="Name"]
+n2->n1
+n2->n2b
+n2->n2c
+n3b[label="Seperator ( . )"]
+n3c[label="Identifier ( Arrays )"]
+n3[label="Name"]
+n3->n2
+n3->n3b
+n3->n3c
+n4a[label="Keyword ( import )"]
+n4c[label="Seperator ( ; )"]
+n4[label="SingleTypeImportDeclaration"]
+n4->n4a
+n4->n3
+n4->n4c
+n5a[label="Identifier ( java )"]
+n5[label="Name"]
+n5->n5a
+n6b[label="Seperator ( . )"]
+n6c[label="Identifier ( util )"]
+n6[label="Name"]
+n6->n5
+n6->n6b
+n6->n6c
+n7b[label="Seperator ( . )"]
+n7c[label="Identifier ( stream )"]
+n7[label="Name"]
+n7->n6
+n7->n7b
+n7->n7c
+n8b[label="Seperator ( . )"]
+n8c[label="Identifier ( IntStream )"]
+n8[label="Name"]
+n8->n7
+n8->n8b
+n8->n8c
+n9a[label="Keyword ( import )"]
+n9c[label="Seperator ( ; )"]
+n9[label="SingleTypeImportDeclaration"]
+n9->n9a
+n9->n8
+n9->n9c
+n10[label="ImportDeclarations"]
+n10->n4
+n10->n9
+n11a[label="Keyword ( private )"]
+n11[label="Modifier"]
+n11->n11a
+n12a[label="Keyword ( static )"]
+n12[label="Modifier"]
+n12->n12a
+n13[label="Modifiers"]
+n13->n11
+n13->n12
+n14a[label="Keyword ( int )"]
+n14[label="NumericType"]
+n14->n14a
+n15a[label="Seperator ( [ )"]
+n15b[label="Seperator ( ] )"]
+n15[label="Dims"]
+n15->n15a
+n15->n15b
+n16[label="ArrayType"]
+n16->n14
+n16->n15
+n17b[label="Identifier ( arr )"]
+n17[label="Parameter"]
+n17->n16
+n17->n17b
+n18a[label="Keyword ( int )"]
+n18[label="NumericType"]
+n18->n18a
+n19b[label="Identifier ( toCheckValue )"]
+n19[label="Parameter"]
+n19->n18
+n19->n19b
+n20b[label="Seperator ( , )"]
+n20[label="ParameterList"]
+n20->n17
+n20->n20b
+n20->n19
+n21a[label="Identifier ( check )"]
+n21b[label="Seperator ( ( )"]
+n21d[label="Seperator ( ) )"]
+n21[label="Declarator"]
+n21->n21a
+n21->n21b
+n21->n20
+n21->n21d
+n22a[label="Keyword ( void )"]
+n22[label="MethodHeader"]
+n22->n22a
+n22->n21
+n23a[label="Keyword ( boolean )"]
+n23[label="PrimitiveType"]
+n23->n23a
+n24a[label="BOOLEAN_LITERAL ( false )"]
+n24[label="Literal"]
+n24->n24a
+n25a[label="Identifier ( test )"]
+n25[label="="]
+n25->n25a
+n25->n24
+n26c[label="Seperator ( ; )"]
+n26[label="BlockStatement"]
+n26->n23
+n26->n25
+n26->n26c
+n27a[label="Keyword ( int )"]
+n27[label="NumericType"]
+n27->n27a
+n28a[label="Identifier ( element )"]
+n28[label="VariableDeclarator"]
+n28->n28a
+n29[label="LocalVariableDeclaration"]
+n29->n27
+n29->n28
+n30a[label="Identifier ( arr )"]
+n30[label="Name"]
+n30->n30a
+n31a[label="Identifier ( element )"]
+n31[label="Name"]
+n31->n31a
+n32a[label="Identifier ( toCheckValue )"]
+n32[label="Name"]
+n32->n32a
+n33[label="=="]
+n33->n31
+n33->n32
+n34a[label="Identifier ( test )"]
+n34[label="Name"]
+n34->n34a
+n35a[label="BOOLEAN_LITERAL ( true )"]
+n35[label="Literal"]
+n35->n35a
+n36[label="="]
+n36->n34
+n36->n35
+n37b[label="Seperator ( ; )"]
+n37[label="ExpressionStatement"]
+n37->n36
+n37->n37b
+n38a[label="Keyword ( break )"]
+n38b[label="Seperator ( ; )"]
+n38[label="BreakStatement"]
+n38->n38a
+n38->n38b
+n39[label="BlockStatements"]
+n39->n37
+n39->n38
+n40a[label="Seperator ( { )"]
+n40c[label="Seperator ( } )"]
+n40[label="Block"]
+n40->n40a
+n40->n39
+n40->n40c
+n41a[label="Keyword ( if )"]
+n41b[label="Seperator ( ( )"]
+n41d[label="Seperator ( ) )"]
+n41[label="IfThenStatement"]
+n41->n41a
+n41->n41b
+n41->n33
+n41->n41d
+n41->n40
+n42a[label="Seperator ( { )"]
+n42c[label="Seperator ( } )"]
+n42[label="Block"]
+n42->n42a
+n42->n41
+n42->n42c
+n43a[label="Keyword ( for )"]
+n43b[label="Seperator ( ( )"]
+n43f[label="Seperator ( ) )"]
+n43[label=":"]
+n43->n43a
+n43->n43b
+n43->n29
+n43->n30
+n43->n43f
+n43->n42
+n44[label="BlockStatements"]
+n44->n26
+n44->n43
+n45a[label="Identifier ( System )"]
+n45[label="Name"]
+n45->n45a
+n46b[label="Seperator ( . )"]
+n46c[label="Identifier ( out )"]
+n46[label="Name"]
+n46->n45
+n46->n46b
+n46->n46c
+n47a[label="STRING_LITERAL ( Is  )"]
+n47[label="Literal"]
+n47->n47a
+n48a[label="Identifier ( toCheckValue )"]
+n48[label="Name"]
+n48->n48a
+n49[label="+"]
+n49->n47
+n49->n48
+n50a[label="STRING_LITERAL (  present in the array:  )"]
+n50[label="Literal"]
+n50->n50a
+n51[label="+"]
+n51->n49
+n51->n50
+n52a[label="Identifier ( test )"]
+n52[label="Name"]
+n52->n52a
+n53[label="+"]
+n53->n51
+n53->n52
+n54b[label="Seperator ( . )"]
+n54c[label="Identifier ( println )"]
+n54d[label="Seperator ( ( )"]
+n54f[label="Seperator ( ) )"]
+n54[label="MethodInvocation"]
+n54->n46
+n54->n54b
+n54->n54c
+n54->n54d
+n54->n53
+n54->n54f
+n55b[label="Seperator ( ; )"]
+n55[label="ExpressionStatement"]
+n55->n54
+n55->n55b
+n56[label="BlockStatements"]
+n56->n44
+n56->n55
+n57a[label="Seperator ( { )"]
+n57c[label="Seperator ( } )"]
+n57[label="Block"]
+n57->n57a
+n57->n56
+n57->n57c
+n58[label="MethodDeclaration"]
+n58->n13
+n58->n22
+n58->n57
+n59a[label="Keyword ( public )"]
+n59[label="Modifier"]
+n59->n59a
+n60a[label="Keyword ( static )"]
+n60[label="Modifier"]
+n60->n60a
+n61[label="Modifiers"]
+n61->n59
+n61->n60
+n62a[label="Keyword ( String )"]
+n62[label="PrimitiveType"]
+n62->n62a
+n63a[label="Seperator ( [ )"]
+n63b[label="Seperator ( ] )"]
+n63[label="Dims"]
+n63->n63a
+n63->n63b
+n64[label="ArrayType"]
+n64->n62
+n64->n63
+n65b[label="Identifier ( args )"]
+n65[label="Parameter"]
+n65->n64
+n65->n65b
+n66a[label="Identifier ( main )"]
+n66b[label="Seperator ( ( )"]
+n66d[label="Seperator ( ) )"]
+n66[label="Declarator"]
+n66->n66a
+n66->n66b
+n66->n65
+n66->n66d
+n67a[label="Keyword ( void )"]
+n67[label="MethodHeader"]
+n67->n67a
+n67->n66
+n68a[label="Keyword ( int )"]
+n68[label="NumericType"]
+n68->n68a
+n69a[label="Seperator ( [ )"]
+n69b[label="Seperator ( ] )"]
+n69[label="Dims"]
+n69->n69a
+n69->n69b
+n70a[label="INTEGER_LITERAL ( 5 )"]
+n70[label="Literal"]
+n70->n70a
+n71a[label="INTEGER_LITERAL ( 1 )"]
+n71[label="Literal"]
+n71->n71a
+n72b[label="Seperator ( , )"]
+n72[label="VariableInitializerList"]
+n72->n70
+n72->n72b
+n72->n71
+n73a[label="INTEGER_LITERAL ( 1 )"]
+n73[label="Literal"]
+n73->n73a
+n74b[label="Seperator ( , )"]
+n74[label="VariableInitializerList"]
+n74->n72
+n74->n74b
+n74->n73
+n75a[label="INTEGER_LITERAL ( 9 )"]
+n75[label="Literal"]
+n75->n75a
+n76b[label="Seperator ( , )"]
+n76[label="VariableInitializerList"]
+n76->n74
+n76->n76b
+n76->n75
+n77a[label="INTEGER_LITERAL ( 7 )"]
+n77[label="Literal"]
+n77->n77a
+n78b[label="Seperator ( , )"]
+n78[label="VariableInitializerList"]
+n78->n76
+n78->n78b
+n78->n77
+n79a[label="INTEGER_LITERAL ( 2 )"]
+n79[label="Literal"]
+n79->n79a
+n80b[label="Seperator ( , )"]
+n80[label="VariableInitializerList"]
+n80->n78
+n80->n80b
+n80->n79
+n81a[label="INTEGER_LITERAL ( 6 )"]
+n81[label="Literal"]
+n81->n81a
+n82b[label="Seperator ( , )"]
+n82[label="VariableInitializerList"]
+n82->n80
+n82->n82b
+n82->n81
+n83a[label="INTEGER_LITERAL ( 10 )"]
+n83[label="Literal"]
+n83->n83a
+n84b[label="Seperator ( , )"]
+n84[label="VariableInitializerList"]
+n84->n82
+n84->n84b
+n84->n83
+n85a[label="Seperator ( { )"]
+n85c[label="Seperator ( } )"]
+n85[label="ArrayInitializer"]
+n85->n85a
+n85->n84
+n85->n85c
+n86a[label="Identifier ( arr )"]
+n86[label="="]
+n86->n86a
+n86->n69
+n86->n85
+n87c[label="Seperator ( ; )"]
+n87[label="BlockStatement"]
+n87->n68
+n87->n86
+n87->n87c
+n88a[label="Keyword ( int )"]
+n88[label="NumericType"]
+n88->n88a
+n89a[label="INTEGER_LITERAL ( 7 )"]
+n89[label="Literal"]
+n89->n89a
+n90a[label="Identifier ( toCheckValue )"]
+n90[label="="]
+n90->n90a
+n90->n89
+n91c[label="Seperator ( ; )"]
+n91[label="BlockStatement"]
+n91->n88
+n91->n90
+n91->n91c
+n92[label="BlockStatements"]
+n92->n87
+n92->n91
+n93a[label="Identifier ( System )"]
+n93[label="Name"]
+n93->n93a
+n94b[label="Seperator ( . )"]
+n94c[label="Identifier ( out )"]
+n94[label="Name"]
+n94->n93
+n94->n94b
+n94->n94c
+n95a[label="STRING_LITERAL ( Array:  )"]
+n95[label="Literal"]
+n95->n95a
+n96a[label="Identifier ( Arrays )"]
+n96[label="Name"]
+n96->n96a
+n97a[label="Identifier ( arr )"]
+n97[label="Name"]
+n97->n97a
+n98b[label="Seperator ( . )"]
+n98c[label="Identifier ( toString )"]
+n98d[label="Seperator ( ( )"]
+n98f[label="Seperator ( ) )"]
+n98[label="MethodInvocation"]
+n98->n96
+n98->n98b
+n98->n98c
+n98->n98d
+n98->n97
+n98->n98f
+n99[label="+"]
+n99->n95
+n99->n98
+n100b[label="Seperator ( . )"]
+n100c[label="Identifier ( println )"]
+n100d[label="Seperator ( ( )"]
+n100f[label="Seperator ( ) )"]
+n100[label="MethodInvocation"]
+n100->n94
+n100->n100b
+n100->n100c
+n100->n100d
+n100->n99
+n100->n100f
+n101b[label="Seperator ( ; )"]
+n101[label="ExpressionStatement"]
+n101->n100
+n101->n101b
+n102[label="BlockStatements"]
+n102->n92
+n102->n101
+n103a[label="Identifier ( arr )"]
+n103[label="Name"]
+n103->n103a
+n104a[label="Identifier ( toCheckValue )"]
+n104[label="Name"]
+n104->n104a
+n105b[label="Seperator ( , )"]
+n105[label="Expressions"]
+n105->n103
+n105->n105b
+n105->n104
+n106a[label="Identifier ( check )"]
+n106b[label="Seperator ( ( )"]
+n106d[label="Seperator ( ) )"]
+n106[label="MethodInvocation"]
+n106->n106a
+n106->n106b
+n106->n105
+n106->n106d
+n107b[label="Seperator ( ; )"]
+n107[label="ExpressionStatement"]
+n107->n106
+n107->n107b
+n108[label="BlockStatements"]
+n108->n102
+n108->n107
+n109a[label="Seperator ( { )"]
+n109c[label="Seperator ( } )"]
+n109[label="Block"]
+n109->n109a
+n109->n108
+n109->n109c
+n110[label="MethodDeclaration"]
+n110->n61
+n110->n67
+n110->n109
+n111[label="ClassBodyDeclarations"]
+n111->n58
+n111->n110
+n112a[label="Seperator ( { )"]
+n112c[label="Seperator ( } )"]
+n112[label="ClassBody"]
+n112->n112a
+n112->n111
+n112->n112c
+n113a[label="Keyword ( class )"]
+n113b[label="Identifier ( GFG )"]
+n113[label="ClassDeclaration"]
+n113->n113a
+n113->n113b
+n113->n112
+n114[label="CompiledUnit"]
+n114->n10
+n114->n113
+}
