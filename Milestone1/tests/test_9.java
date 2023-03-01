@@ -1,48 +1,42 @@
-// Java Program to Traverse Through a Directory
-
-// Importing required classes
-import java.io.File;
-
+// Java Program to Print the Pyramid pattern
+ 
 // Main class
-class GFG {
-
-	// Method 1
-	// To display files
-	public static void displayFiles(File[] files)
-	{
-		// Traversing through the files array
-		for (File filename : files) {
-			// If a sub directory is found,
-			// print the name of the sub directory
-			if (filename.isDirectory()) {
-				System.out.println("Directory: "
-								+ filename.getName());
-
-				// and call the displayFiles function
-				// recursively to list files present
-				// in sub directory
-				displayFiles(filename.listFiles());
-			}
-
-			// Printing the file name present in given path
-			else {
-				// Getting the file name
-				// System.out.println("File: "
-				// 				+ filename.getName());
-			}
-		}
-	}
-
-	// Method 2
-	// Main driver method
-	public static void main(String[] args)
-	{
-		// Storing the name of files and directories
-		// in an array of File type
-		File[] files = new File("C:\\GFG").listFiles();
-
-		// Calling method 1 to
-		// display files
-		displayFiles(files);
-	}
+public class GFG {
+ 
+    // Main driver method
+    public static void main(String[] args)
+    {
+        int num = 5;
+        int x = 0;
+ 
+        // Outer loop for rows
+        for (int i = 1; i <= num; i++) {
+            x = i - 1;
+ 
+            // inner loop for "i"th row printing
+            for (int j = i; j <= num - 1; j++) {
+ 
+                // First Number Space
+                System.out.print(" ");
+ 
+                // Space between Numbers
+                System.out.print("  ");
+            }
+ 
+            // Pyramid printing
+            for (int j = 0; j <= x; j++)
+                System.out.print((i + j) < 10
+                                     ? (i + j) + "  "
+                                     : (i + j) + " ");
+ 
+            for (int j = 1; j <= x; j++)
+                System.out.print((i + x - j) < 10
+                                     ? (i + x - j) + "  "
+                                     : (i + x - j) + " ");
+ 
+            // By now we reach end for one row, so
+            // new line to switch to next
+            System.out.println();
+        }
+    }
 }

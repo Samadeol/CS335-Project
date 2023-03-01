@@ -1,18 +1,33 @@
-public class MatrixAdditionExample{  
-public static void main(String args[]){  
-//creating two matrices    
-int a[][]={{1,3,4},{2,4,3},{3,4,5}};    
-int b[][]={{1,3,4},{2,4,3},{1,2,4}};    
-    
-//creating another matrix to store the sum of two matrices    
-int c[][]=new int[3][3];  //3 rows and 3 columns  
-    
-//adding and printing addition of 2 matrices    
-for(int i=0;i<3;i++){    
-for(int j=0;j<3;j++){    
-c[i][j]=a[i][j]+b[i][j];    //use - for subtraction  
-System.out.print(c[i][j]+" ");    
-}    
-System.out.println();//new line    
-}    
-}}  
+public class LowerTriangular    
+{    
+    public static void main(String[] args) {    
+    int rows, cols;    
+    //Initialize matrix a    
+        int a[][] = {       
+                        {1, 2, 3},    
+                        {8, 6, 4},    
+                        {4, 5, 6}    
+                    };    
+              
+          //Calculates number of rows and columns present in given matrix    
+          rows = a.length;    
+          cols = a[0].length;    
+            
+          if(rows != cols){    
+              System.out.println("Matrix should be a square matrix");    
+          }    
+          else {    
+              //Performs required operation to convert given matrix into lower triangular matrix    
+              System.out.println("Lower triangular matrix: ");    
+              for(int i = 0; i < rows; i++){    
+                  for(int j = 0; j < cols; j++){    
+                    if(j > i)    
+                      System.out.print("0 ");    
+                    else    
+                      System.out.print(a[i][j] + " ");    
+                }    
+                System.out.println();    
+            }    
+        }    
+    }    
+}  
