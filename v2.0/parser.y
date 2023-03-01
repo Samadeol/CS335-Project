@@ -13,6 +13,7 @@ int node_number=1;
 
 void yyerror(const char* error){
     fprintf (stderr, "%s | %d\n",error,yylineno);
+    exit(1);
 }
 
 void func(string q,string p){
@@ -50,7 +51,7 @@ void func(string q,string p){
 }
 
 %token <str> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
-%type <str> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression AssignmentOperator BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
+%type <str> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
 
 %start input
 
@@ -745,24 +746,42 @@ ConditionalExpression		{ func("AssignmentExpression", "0");}
 ;
 
 Assignment:
-DotIdentifiers AssignmentOperator Expression		{ func("Assignment", "000");}
-| FieldAccess AssignmentOperator Expression		{ func("Assignment", "000");}
-| ArrayAccess AssignmentOperator Expression		{ func("Assignment", "000");}
-;
-
-AssignmentOperator:
-EQUALS		{ func("=", "2");}
-| STAR_EQUALS		{ func("*=", "2");}
-| SLASH_EQUALS		{ func("/=", "2");}
-| PERCENT_EQUALS		{ func("%=", "2");}
-| PLUS_EQUALS		{ func("+=", "2");}
-| MINUS_EQUALS		{ func("-=", "2");}
-| LESS_THAN_LESS_THAN_EQUALS		{ func("<<=", "2");}
-| GREATER_THAN_GREATER_THAN_EQUALS		{ func(">>=", "2");}
-| GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS		{ func(">>>=", "2");}
-| AMPERSAND_EQUALS		{ func("&=", "2");}
-| POWER_EQUALS		{ func("^=", "2");}
-| BAR_EQUALS		{ func("|=", "2");}
+DotIdentifiers EQUALS Expression	{ func("=", "020");}
+| DotIdentifiers STAR_EQUALS Expression		{ func("*=", "020");}
+| DotIdentifiers SLASH_EQUALS Expression		{ func("/=", "020");}
+| DotIdentifiers PERCENT_EQUALS Expression		{ func("%=", "020");}
+| DotIdentifiers PLUS_EQUALS Expression		{ func("+=", "020");}
+| DotIdentifiers MINUS_EQUALS Expression		{ func("-=", "020");}
+| DotIdentifiers LESS_THAN_LESS_THAN_EQUALS Expression		{ func("<<=", "020");}
+| DotIdentifiers GREATER_THAN_GREATER_THAN_EQUALS Expression		{ func(">>=", "020");}
+| DotIdentifiers GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		{ func(">>>=", "020");}
+| DotIdentifiers AMPERSAND_EQUALS Expression		{ func("&=", "020");}
+| DotIdentifiers POWER_EQUALS Expression		{ func("^=", "020");}
+| DotIdentifiers BAR_EQUALS Expression		{ func("|=", "020");}
+| FieldAccess EQUALS Expression	{ func("=", "020");}
+| FieldAccess STAR_EQUALS Expression		{ func("*=", "020");}
+| FieldAccess SLASH_EQUALS Expression		{ func("/=", "020");}
+| FieldAccess PERCENT_EQUALS Expression		{ func("%=", "020");}
+| FieldAccess PLUS_EQUALS Expression		{ func("+=", "020");}
+| FieldAccess MINUS_EQUALS Expression		{ func("-=", "020");}
+| FieldAccess LESS_THAN_LESS_THAN_EQUALS Expression		{ func("<<=", "020");}
+| FieldAccess GREATER_THAN_GREATER_THAN_EQUALS Expression		{ func(">>=", "020");}
+| FieldAccess GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		{ func(">>>=", "020");}
+| FieldAccess AMPERSAND_EQUALS Expression		{ func("&=", "020");}
+| FieldAccess POWER_EQUALS Expression		{ func("^=", "020");}
+| FieldAccess BAR_EQUALS Expression		{ func("|=", "020");}
+| ArrayAccess EQUALS Expression	{ func("=", "020");}
+| ArrayAccess STAR_EQUALS Expression		{ func("*=", "020");}
+| ArrayAccess SLASH_EQUALS Expression		{ func("/=", "020");}
+| ArrayAccess PERCENT_EQUALS Expression		{ func("%=", "020");}
+| ArrayAccess PLUS_EQUALS Expression		{ func("+=", "020");}
+| ArrayAccess MINUS_EQUALS Expression		{ func("-=", "020");}
+| ArrayAccess LESS_THAN_LESS_THAN_EQUALS Expression		{ func("<<=", "020");}
+| ArrayAccess GREATER_THAN_GREATER_THAN_EQUALS Expression		{ func(">>=", "020");}
+| ArrayAccess GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		{ func(">>>=", "020");}
+| ArrayAccess AMPERSAND_EQUALS Expression		{ func("&=", "020");}
+| ArrayAccess POWER_EQUALS Expression		{ func("^=", "020");}
+| ArrayAccess BAR_EQUALS Expression		{ func("|=", "020");}
 ;
 
 ConditionalExpression:
