@@ -1,8 +1,8 @@
 import re
 
 
-f=open("parser_empty.y","r")
-g=open("new_parser.y","a")
+f=open("new_parser.y","r")
+g=open("parser.y","a")
 
 for x in f:
     l=re.sub(r'{}', "", x)

@@ -1,0 +1,25 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+typedef struct sym_entry{
+    string type;
+    string source_file;
+    int line_number;
+    bool isArray;
+    bool isFunc;
+    int size;
+    int offset;
+    vector<int> dims;
+    vector<pair<string,string> > arguments;
+
+}sym_entry;
+
+typedef map<string, sym_entry*> sym_table;
+typedef map<string, sym_table*> list_sym_table;
+
+extern list_sym_table* global_sym_table;
+extern sym_table* curr_sym_table;
+extern int level;
+
+void init_symbol_table();
