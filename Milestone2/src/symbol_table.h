@@ -6,7 +6,7 @@ typedef struct sym_entry{
     string type;
     string source_file;
     int line_number;
-    int normal;
+    int normal; 
     int size;
     int offset;
     vector<int> dims;
