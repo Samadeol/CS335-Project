@@ -42,27 +42,32 @@ sym_table* gst_look_up(string name){
     else return (*global_sym_table)[name];
 }
 
-void make_entry(string name, string type, int line_number, bool array){
+void make_entry(string name, string type, int line_number){
     sym_entry* new_sym_entry = new sym_entry;
     if(check(name)) (*curr_sym_table).insert(make_pair(name,new_sym_entry));
     else error_msg();
     (*curr_sym_table)[name]->line_number = line_number;
-    (*curr_sym_table)[name]->isFunc = false;
-    (*curr_sym_table)[name]->isArray = array;
+    (*curr_sym_table)[name]->normal = 0;
     (*curr_sym_table)[name]->source_file = curr_file;
     (*curr_sym_table)[name]->type = type;
 }
 
 void make_func_entry(string name, string type, vector<pair<string,string> > args, int line_number){
-    make_entry(name,type,line_number, false);
+    make_entry(name,type,line_number);
     (*curr_sym_table)[name]->arguments = args;
-    (*curr_sym_table)[name]->isFunc = true;
-    make_symbol_table(name);
+    (*curr_sym_table)[name]->normal = 2;
 }
 
 void make_array_entry(string name, string type, int line_number, vector<int> dims){
-    make_entry(name,type,line_number, true);
+    make_entry(name,type,line_number);
+    (*curr_sym_table)[name]->normal = 1;
     (*curr_sym_table)[name]->dims = dims;
+}
+
+void make_class_entry(string name, int line_number){
+    make_entry(name,name,line_number);
+    (*curr_sym_table)[name]->normal = 3;
+    make_symbol_table(name);
 }
 
 void error_msg(){

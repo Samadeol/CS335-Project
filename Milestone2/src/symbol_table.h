@@ -6,8 +6,7 @@ typedef struct sym_entry{
     string type;
     string source_file;
     int line_number;
-    bool isArray;
-    bool isFunc;
+    int normal;
     int size;
     int offset;
     vector<int> dims;
