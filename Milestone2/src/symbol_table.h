@@ -20,6 +20,5 @@ typedef map<string, sym_table*> list_sym_table;
 
 extern list_sym_table* global_sym_table;
 extern sym_table* curr_sym_table;
-extern int level;
 
 void init_symbol_table();
