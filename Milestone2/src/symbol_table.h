@@ -6,7 +6,7 @@ typedef struct sym_entry{
     string type;
     string source_file;
     int line_number;
-    int normal;
+    int normal; //normal->0 = basic  normal->1 = array  normal->2 = func  normal->3 = class/interface
     int size;
     int offset;
     vector<int> dims;
