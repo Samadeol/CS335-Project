@@ -52,7 +52,7 @@ void func(string q,string p){
 }
 
 %token <str> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PACKAGE PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_TYPE STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
-%type <str> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
+%type <str> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassDeclarationHeader ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ConstructorDeclarationHeader ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration InterfaceDeclarationHeader LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
 
 %start input
 
@@ -173,38 +173,42 @@ QUESTION EXTENDS ReferenceType
 ;
 
 ClassDeclaration:
-CLASS IDENTIFIER ClassBody 		
-| CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		
-| CLASS IDENTIFIER ClassImplements ClassBody 		
-| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		
-| CLASS IDENTIFIER ClassExtends ClassBody 		
-| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		
-| CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		
-| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		
-| CLASS IDENTIFIER TypeParameterList ClassBody 		
-| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		
-| CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		
-| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		
-| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		
-| ClassModifiers CLASS IDENTIFIER ClassBody 		
-| ClassModifiers CLASS IDENTIFIER PERMITS DotIdentifiers ClassBody 		
-| ClassModifiers CLASS IDENTIFIER ClassImplements ClassBody 		
-| ClassModifiers CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers ClassBody 		
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassBody 		
-| ClassModifiers CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers ClassBody 		
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements ClassBody 		
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassBody 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers ClassBody 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements ClassBody 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers ClassBody 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassBody 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers ClassBody 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements ClassBody 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers ClassBody		
+ClassDeclarationHeader ClassBody
+;
+
+ClassDeclarationHeader:
+CLASS IDENTIFIER 		
+| CLASS IDENTIFIER PERMITS DotIdentifiers 		
+| CLASS IDENTIFIER ClassImplements  		
+| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers  		
+| CLASS IDENTIFIER ClassExtends  		
+| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers 		
+| CLASS IDENTIFIER ClassExtends ClassImplements  		
+| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers  		
+| CLASS IDENTIFIER TypeParameterList  		
+| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers 		
+| CLASS IDENTIFIER TypeParameterList ClassImplements  		
+| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers  		
+| CLASS IDENTIFIER TypeParameterList ClassExtends  		
+| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers  		
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements  		
+| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers 		
+| ClassModifiers CLASS IDENTIFIER  		
+| ClassModifiers CLASS IDENTIFIER PERMITS DotIdentifiers  		
+| ClassModifiers CLASS IDENTIFIER ClassImplements  		
+| ClassModifiers CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers  		
+| ClassModifiers CLASS IDENTIFIER ClassExtends  		
+| ClassModifiers CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers  		
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements  		
+| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers  		
+| ClassModifiers CLASS IDENTIFIER TypeParameterList  		
+| ClassModifiers CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers  		
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements  		
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers 		
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends  		
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers  		
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements 		
+| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers		
 ;
 
 ClassModifiers:
@@ -347,14 +351,18 @@ STATIC Block
 ;
 
 ConstructorDeclaration:
-TypeParameterList Declarator ConstructorBody 		
-| TypeParameterList Declarator Throws ConstructorBody		
-| ClassModifiers TypeParameterList Declarator ConstructorBody 		
-| ClassModifiers TypeParameterList Declarator Throws ConstructorBody		
-| Declarator ConstructorBody 		
-| Declarator Throws ConstructorBody		
-| ClassModifiers Declarator ConstructorBody 		
-| ClassModifiers Declarator Throws ConstructorBody		
+ConstructorDeclarationHeader ConstructorBody
+;
+
+ConstructorDeclarationHeader:
+TypeParameterList Declarator 		
+| TypeParameterList Declarator Throws 	
+| ClassModifiers TypeParameterList Declarator  		
+| ClassModifiers TypeParameterList Declarator Throws 		
+| Declarator  		
+| Declarator Throws 		
+| ClassModifiers Declarator  		
+| ClassModifiers Declarator Throws 		
 ;
 
 Declarator:
@@ -392,14 +400,18 @@ Expressions COMMA Expression
 ;
 
 InterfaceDeclaration:
-INTERFACE IDENTIFIER ClassBody 		
-| INTERFACE IDENTIFIER ClassExtends ClassBody 		
-| INTERFACE IDENTIFIER TypeParameterList ClassBody 		
-| INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 		
-| ClassModifiers INTERFACE IDENTIFIER ClassBody 		
-| ClassModifiers INTERFACE IDENTIFIER ClassExtends ClassBody 		
-| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassBody 		
-| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassExtends ClassBody 		
+InterfaceDeclarationHeader ClassBody
+;
+
+InterfaceDeclarationHeader:
+INTERFACE IDENTIFIER 		
+| INTERFACE IDENTIFIER ClassExtends 		
+| INTERFACE IDENTIFIER TypeParameterList  		
+| INTERFACE IDENTIFIER TypeParameterList ClassExtends 		
+| ClassModifiers INTERFACE IDENTIFIER  		
+| ClassModifiers INTERFACE IDENTIFIER ClassExtends  		
+| ClassModifiers INTERFACE IDENTIFIER TypeParameterList  		
+| ClassModifiers INTERFACE IDENTIFIER TypeParameterList ClassExtends  		
 ;
 
 ArrayInitializer:
