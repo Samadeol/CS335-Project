@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Main {
+public final class Main {
     public static void main(String[] args){
         int x=5;
         int k = abc ? x>0 : 1;

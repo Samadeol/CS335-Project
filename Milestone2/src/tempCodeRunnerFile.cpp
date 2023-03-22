@@ -1,0 +1,1 @@
+sym_table* gst_look_up(string name)

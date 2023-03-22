@@ -1,5 +1,6 @@
 %{
 #include <bits/stdc++.h>
+#include "symbol_table.cpp"
 using namespace std;
 
 extern int yylex();
@@ -11,6 +12,7 @@ extern FILE* yyin;
 fstream fout,fin;
 stack<int> st;
 int node_number=1;
+string type;
 
 void yyerror(const char* error){
     fprintf (stderr, "%s | %d\n",error,yylineno);
@@ -48,11 +50,14 @@ void func(string q,string p){
 %locations
 
 %union{
-    char str[1000];
+    struct {
+        char label[1000]
+        char type[100]
+    }item;
 }
 
-%token <str> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PACKAGE PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_TYPE STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
-%type <str> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassDeclarationHeader ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ConstructorDeclarationHeader ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration InterfaceDeclarationHeader LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
+%token <item> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PACKAGE PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_TYPE STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
+%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassDeclarationHeader ClassExtends ClassImplements ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ConstructorDeclarationHeader ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration InterfaceDeclarationHeader LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
 
 %start input
 
@@ -113,38 +118,37 @@ ClassDeclaration
 ;
 
 Type:
-PrimitiveType		
-| ReferenceType		
+PrimitiveType   {type = $1;}		
+| ReferenceType	{type = $1;}	
 ;
 
 PrimitiveType:
-NumericType		
-| BOOLEAN_TYPE		
-| STRING_TYPE       
+NumericType	 {strcpy($$,$1);}	
+| BOOLEAN_TYPE	{strcpy($$,$1);}	
+| STRING_TYPE   {strcpy($$,$1);}    
 ;
 
 NumericType:
-INTEGRAL_TYPE		
-| FLOAT_POINT_TYPE		
+INTEGRAL_TYPE	{strcpy($$,$1);}	
+| FLOAT_POINT_TYPE	{strcpy($$,$1);}	
 ;
 
 ReferenceType:
-ClassType		
+ClassType	{check_gst($1); strcpy($$,$1);}	
 | ArrayType		
 ;
 
 ClassType:
-DotIdentifiers		
+DotIdentifiers	{strcpy($$,$1);}	
 ;
 
 DotIdentifiers:
-DotIdentifiers DOT IDENTIFIER		
-| IDENTIFIER		
+DotIdentifiers DOT IDENTIFIER	{strcpy($$,strcat($1,strcat($2,$3)));}	
+| IDENTIFIER		{strcpy($$,$1)};
 ;
 
 ArrayType:
-DotIdentifiers Dims		
-| PrimitiveType Dims		
+PrimitiveType Dims		
 ;
 
 Dims:
@@ -173,55 +177,24 @@ QUESTION EXTENDS ReferenceType
 ;
 
 ClassDeclaration:
-ClassDeclarationHeader ClassBody
+ClassDeclarationHeader ClassBody {up_sym_table();}
 ;
 
 ClassDeclarationHeader:
-CLASS IDENTIFIER 		
-| CLASS IDENTIFIER PERMITS DotIdentifiers 		
-| CLASS IDENTIFIER ClassImplements  		
-| CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers  		
-| CLASS IDENTIFIER ClassExtends  		
-| CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers 		
-| CLASS IDENTIFIER ClassExtends ClassImplements  		
-| CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers  		
-| CLASS IDENTIFIER TypeParameterList  		
-| CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers 		
-| CLASS IDENTIFIER TypeParameterList ClassImplements  		
-| CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers  		
-| CLASS IDENTIFIER TypeParameterList ClassExtends  		
-| CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers  		
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements  		
-| CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers 		
-| ClassModifiers CLASS IDENTIFIER  		
-| ClassModifiers CLASS IDENTIFIER PERMITS DotIdentifiers  		
-| ClassModifiers CLASS IDENTIFIER ClassImplements  		
-| ClassModifiers CLASS IDENTIFIER ClassImplements PERMITS DotIdentifiers  		
-| ClassModifiers CLASS IDENTIFIER ClassExtends  		
-| ClassModifiers CLASS IDENTIFIER ClassExtends PERMITS DotIdentifiers  		
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements  		
-| ClassModifiers CLASS IDENTIFIER ClassExtends ClassImplements PERMITS DotIdentifiers  		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList  		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList PERMITS DotIdentifiers  		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements  		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassImplements PERMITS DotIdentifiers 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends  		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends PERMITS DotIdentifiers  		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements 		
-| ClassModifiers CLASS IDENTIFIER TypeParameterList ClassExtends ClassImplements PERMITS DotIdentifiers		
+CLASS IDENTIFIER 		{make_class_entry($3,yylineno);}
+| ClassModifiers CLASS IDENTIFIER  {string mod = check_class_modifiers($1,$3); cout<<mod<<endl; make_class_entry($3,yylineno);}
 ;
 
 ClassModifiers:
-ClassModifiers ClassModifier		
-| ClassModifier		
+ClassModifiers ClassModifier {strcpy($$,strcat($1,$2));}		
+| ClassModifier	{strcpy($$,$1);}	
 ;
 
 ClassModifier:
-PUBLIC		
-| PRIVATE		
-| FINAL		
-| STATIC		
-| SYNCHRONIZED		
+PUBLIC	    {strcpy($$,"0");}
+| PRIVATE	{strcpy($$,"1");}	
+| FINAL		{strcpy($$,"2");}
+| STATIC	{strcpy($$,"3");}			
 ;
 
 TypeParameterList:
@@ -281,9 +254,9 @@ VariableDeclaratorList COMMA VariableDeclarator
 ;
 
 VariableDeclarator:
-IDENTIFIER EQUALS VariableInitializer		
+IDENTIFIER EQUALS VariableInitializer   {make_entry($1,type,yylineno);}		
 | IDENTIFIER Dims EQUALS VariableInitializer		
-| IDENTIFIER		
+| IDENTIFIER	{make_entry($1,type,yylineno);}	
 | IDENTIFIER Dims		
 ;
 
@@ -969,7 +942,11 @@ int main(int argc, char** argv){
     fout.open(output,ios::out);
     st.empty();
     fout<<"digraph G{"<<endl<<"node[ordering=out]"<<endl;
+
+    init_symbol_tabl();
     yyparse();
+
+
     fout<<"}"<<endl;
     exit(0);
 }
