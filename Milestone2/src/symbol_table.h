@@ -10,9 +10,11 @@ typedef struct sym_entry{
     int normal; //normal->0 = basic  normal->1 = array  normal->2 = func  normal->3 = class/interface
     int size;
     int offset;
+    int dimension;
     string modifiers;
     vector<int> dims;
-    vector<pair<string,string> > arguments;
+    map<string, sym_entry*> child;
+    vector<tuple<string,string, int, bool, bool> > arguments;
 
 }sym_entry;
 

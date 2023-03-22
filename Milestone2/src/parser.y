@@ -13,6 +13,9 @@ fstream fout,fin;
 stack<int> st;
 int node_number=1;
 string type;
+string modifiers;
+
+vector<tuple<string,string,int,bool,bool> > arguments;
 
 void yyerror(const char* error){
     fprintf (stderr, "%s | %d\n",error,yylineno);
@@ -53,11 +56,12 @@ void func(string q,string p){
     struct {
         char label[1000];
         char type[100];
+        int dims;
     }item;
 }
 
 %token <item> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PACKAGE PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_TYPE STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
-%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassDeclarationHeader ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ConstructorDeclarationHeader ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration InterfaceDeclarationHeader LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReceiverParameter ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList VariableModifiers WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
+%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassDeclarationHeader ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ConstructorDeclarationHeader ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration InterfaceDeclarationHeader LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
 
 %start input
 
@@ -152,8 +156,8 @@ PrimitiveType Dims
 ;
 
 Dims:
-Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		
-| LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE		
+Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE {$$.dims = $1.dims+1;}		
+| LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE	{$$.dims = 1;}	
 ;
 
 TypeArguments:
@@ -181,13 +185,13 @@ ClassDeclarationHeader ClassBody {up_sym_table();}
 ;
 
 ClassDeclarationHeader:
-CLASS IDENTIFIER 		{make_class_entry($2.label,yylineno);}
-| ClassModifiers CLASS IDENTIFIER  {string mod = check_class_modifiers($1.label,$3.label); cout<<mod<<endl; make_class_entry($3.label,yylineno);}
+CLASS IDENTIFIER 		{make_class_entry($2.label,yylineno,"00");}
+| ClassModifiers CLASS IDENTIFIER  {string mod = check_class_modifiers($1.label,$3.label); cout<<mod<<endl; make_class_entry($3.label,yylineno,mod);}
 ;
 
 ClassModifiers:
 ClassModifiers ClassModifier {strcpy($$.label,strcat($1.label,$2.label));}		
-| ClassModifier	{strcpy($$.type,$1.type);}	
+| ClassModifier	{strcpy($$.label,$1.label);}	
 ;
 
 ClassModifier:
@@ -245,10 +249,10 @@ VariableDeclaratorList COMMA VariableDeclarator
 ;
 
 VariableDeclarator:
-IDENTIFIER EQUALS VariableInitializer   {make_entry($1.label,type,yylineno);}		
-| IDENTIFIER Dims EQUALS VariableInitializer		
-| IDENTIFIER	{make_entry($1.label,type,yylineno);}	
-| IDENTIFIER Dims		
+IDENTIFIER EQUALS VariableInitializer   {string x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}		
+| IDENTIFIER Dims EQUALS VariableInitializer	{string x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}	
+| IDENTIFIER	{string x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}	
+| IDENTIFIER Dims	{string x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}		
 ;
 
 VariableInitializer:
@@ -257,29 +261,19 @@ Expression
 ;
 
 MethodDeclaration:
-MethodHeader MethodBody		
-| ClassModifiers MethodHeader MethodBody		
+MethodHeader MethodBody	 {up_sym_table();}
 ;
 
 MethodHeader:
-VOID MethodDeclarator 		
-| VOID MethodDeclarator Throws 		
-| Type MethodDeclarator 		
-| Type MethodDeclarator Throws 		
-| TypeParameterList VOID MethodDeclarator 		
-| TypeParameterList VOID MethodDeclarator Throws 		
-| TypeParameterList Type MethodDeclarator 		
-| TypeParameterList Type MethodDeclarator Throws 		
+VOID MethodDeclarator 	{make_func_entry($2.label,"void",arguments,yylineno,"0000",$2.dims); add_arguments(arguments); arguments.clear();}	
+| Type MethodDeclarator 	{make_func_entry($2.label,$1.type,arguments,yylineno,"0000",$2.dims); add_arguments(arguments); arguments.clear();}	
+| ClassModifiers VOID MethodDeclarator  {string x = check_method_modifiers($1.label); make_func_entry($3.label,"void",arguments,yylineno,x,$2.dims); add_arguments(arguments); arguments.clear();}
+| ClassModifiers Type MethodDeclarator  {string x = check_method_modifiers($1.label); make_func_entry($3.label,$2.type,arguments,yylineno,x,$2.dims); add_arguments(arguments); arguments.clear();}	
 ;
 
 MethodDeclarator:
-Declarator		
-| Declarator Dims		
-;
-
-ReceiverParameter:
-Type THIS		
-| Type IDENTIFIER DOT THIS		
+Declarator  {strcpy($$.label,$1.label); $$.dims = 0;}		
+| Declarator Dims	{strcpy($$.label,$1.label); $$.dims = $2.dims;}	
 ;
 
 FormalParameterList:
@@ -288,17 +282,12 @@ FormalParameterList COMMA FormalParameter
 ;
 
 FormalParameter:
-Type IDENTIFIER 		
-| VariableModifiers Type IDENTIFIER 		
-| Type IDENTIFIER Dims 		
-| VariableModifiers Type IDENTIFIER Dims		
-| Type TRIPLE_DOT IDENTIFIER		
-| VariableModifiers Type TRIPLE_DOT IDENTIFIER		
-;
-
-VariableModifiers:
-VariableModifiers FINAL		
-| FINAL		
+Type IDENTIFIER     {arguments.push_back(make_tuple($2.label,$1.type,0,0,0));}	
+| FINAL Type IDENTIFIER 		{arguments.push_back(make_tuple($3.label,$2.type,0,0,1));}
+| Type IDENTIFIER Dims 		{arguments.push_back(make_tuple($2.label,$1.type,$3.dims,0,0));}
+| FINAL Type IDENTIFIER Dims		{arguments.push_back(make_tuple($3.label,$1.type,0,0,0));}
+| Type TRIPLE_DOT IDENTIFIER		{arguments.push_back(make_tuple($3.label,$1.type,0,1,0));}
+| FINAL Type TRIPLE_DOT IDENTIFIER		{arguments.push_back(make_tuple($4.label,$2.type,0,1,1));}
 ;
 
 Throws:
@@ -332,8 +321,6 @@ TypeParameterList Declarator
 Declarator:
 IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
 | IDENTIFIER LEFT_PARANTHESIS FormalParameterList RIGHT_PARANTHESIS 		
-| IDENTIFIER LEFT_PARANTHESIS ReceiverParameter COMMA RIGHT_PARANTHESIS 		
-| IDENTIFIER LEFT_PARANTHESIS ReceiverParameter COMMA FormalParameterList RIGHT_PARANTHESIS 		
 ;
 
 ConstructorBody:
@@ -399,8 +386,8 @@ BlockStatements BlockStatement
 BlockStatement:
 Type VariableDeclaratorList SEMI_COLON		
 | VAR VariableDeclaratorList SEMI_COLON		
-| VariableModifiers Type VariableDeclaratorList SEMI_COLON		
-| VariableModifiers VAR VariableDeclaratorList SEMI_COLON		
+| FINAL Type VariableDeclaratorList SEMI_COLON		
+| FINAL VAR VariableDeclaratorList SEMI_COLON		
 | Statement		
 ;
 
@@ -524,9 +511,9 @@ StatementExpressionList
 
 LocalVariableDeclaration:
 Type VariableDeclaratorList		
-| VariableModifiers Type VariableDeclaratorList		
+| FINAL Type VariableDeclaratorList		
 | VAR VariableDeclaratorList		
-| VariableModifiers VAR VariableDeclaratorList		
+| FINAL VAR VariableDeclaratorList		
 ;
 
 ForUpdate:
