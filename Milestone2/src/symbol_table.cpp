@@ -8,8 +8,10 @@ map<sym_table*, sym_table*> parent;
 string curr_file;
 
 void init_symbol_table(){
+    default_sym_table = new sym_table;
     curr_sym_table = default_sym_table;
     global_sym_table = new list_sym_table;
+    dirty_sym_table = new sym_table;
 }
 
 void new_scope(){
@@ -121,6 +123,15 @@ void check_gst(string name){
         cout<<"No datatype or Class name of type: "<<name<<endl;
         exit(1);
     }
+}
+
+void check_constructor(string name){
+    if((*global_sym_table).find(name)==(*global_sym_table).end() || (*global_sym_table)[name]!=curr_sym_table) cout<<"Constructor should have same name as class"<<endl;
+}
+
+bool check_first(){
+    if(parent[curr_sym_table] == default_sym_table) return true;
+    else return false;
 }
 
 void error_msg(){

@@ -9,6 +9,7 @@ extern FILE* yyin;
 
 #define YYDEBUG 1
 
+bool first_parse;
 fstream fout,fin;
 stack<int> st;
 int node_number=1;
@@ -62,7 +63,7 @@ void func(string q,string p){
 }
 
 %token <item> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PACKAGE PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_TYPE STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
-%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ConstructorDeclarationHeader ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration InterfaceDeclarationHeader LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList WhileStatement WhileStatementNoShortIf Wildcard YieldStatement IfThenElseStatementStart 
+%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodInvocation MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList WhileStatement WhileStatementNoShortIf Wildcard YieldStatement IfThenElseStatementStart 
 
 %start input
 
@@ -182,8 +183,8 @@ QUESTION EXTENDS ReferenceType
 ;
 
 ClassDeclaration:
-CLASS IDENTIFIER ClassBody	{make_class_entry($2.label,yylineno,"00");}
-| ClassModifiers CLASS IDENTIFIER ClassBody {string mod = check_class_modifiers($1.label,$3.label); cout<<mod<<endl; make_class_entry($3.label,yylineno,mod);}
+CLASS IDENTIFIER ClassBody	{if(first_parse) make_class_entry($2.label,yylineno,"00");}
+| ClassModifiers CLASS IDENTIFIER ClassBody {if(first_parse){string mod = check_class_modifiers($1.label,$3.label); make_class_entry($3.label,yylineno,mod);} modifiers.clear();}
 ;
 
 ClassModifiers:
@@ -194,23 +195,8 @@ ClassModifiers ClassModifier {strcpy($$.label,strcat($1.label,$2.label)); modifi
 ClassModifier:
 PUBLIC	    {strcpy($$.label,"0");}
 | PRIVATE	{strcpy($$.label,"1");}	
-| FINAL		{strcpy($$.label,"2");}
+| FINAL		{strcpy($$.label,"2");temp.clear();}
 | STATIC	{strcpy($$.label,"3");}			
-;
-
-TypeParameterList:
-LESS_THAN IDENTIFIER GREATER_THAN 		
-| LESS_THAN IDENTIFIER TypeParameters GREATER_THAN 		
-;
-
-TypeParameters:
-TypeParameters COMMA IDENTIFIER 		
-| COMMA IDENTIFIER		
-;
-
-ClassTypes:
-ClassTypes COMMA ClassType		
-| COMMA ClassType		
 ;
 
 ClassBody:
@@ -247,10 +233,10 @@ VariableDeclaratorList COMMA VariableDeclarator
 ;
 
 VariableDeclarator:
-IDENTIFIER EQUALS VariableInitializer   {string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}		
-| IDENTIFIER Dims EQUALS VariableInitializer	{string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}	
-| IDENTIFIER	{string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}	
-| IDENTIFIER Dims	{string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}		
+IDENTIFIER EQUALS VariableInitializer   {if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}}		
+| IDENTIFIER Dims EQUALS VariableInitializer	{if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}}	
+| IDENTIFIER	{if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}}	
+| IDENTIFIER Dims	{if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}}		
 ;
 
 VariableInitializer:
@@ -259,10 +245,10 @@ Expression
 ;
 
 MethodDeclaration:
-VOID MethodDeclarator MethodBody	{make_func_entry($2.label,"void",arguments,yylineno,"0000",$2.dims); add_arguments(arguments,$2.label); arguments.clear();}	
-| Type MethodDeclarator MethodBody	{make_func_entry($2.label,$1.type,arguments,yylineno,"0000",$2.dims); add_arguments(arguments,$2.label); arguments.clear();}	
-| ClassModifiers VOID MethodDeclarator MethodBody  {string x = check_method_modifiers($1.label); make_func_entry($3.label,"void",arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}
-| ClassModifiers Type MethodDeclarator MethodBody {string x = check_method_modifiers($1.label); make_func_entry($3.label,$2.type,arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}	
+VOID MethodDeclarator MethodBody	{if(first_parse){make_func_entry($2.label,"void",arguments,yylineno,"0000",$2.dims); add_arguments(arguments,$2.label); arguments.clear();}}	
+| Type MethodDeclarator MethodBody	{if(first_parse){make_func_entry($2.label,$1.type,arguments,yylineno,"0000",$2.dims); add_arguments(arguments,$2.label); arguments.clear();}}	
+| ClassModifiers VOID MethodDeclarator MethodBody  {if(first_parse){string x = check_method_modifiers($1.label); make_func_entry($3.label,"void",arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}
+| ClassModifiers Type MethodDeclarator MethodBody {if(first_parse){string x = check_method_modifiers($1.label); make_func_entry($3.label,$2.type,arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}	
 ;
 
 MethodDeclarator:
@@ -276,16 +262,12 @@ FormalParameterList COMMA FormalParameter
 ;
 
 FormalParameter:
-Type IDENTIFIER     {arguments.push_back(make_tuple($2.label,$1.type,0,0,0));}	
-| FINAL Type IDENTIFIER 		{arguments.push_back(make_tuple($3.label,$2.type,0,0,1));}
-| Type IDENTIFIER Dims 		{arguments.push_back(make_tuple($2.label,$1.type,$3.dims,0,0));}
-| FINAL Type IDENTIFIER Dims		{arguments.push_back(make_tuple($3.label,$1.type,0,0,0));}
-| Type TRIPLE_DOT IDENTIFIER		{arguments.push_back(make_tuple($3.label,$1.type,0,1,0));}
-| FINAL Type TRIPLE_DOT IDENTIFIER		{arguments.push_back(make_tuple($4.label,$2.type,0,1,1));}
-;
-
-Throws:
-THROWS ClassTypes		
+Type IDENTIFIER     {if(first_parse){arguments.push_back(make_tuple($2.label,$1.type,0,0,0));}}	
+| FINAL Type IDENTIFIER 		{if(first_parse){arguments.push_back(make_tuple($3.label,$2.type,0,0,1));}}
+| Type IDENTIFIER Dims 		{if(first_parse){arguments.push_back(make_tuple($2.label,$1.type,$3.dims,0,0));}}
+| FINAL Type IDENTIFIER Dims		{if(first_parse){arguments.push_back(make_tuple($3.label,$1.type,0,0,0));}}
+| Type TRIPLE_DOT IDENTIFIER		{if(first_parse){arguments.push_back(make_tuple($3.label,$1.type,0,1,0));}}
+| FINAL Type TRIPLE_DOT IDENTIFIER		{if(first_parse){arguments.push_back(make_tuple($4.label,$2.type,0,1,1));}}
 ;
 
 MethodBody:
@@ -297,19 +279,9 @@ StaticInitializer:
 STATIC Block		
 ;
 
-ConstructorDeclaration:
-ConstructorDeclarationHeader ConstructorBody
-;
-
-ConstructorDeclarationHeader:
-TypeParameterList Declarator 		
-| TypeParameterList Declarator Throws 	
-| ClassModifiers TypeParameterList Declarator  		
-| ClassModifiers TypeParameterList Declarator Throws 		
-| Declarator  		
-| Declarator Throws 		
-| ClassModifiers Declarator  		
-| ClassModifiers Declarator Throws 		
+ConstructorDeclaration:		
+Declarator ConstructorBody {if(first_parse){check_constructor($2.label); make_func_entry($1.label,$1.label,arguments,yylineno,"0000",$1.dims); add_arguments(arguments,$1.label); arguments.clear();}}
+| ClassModifiers Declarator ConstructorBody{if(first_parse){check_constructor($2.label); string x = check_method_modifiers($1.label); make_func_entry($2.label,$2.label,arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}
 ;
 
 Declarator:
@@ -344,15 +316,10 @@ Expressions COMMA Expression
 | Expression		
 ;
 
-InterfaceDeclaration:
-InterfaceDeclarationHeader ClassBody
-;
 
-InterfaceDeclarationHeader:
-INTERFACE IDENTIFIER 		
-| INTERFACE IDENTIFIER TypeParameterList  				
-| ClassModifiers INTERFACE IDENTIFIER	
-| ClassModifiers INTERFACE IDENTIFIER TypeParameterList		
+InterfaceDeclaration:
+INTERFACE IDENTIFIER ClassBody	{if(first_parse) make_class_entry($2.label,yylineno,"00");}
+| ClassModifiers INTERFACE IDENTIFIER ClassBody {if(first_parse){string mod = check_class_modifiers($1.label,$3.label); make_class_entry($3.label,yylineno,mod);} modifiers.clear();}
 ;
 
 ArrayInitializer:
@@ -581,8 +548,7 @@ PrimaryNoNewArray
 ;
 
 PrimaryNoNewArray:
-Literal		
-| ClassLiteral		
+Literal			
 | THIS		
 | DotIdentifiers DOT THIS		
 | LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS		
@@ -590,25 +556,15 @@ Literal
 | FieldAccess		
 | ArrayAccess		
 | MethodInvocation		
-| MethodReference		
 ;
 
 Literal:
-INTEGER_LITERAL		
-| FLOATINGPOINT_LITERAL		
-| BOOLEAN_LITERAL		
-| CHARACTER_LITERAL		
-| STRING_LITERAL		
-| TEXTBLOCK		
-| NULL_LITERAL		
-;
-
-ClassLiteral:
-DotIdentifiers DOT CLASS 		
-| DotIdentifiers Dims DOT CLASS 		
-| PrimitiveType DOT CLASS 		
-| PrimitiveType Dims DOT CLASS 		
-| VOID DOT CLASS		
+INTEGER_LITERAL	    {strcpy($$.type,"int");}	
+| FLOATINGPOINT_LITERAL		{strcpy($$.type,"float");}
+| BOOLEAN_LITERAL	{strcpy($$.type,"bool");}	
+| CHARACTER_LITERAL		{strcpy($$.type,"char");}
+| STRING_LITERAL		{strcpy($$.type,"string");}	
+| NULL_LITERAL		{strcpy($$.type,"null");}
 ;
 
 ClassInstanceCreationExpression:
@@ -622,18 +578,6 @@ NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS
 | NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		
 | NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
 | NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		
-| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		
-| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
-| NEW DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
-| NEW TypeArguments DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		
-| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS RIGHT_PARANTHESIS ClassBody 		
-| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
-| NEW TypeArguments DotIdentifiers LESS_THAN GREATER_THAN LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		
 ;
 
 FieldAccess:
@@ -666,19 +610,6 @@ IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS
 | DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
 | DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
 | DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS		
-;
-
-MethodReference:
-Primary DOUBLE_COLON IDENTIFIER 		
-| Primary DOUBLE_COLON TypeArguments IDENTIFIER 		
-| ReferenceType DOUBLE_COLON IDENTIFIER 		
-| ReferenceType DOUBLE_COLON TypeArguments IDENTIFIER 		
-| ReferenceType DOUBLE_COLON NEW 		
-| ReferenceType DOUBLE_COLON TypeArguments NEW 		
-| SUPER DOUBLE_COLON IDENTIFIER 		
-| SUPER DOUBLE_COLON TypeArguments IDENTIFIER 		
-| DotIdentifiers DOT SUPER DOUBLE_COLON IDENTIFIER 		
-| DotIdentifiers DOT SUPER DOUBLE_COLON TypeArguments IDENTIFIER		
 ;
 
 ArrayCreationExpression:
@@ -819,23 +750,23 @@ UnaryExpression
 ;
 
 UnaryExpression:
-PreIncrementExpression		
-| PreDecrementExpression		
-| PLUS UnaryExpression		
-| MINUS UnaryExpression		
-| UnaryExpressionNotPlusMinus		
+PreIncrementExpression		    {if(!first_parse){strcpy($$.type,$1.type);}}
+| PreDecrementExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| PLUS UnaryExpression		    {if(!first_parse){strcpy($$.type,$2.type);}}
+| MINUS UnaryExpression		    {if(!first_parse){strcpy($$.type,$2.type);}}
+| UnaryExpressionNotPlusMinus	{if(!first_parse){strcpy($$.type,$1.type);}}	
 ;
 
 PreIncrementExpression:
-PLUS_PLUS UnaryExpression		
+PLUS_PLUS UnaryExpression		{if(!first_parse){strcpy($$.type,$2.type);}}
 ;
 
 PreDecrementExpression:
-MINUS_MINUS UnaryExpression		
+MINUS_MINUS UnaryExpression		{if(!first_parse){strcpy($$.type,$2.type);}}
 ;
 
 UnaryExpressionNotPlusMinus:
-PostfixExpression		
+PostfixExpression	{if(!first_parse){strcpy($$.type,$1.type);}}	
 | TILDA UnaryExpression		
 | EXCLAIM UnaryExpression		
 | CastExpression        
@@ -849,18 +780,18 @@ LEFT_PARANTHESIS PrimitiveType RIGHT_PARANTHESIS UnaryExpression
 ;
 
 PostfixExpression:
-Primary		
-| DotIdentifiers		
-| PostIncrementExpression		
-| PostDecrementExpression		
+Primary		                    {if(!first_parse){strcpy($$.type,$1.type);}}
+| DotIdentifiers		        {if(!first_parse){strcpy($$.type,$1.type);}}
+| PostIncrementExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| PostDecrementExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
 ;
 
 PostIncrementExpression:
-PostfixExpression PLUS_PLUS		
+PostfixExpression PLUS_PLUS		{if(!first_parse){strcpy($$.type,$1.type);}}
 ;
 
 PostDecrementExpression:
-PostfixExpression MINUS_MINUS		
+PostfixExpression MINUS_MINUS	{if(!first_parse){strcpy($$.type,$1.type);}}	
 ;
 
 
@@ -917,6 +848,7 @@ int main(int argc, char** argv){
     st.empty();
     fout<<"digraph G{"<<endl<<"node[ordering=out]"<<endl;
 
+    first_parse = true;
     init_symbol_table();
     yyparse();
 
