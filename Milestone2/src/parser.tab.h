@@ -154,9 +154,10 @@ union YYSTYPE
         char label[1000];
         char type[100];
         int dims;
+        bool lit;
     }item;
 
-#line 160 "parser.tab.h"
+#line 161 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

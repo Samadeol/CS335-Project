@@ -24,6 +24,7 @@ void old_scope(){
     sym_table* temp = curr_sym_table;
     curr_sym_table = parent[curr_sym_table];
     dirty_sym_table = temp;
+    if(dirty_sym_table->size() == 0) parent.erase(dirty_sym_table);
 }
 
 void reset(){
@@ -62,19 +63,17 @@ void make_entry(string name, string type, int line_number, string modifiers){
     (*curr_sym_table)[name]->modifiers = modifiers;
 }
 
-void make_func_entry(string name, string type, vector<tuple<string,string,int,bool,bool> > args, int line_number, string modifiers, int dims){
+void make_func_entry(string name, string type, vector<tuple<string,string,bool,bool> > args, int line_number, string modifiers){
     make_entry(name,type,line_number,modifiers);
     (*curr_sym_table)[name]->arguments = args;
     (*curr_sym_table)[name]->normal = 2;
-    (*curr_sym_table)[name]->dimension = dims;
     (*curr_sym_table)[name]->child = dirty_sym_table;
     reset();
 }    
 
-void make_array_entry(string name, string type, int line_number, vector<int> dims, string modifiers){
+void make_array_entry(string name, string type, int line_number, string modifiers){
     make_entry(name,type,line_number,modifiers);
     (*curr_sym_table)[name]->normal = 1;
-    (*curr_sym_table)[name]->dims = dims;
 }
 
 void make_class_entry(string name, int line_number, string modifiers){
@@ -88,17 +87,16 @@ void make_class_entry(string name, int line_number, string modifiers){
 string check_class_modifiers(string str, string name){
     string ans = "00";
     for(int i=0;i<str.size();i++){
-        if((str[i]=='2' || str[i]=='0') && (ans.size()==0 || (ans.size()==1 && ans[0]!=str[i]))) ans[(str[i]-'0')/2]='1';
+        if((str[i]=='2' || str[i]=='0') && ans[(str[i]-'0')/2]=='0')ans[(str[i]-'0')/2]='1';
         else{
             cout<<"Either wrong or repeated modifier used"<<endl;
             exit(1);
         }
     }
-    if((ans[0]=='0' || ans[1]=='0') && name!=curr_file.substr(0,curr_file.size()-5)){
-        cout<<"Public class "<<name<<" must be declared in file "<<name<<".java";
+    if((ans[0]=='1') && name!=curr_file.substr(0,curr_file.size()-5)){
+        cout<<"Public class "<<name<<" must be declared in file "<<name<<".java"<<endl;
         exit(1);
     } 
-    sort(ans.begin(),ans.end());
     return ans;
 }
 
@@ -132,6 +130,14 @@ void check_constructor(string name){
 bool check_first(){
     if(parent[curr_sym_table] == default_sym_table) return true;
     else return false;
+}
+
+void add_arguments(vector<tuple<string,string,bool, bool> > arguments, string name){
+
+}
+
+string expression_type(string type1, string type2, string op){
+
 }
 
 void error_msg(){

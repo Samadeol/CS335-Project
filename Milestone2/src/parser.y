@@ -17,7 +17,7 @@ string type;
 string modifiers;
 string temp;
 
-vector<tuple<string,string,int,bool,bool> > arguments;
+vector<tuple<string,string,bool,bool> > arguments;
 
 void yyerror(const char* error){
     fprintf (stderr, "%s | %d\n",error,yylineno);
@@ -59,11 +59,12 @@ void func(string q,string p){
         char label[1000];
         char type[100];
         int dims;
+        bool lit;
     }item;
 }
 
 %token <item> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PACKAGE PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_TYPE STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
-%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodInvocation MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList WhileStatement WhileStatementNoShortIf Wildcard YieldStatement IfThenElseStatementStart 
+%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassInstanceCreationExpression ClassMemberDeclaration ClassModifier ClassModifiers ClassType CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodInvocation MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement TryStatement Type TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList WhileStatement WhileStatementNoShortIf YieldStatement IfThenElseStatementStart 
 
 %start input
 
@@ -140,8 +141,8 @@ INTEGRAL_TYPE	{strcpy($$.type,$1.type);}
 ;
 
 ReferenceType:
-ClassType	{check_gst($1.label); strcpy($$.type,$1.type);}	
-| ArrayType		
+ClassType	{check_gst($1.label); strcpy($$.type,$1.label);}	
+| ArrayType		{strcpy($$.type,$1.type);}
 ;
 
 ClassType:
@@ -150,11 +151,11 @@ DotIdentifiers	{strcpy($$.type,$1.type);}
 
 DotIdentifiers:
 DotIdentifiers DOT IDENTIFIER	{strcpy($$.label,strcat($1.label,strcat($2.label,$3.label)));}	
-| IDENTIFIER		{strcpy($$.type,$1.type);}
+| IDENTIFIER		{strcpy($$.label,$1.label);}
 ;
 
 ArrayType:
-PrimitiveType Dims		
+PrimitiveType Dims	{string t; for(int i=0;i<$1.dims;i++) t.push_back('*'); strcpy($$.type,strcat($1.type,t.c_str()));}	
 ;
 
 Dims:
@@ -162,28 +163,8 @@ Dims LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE {$$.dims = $1.dims+1;}
 | LEFT_SQUARE_BRACE RIGHT_SQUARE_BRACE	{$$.dims = 1;}	
 ;
 
-TypeArguments:
-LESS_THAN TypeArgumentList GREATER_THAN		
-;
-
-TypeArgumentList:
-TypeArgumentList COMMA TypeArgument		
-| TypeArgument		
-;
-
-TypeArgument:
-ReferenceType		
-| Wildcard		
-;
-
-Wildcard:
-QUESTION EXTENDS ReferenceType		
-| QUESTION SUPER ReferenceType		
-| QUESTION		
-;
-
 ClassDeclaration:
-CLASS IDENTIFIER ClassBody	{if(first_parse) make_class_entry($2.label,yylineno,"00");}
+CLASS IDENTIFIER ClassBody	{if(first_parse){make_class_entry($2.label,yylineno,"00");}}
 | ClassModifiers CLASS IDENTIFIER ClassBody {if(first_parse){string mod = check_class_modifiers($1.label,$3.label); make_class_entry($3.label,yylineno,mod);} modifiers.clear();}
 ;
 
@@ -234,21 +215,21 @@ VariableDeclaratorList COMMA VariableDeclarator
 
 VariableDeclarator:
 IDENTIFIER EQUALS VariableInitializer   {if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}}		
-| IDENTIFIER Dims EQUALS VariableInitializer	{if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}}	
+| IDENTIFIER Dims EQUALS VariableInitializer	{if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); string t; for(int i=0;i<$2.dims;i++) t.push_back('*'); make_array_entry($1.label,type+t,yylineno,x);}}	
 | IDENTIFIER	{if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}}	
-| IDENTIFIER Dims	{if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}}		
+| IDENTIFIER Dims	{if(check_first()){string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers);string t; for(int i=0;i<$1.dims;i++) t.push_back('*'); make_array_entry($1.label,type+t,yylineno,x);}}		
 ;
 
 VariableInitializer:
-Expression		
-| ArrayInitializer		
+Expression		{strcpy($$.type,$1.type);}
+| ArrayInitializer	{strcpy($$.type,$1.type);}	
 ;
 
 MethodDeclaration:
-VOID MethodDeclarator MethodBody	{if(first_parse){make_func_entry($2.label,"void",arguments,yylineno,"0000",$2.dims); add_arguments(arguments,$2.label); arguments.clear();}}	
-| Type MethodDeclarator MethodBody	{if(first_parse){make_func_entry($2.label,$1.type,arguments,yylineno,"0000",$2.dims); add_arguments(arguments,$2.label); arguments.clear();}}	
-| ClassModifiers VOID MethodDeclarator MethodBody  {if(first_parse){string x = check_method_modifiers($1.label); make_func_entry($3.label,"void",arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}
-| ClassModifiers Type MethodDeclarator MethodBody {if(first_parse){string x = check_method_modifiers($1.label); make_func_entry($3.label,$2.type,arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}	
+VOID MethodDeclarator MethodBody	{if(first_parse){if($2.dims){cout<<"Void function cant be of array type"<<endl; exit(1);} make_func_entry($2.label,"void",arguments,yylineno,"0000"); add_arguments(arguments,$2.label); arguments.clear();}}	
+| Type MethodDeclarator MethodBody	{if(first_parse){string t; for(int i=0;i<$2.dims;i++) t.push_back('*'); make_func_entry($2.label,strcat($1.type,t.c_str()),arguments,yylineno,"0000"); add_arguments(arguments,$2.label); arguments.clear();}}	
+| ClassModifiers VOID MethodDeclarator MethodBody  {if(first_parse){if($2.dims){cout<<"Void function cant be of array type"<<endl; exit(1);} string x = check_method_modifiers($1.label); make_func_entry($3.label,"void",arguments,yylineno,x); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}
+| ClassModifiers Type MethodDeclarator MethodBody {if(first_parse){string t; for(int i=0;i<$2.dims;i++) t.push_back('*'); string x = check_method_modifiers($1.label); make_func_entry($3.label,strcat($2.type,t.c_str()),arguments,yylineno,x); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}	
 ;
 
 MethodDeclarator:
@@ -262,12 +243,12 @@ FormalParameterList COMMA FormalParameter
 ;
 
 FormalParameter:
-Type IDENTIFIER     {if(first_parse){arguments.push_back(make_tuple($2.label,$1.type,0,0,0));}}	
-| FINAL Type IDENTIFIER 		{if(first_parse){arguments.push_back(make_tuple($3.label,$2.type,0,0,1));}}
-| Type IDENTIFIER Dims 		{if(first_parse){arguments.push_back(make_tuple($2.label,$1.type,$3.dims,0,0));}}
-| FINAL Type IDENTIFIER Dims		{if(first_parse){arguments.push_back(make_tuple($3.label,$1.type,0,0,0));}}
-| Type TRIPLE_DOT IDENTIFIER		{if(first_parse){arguments.push_back(make_tuple($3.label,$1.type,0,1,0));}}
-| FINAL Type TRIPLE_DOT IDENTIFIER		{if(first_parse){arguments.push_back(make_tuple($4.label,$2.type,0,1,1));}}
+Type IDENTIFIER     {if(first_parse){arguments.push_back(make_tuple($2.label,$1.type,0,0));}}	
+| FINAL Type IDENTIFIER 		{if(first_parse){arguments.push_back(make_tuple($3.label,$2.type,0,1));}}
+| Type IDENTIFIER Dims 		{if(first_parse){string t; for(int i=0;i<$3.dims;i++) t.push_back('*'); arguments.push_back(make_tuple($2.label,strcat($1.type,t.c_str()),0,0));}}
+| FINAL Type IDENTIFIER Dims		{if(first_parse){string t; for(int i=0;i<$3.dims;i++) t.push_back('*'); arguments.push_back(make_tuple($3.label,strcat($1.type,t.c_str()),0,1));}}
+| Type TRIPLE_DOT IDENTIFIER		{if(first_parse){arguments.push_back(make_tuple($3.label,$1.type,1,0));}}
+| FINAL Type TRIPLE_DOT IDENTIFIER		{if(first_parse){arguments.push_back(make_tuple($4.label,$2.type,1,1));}}
 ;
 
 MethodBody:
@@ -280,8 +261,8 @@ STATIC Block
 ;
 
 ConstructorDeclaration:		
-Declarator ConstructorBody {if(first_parse){check_constructor($2.label); make_func_entry($1.label,$1.label,arguments,yylineno,"0000",$1.dims); add_arguments(arguments,$1.label); arguments.clear();}}
-| ClassModifiers Declarator ConstructorBody{if(first_parse){check_constructor($2.label); string x = check_method_modifiers($1.label); make_func_entry($2.label,$2.label,arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}
+Declarator ConstructorBody {if(first_parse){check_constructor($2.label); make_func_entry($1.label,$1.label,arguments,yylineno,"0000"); add_arguments(arguments,$1.label); arguments.clear();}}
+| ClassModifiers Declarator ConstructorBody{if(first_parse){check_constructor($2.label); string x = check_method_modifiers($1.label); make_func_entry($2.label,$2.label,arguments,yylineno,x); add_arguments(arguments,$3.label); arguments.clear();}modifiers.clear();}
 ;
 
 Declarator:
@@ -298,17 +279,11 @@ LEFT_CURLY_BRACE RIGHT_CURLY_BRACE
 
 ExplicitConstructorInvocation:
 THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		
-| THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		
-| TypeArguments THIS LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		
-| TypeArguments THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		
+| THIS LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		 		
 | SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		
-| SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		
-| TypeArguments SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		
-| TypeArguments SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		
+| SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 				
 | DotIdentifiers DOT SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		
 | DotIdentifiers DOT SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON 		
-| DotIdentifiers DOT TypeArguments SUPER LEFT_PARANTHESIS RIGHT_PARANTHESIS SEMI_COLON 		
-| DotIdentifiers DOT TypeArguments SUPER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS SEMI_COLON		
 ;
 
 Expressions:
@@ -323,15 +298,15 @@ INTERFACE IDENTIFIER ClassBody	{if(first_parse) make_class_entry($2.label,yyline
 ;
 
 ArrayInitializer:
-LEFT_CURLY_BRACE RIGHT_CURLY_BRACE 		
-| LEFT_CURLY_BRACE COMMA RIGHT_CURLY_BRACE 		
-| LEFT_CURLY_BRACE VariableInitializerList RIGHT_CURLY_BRACE 		
-| LEFT_CURLY_BRACE VariableInitializerList COMMA RIGHT_CURLY_BRACE 		
+LEFT_CURLY_BRACE RIGHT_CURLY_BRACE 		{strcpy($$.type,"*");}
+| LEFT_CURLY_BRACE COMMA RIGHT_CURLY_BRACE 		{strcpy($$.type,"*");}
+| LEFT_CURLY_BRACE VariableInitializerList RIGHT_CURLY_BRACE 		{strcpy($$.type,strcat($2.type,"*"));}
+| LEFT_CURLY_BRACE VariableInitializerList COMMA RIGHT_CURLY_BRACE 	{strcpy($$.type,strcat($2.type,"*"));}	
 ;
 
 VariableInitializerList:
-VariableInitializerList COMMA VariableInitializer		
-| VariableInitializer		
+VariableInitializerList COMMA VariableInitializer   {strcpy($$.type, expression_type($1.type,$3.type,"array").c_str());}		
+| VariableInitializer	{strcpy($$.type,$1.type);}	
 ;
 
 Block:
@@ -409,21 +384,20 @@ Assignment
 | ClassInstanceCreationExpression		
 		
 IfThenStatement:
-IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement		
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement	{reset();}	
 ;
 
 IfThenElseStatement:
-IfThenElseStatementStart ELSE Statement	
+IfThenElseStatementStart ELSE Statement	    {reset();}
 ;
 
 IfThenElseStatementStart:
-IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf {reset();}
 ;
 
 IfThenElseStatementNoShortIf:
-IfThenElseStatementStart ELSE StatementNoShortIf	
+IfThenElseStatementStart ELSE StatementNoShortIf	{reset();}
 ;
-
 
 
 AssertStatement:
@@ -432,11 +406,11 @@ ASSERT Expression SEMI_COLON
 ;
 
 WhileStatement:
-WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement		
+WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement	{if($3.type!="boolean"){cout<<"Expression must be of type boolean"<<endl;exit(1);} reset();}	
 ;
 
 WhileStatementNoShortIf:
-WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf		
+WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf		{if($3.type!="boolean"){cout<<"Expression must be of type boolean"<<endl;exit(1);} reset();}
 ;
 
 ForStatement:
@@ -473,7 +447,7 @@ FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf
 
 ForInit:
 StatementExpressionList		
-| LocalVariableDeclaration		
+| LocalVariableDeclaration
 ;
 
 LocalVariableDeclaration:
@@ -548,12 +522,11 @@ PrimaryNoNewArray
 ;
 
 PrimaryNoNewArray:
-Literal			
+Literal			{$$.lit = true;}
 | THIS		
 | DotIdentifiers DOT THIS		
 | LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS		
-| ClassInstanceCreationExpression		
-| FieldAccess		
+| ClassInstanceCreationExpression			
 | ArrayAccess		
 | MethodInvocation		
 ;
@@ -580,12 +553,6 @@ NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS
 | NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS ClassBody 		
 ;
 
-FieldAccess:
-Primary DOT IDENTIFIER		
-| SUPER DOT IDENTIFIER		
-| DotIdentifiers DOT SUPER DOT IDENTIFIER		
-;
-
 ArrayAccess:
 DotIdentifiers LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE  		
 | PrimaryNoNewArray LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		
@@ -595,21 +562,13 @@ MethodInvocation:
 IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
 | IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
 | DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
-| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| DotIdentifiers DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 			
 | Primary DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| Primary DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
-| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| Primary DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
+| Primary DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		 		
 | SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
-| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
+| SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 				
 | DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
 | DotIdentifiers DOT SUPER DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		
-| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		
-| DotIdentifiers DOT SUPER DOT TypeArguments IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS		
 ;
 
 ArrayCreationExpression:
@@ -657,19 +616,7 @@ DotIdentifiers EQUALS Expression
 | DotIdentifiers GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		
 | DotIdentifiers AMPERSAND_EQUALS Expression		
 | DotIdentifiers POWER_EQUALS Expression		
-| DotIdentifiers BAR_EQUALS Expression		
-| FieldAccess EQUALS Expression	
-| FieldAccess STAR_EQUALS Expression		
-| FieldAccess SLASH_EQUALS Expression		
-| FieldAccess PERCENT_EQUALS Expression		
-| FieldAccess PLUS_EQUALS Expression		
-| FieldAccess MINUS_EQUALS Expression		
-| FieldAccess LESS_THAN_LESS_THAN_EQUALS Expression		
-| FieldAccess GREATER_THAN_GREATER_THAN_EQUALS Expression		
-| FieldAccess GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		
-| FieldAccess AMPERSAND_EQUALS Expression		
-| FieldAccess POWER_EQUALS Expression		
-| FieldAccess BAR_EQUALS Expression		
+| DotIdentifiers BAR_EQUALS Expression
 | ArrayAccess EQUALS Expression	
 | ArrayAccess STAR_EQUALS Expression		
 | ArrayAccess SLASH_EQUALS Expression		
@@ -685,88 +632,107 @@ DotIdentifiers EQUALS Expression
 ;
 
 ConditionalExpression:
-ConditionalOrExpression		
+ConditionalOrExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
 | ConditionalOrExpression QUESTION Expression COLON ConditionalExpression		
 | ConditionalOrExpression QUESTION Expression COLON LambdaExpression		
 ;
 
 ConditionalOrExpression:
-ConditionalAndExpression		
-| ConditionalOrExpression BAR_BAR ConditionalAndExpression		
+ConditionalAndExpression	{if(!first_parse){strcpy($$.type,$1.type);}}	
+| ConditionalOrExpression BAR_BAR ConditionalAndExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
 ;
 
 ConditionalAndExpression:
-InclusiveOrExpression		
-| ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression		
+InclusiveOrExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
 ;
 
 InclusiveOrExpression:
-ExclusiveOrExpression		
-| InclusiveOrExpression BAR ExclusiveOrExpression		
+ExclusiveOrExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| InclusiveOrExpression BAR ExclusiveOrExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
 ;
 
 ExclusiveOrExpression:
-AndExpression		
-| ExclusiveOrExpression POWER AndExpression		
+AndExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| ExclusiveOrExpression POWER AndExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
 ;
 
 AndExpression:
-EqualityExpression		
-| AndExpression AMPERSAND EqualityExpression		
+EqualityExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| AndExpression AMPERSAND EqualityExpression	{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
 ;
 
 EqualityExpression:
-RelationalExpression		
-| EqualityExpression EQUALS_EQUALS RelationalExpression		
-| EqualityExpression EXCLAIM_EQUALS RelationalExpression		
+RelationalExpression	{if(!first_parse){strcpy($$.type,$1.type);}}	
+| EqualityExpression EQUALS_EQUALS RelationalExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
+| EqualityExpression EXCLAIM_EQUALS RelationalExpression	{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
 ;
 
 RelationalExpression:
-ShiftExpression		
-| RelationalExpression LESS_THAN ShiftExpression		
-| RelationalExpression GREATER_THAN ShiftExpression		
-| RelationalExpression LESS_THAN_EQUALS ShiftExpression		
-| RelationalExpression GREATER_THAN_EQUALS ShiftExpression		
+ShiftExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| RelationalExpression LESS_THAN ShiftExpression	{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
+| RelationalExpression GREATER_THAN ShiftExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
+| RelationalExpression LESS_THAN_EQUALS ShiftExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
+| RelationalExpression GREATER_THAN_EQUALS ShiftExpression  {if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
 ;
 
 ShiftExpression:
-AdditiveExpression		
-| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression		
-| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression		
-| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression		
+AdditiveExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
+| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
+| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
 ;
 
 AdditiveExpression:
-MultiplicativeExpression		
-| AdditiveExpression PLUS MultiplicativeExpression		
-| AdditiveExpression MINUS MultiplicativeExpression		
+MultiplicativeExpression    {if(!first_parse){strcpy($$.type,$1.type);}}		
+| AdditiveExpression PLUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
+| AdditiveExpression MINUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
 ;
 
 MultiplicativeExpression:
-UnaryExpression		
-| MultiplicativeExpression STAR UnaryExpression		
-| MultiplicativeExpression SLASH UnaryExpression		
-| MultiplicativeExpression PERCENT UnaryExpression		
+UnaryExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+| MultiplicativeExpression STAR UnaryExpression	    {if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
+| MultiplicativeExpression SLASH UnaryExpression    {if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
+| MultiplicativeExpression PERCENT UnaryExpression	{if(!first_parse){string t = expression_type($1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
 ;
 
 UnaryExpression:
-PreIncrementExpression		    {if(!first_parse){strcpy($$.type,$1.type);}}
-| PreDecrementExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
-| PLUS UnaryExpression		    {if(!first_parse){strcpy($$.type,$2.type);}}
-| MINUS UnaryExpression		    {if(!first_parse){strcpy($$.type,$2.type);}}
-| UnaryExpressionNotPlusMinus	{if(!first_parse){strcpy($$.type,$1.type);}}	
+PreIncrementExpression		    {if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
+| PreDecrementExpression		{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
+| PLUS UnaryExpression		    {if(!first_parse){string t = expression_type($2.type,"",$1.label); $$.lit = $2.lit; strcpy($$.type,t.c_str());}}
+| MINUS UnaryExpression		    {if(!first_parse){string t = expression_type($2.type,"",$1.label); $$.lit = $2.lit; strcpy($$.type,t.c_str());}}
+| UnaryExpressionNotPlusMinus	{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}	
 ;
 
 PreIncrementExpression:
-PLUS_PLUS UnaryExpression		{if(!first_parse){strcpy($$.type,$2.type);}}
+PLUS_PLUS UnaryExpression		{
+if(!first_parse){
+    string t = expression_type($2.type,"",$1.label);
+    if($2.lit = true){
+        cout<<"Cannot apply increment/decrement operation on a literal"<<endl;
+        exit(1);
+    }
+    $$.lit = false;
+    strcpy($$.type,t.c_str());
+}    
+}
 ;
 
 PreDecrementExpression:
-MINUS_MINUS UnaryExpression		{if(!first_parse){strcpy($$.type,$2.type);}}
+MINUS_MINUS UnaryExpression		{
+if(!first_parse){
+    string t = expression_type($2.type,"",$1.label);
+    if($2.lit = true){
+        cout<<"Cannot apply increment/decrement operation on a literal"<<endl;
+        exit(1);
+    }
+    $$.lit = false;
+    strcpy($$.type,t.c_str());
+}}
 ;
 
 UnaryExpressionNotPlusMinus:
-PostfixExpression	{if(!first_parse){strcpy($$.type,$1.type);}}	
+PostfixExpression	{if(!first_parse){strcpy($$.type,$1.type); strcpy($$.type,$1.type);}}	
 | TILDA UnaryExpression		
 | EXCLAIM UnaryExpression		
 | CastExpression        
@@ -780,18 +746,38 @@ LEFT_PARANTHESIS PrimitiveType RIGHT_PARANTHESIS UnaryExpression
 ;
 
 PostfixExpression:
-Primary		                    {if(!first_parse){strcpy($$.type,$1.type);}}
-| DotIdentifiers		        {if(!first_parse){strcpy($$.type,$1.type);}}
-| PostIncrementExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
-| PostDecrementExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
+Primary		                    {if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
+| DotIdentifiers		        {if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
+| PostIncrementExpression		{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
+| PostDecrementExpression		{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
 ;
 
 PostIncrementExpression:
-PostfixExpression PLUS_PLUS		{if(!first_parse){strcpy($$.type,$1.type);}}
+PostfixExpression PLUS_PLUS		{
+if(!first_parse){
+    string t = expression_type($1.type,"",$2.label);
+    if($1.lit = true){
+        cout<<"Cannot apply increment operation on a literal"<<endl;
+        exit(1);
+    }
+    $$.lit = false;
+    strcpy($$.type,t.c_str());
+}
+}
 ;
 
 PostDecrementExpression:
-PostfixExpression MINUS_MINUS	{if(!first_parse){strcpy($$.type,$1.type);}}	
+PostfixExpression MINUS_MINUS	{
+if(!first_parse){
+    string t = expression_type($1.type,"",$2.label);
+    if($1.lit = true){
+        cout<<"Cannot apply increment operation on a literal"<<endl;
+        exit(1);
+    }
+    $$.lit = false;
+    strcpy($$.type,t.c_str());
+}
+}	
 ;
 
 

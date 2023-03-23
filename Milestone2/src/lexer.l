@@ -2,7 +2,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #include "parser.tab.h"
-#include "symbol_table.cpp"
+#include "symbol_table.h"
 
 extern string type;
 extern string temp;
