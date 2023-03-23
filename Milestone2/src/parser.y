@@ -14,6 +14,7 @@ stack<int> st;
 int node_number=1;
 string type;
 string modifiers;
+string temp;
 
 vector<tuple<string,string,int,bool,bool> > arguments;
 
@@ -61,7 +62,7 @@ void func(string q,string p){
 }
 
 %token <item> AMPERSAND AMPERSAND_AMPERSAND AMPERSAND_EQUALS ARROW_RIGHT ASSERT BAR BAR_BAR BAR_EQUALS BOOLEAN_LITERAL BOOLEAN_TYPE BREAK CATCH CHARACTER_LITERAL CLASS COLON COMMA CONTINUE DOT DOUBLE_COLON ELSE EQUALS EQUALS_EQUALS EXCLAIM EXCLAIM_EQUALS EXTENDS FINAL FINALLY FLOATINGPOINT_LITERAL FLOAT_POINT_TYPE FOR GREATER_THAN GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_EQUALS GREATER_THAN_GREATER_THAN_GREATER_THAN GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS IDENTIFIER IF IMPLEMENTS IMPORT INTEGER_LITERAL INTEGRAL_TYPE INTERFACE LEFT_CURLY_BRACE LEFT_PARANTHESIS LEFT_SQUARE_BRACE LESS_THAN LESS_THAN_EQUALS LESS_THAN_LESS_THAN LESS_THAN_LESS_THAN_EQUALS MINUS MINUS_EQUALS MINUS_MINUS NEW NULL_LITERAL PACKAGE PERCENT PERCENT_EQUALS PERMITS PLUS PLUS_EQUALS PLUS_PLUS POWER POWER_EQUALS PRIVATE PUBLIC QUESTION RETURN RIGHT_CURLY_BRACE RIGHT_PARANTHESIS RIGHT_SQUARE_BRACE SEMI_COLON SLASH SLASH_EQUALS STAR STAR_EQUALS STATIC STRING_TYPE STRING_LITERAL SUPER SYNCHRONIZED TEXTBLOCK THIS THROW THROWS TILDA TRIPLE_DOT TRY VAR VOID WHILE YIELD
-%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassDeclarationHeader ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ConstructorDeclarationHeader ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration InterfaceDeclarationHeader LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodHeader MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
+%type <item> AdditiveExpression AndExpression ArrayAccess ArrayCreationExpression ArrayInitializer ArrayType AssertStatement Assignment AssignmentExpression BasicForStatement BasicForStatementNoShortIf Block BlockStatement BlockStatements BreakStatement CastExpression CatchClause Catches ClassBody ClassBodyDeclaration ClassBodyDeclarations ClassDeclaration ClassInstanceCreationExpression ClassLiteral ClassMemberDeclaration ClassModifier ClassModifiers ClassType ClassTypes CompiledStuff ConditionalAndExpression ConditionalExpression ConditionalOrExpression ConstructorBody ConstructorDeclaration ConstructorDeclarationHeader ContinueStatement Declarator DimExprs Dims DotIdentifiers EmptyStatement EnhancedForStatement EnhancedForStatementNoShortIf EqualityExpression ExclusiveOrExpression ExplicitConstructorInvocation Expression ExpressionStatement Expressions FieldAccess FieldDeclaration ForInit ForStatement ForStatementNoShortIf ForUpdate FormalParameter FormalParameterList IfThenElseStatement IfThenElseStatementNoShortIf IfThenStatement ImportDeclaration ImportDeclarations InclusiveOrExpression InterfaceDeclaration InterfaceDeclarationHeader LabeledStatement LabeledStatementNoShortIf LambdaExpression Literal LocalVariableDeclaration MethodBody MethodDeclaration MethodDeclarator MethodInvocation MethodReference MultiplicativeExpression NumericType PackageDeclaration PostDecrementExpression PostIncrementExpression PostfixExpression PreDecrementExpression PreIncrementExpression Primary PrimaryNoNewArray PrimitiveType ReferenceType RelationalExpression ReturnStatement ShiftExpression SingleStaticImportDeclaration SingleTypeImportDeclaration Statement StatementExpression StatementExpressionList StatementNoShortIf StatementWithoutTrailingSubstatement StaticImportOnDemandDeclaration StaticInitializer SynchronizedStatement ThrowStatement Throws TryStatement Type TypeArgument TypeArgumentList TypeArguments TypeDeclaration TypeDeclarations TypeImportOnDemandDeclaration TypeParameterList TypeParameters UnaryExpression UnaryExpressionNotPlusMinus UnqualifiedClassInstanceCreationExpression VariableDeclarator VariableDeclaratorList VariableInitializer VariableInitializerList WhileStatement WhileStatementNoShortIf Wildcard YieldStatement
 
 %start input
 
@@ -122,8 +123,8 @@ ClassDeclaration
 ;
 
 Type:
-PrimitiveType   {strcpy($$.type,$1.type);}		
-| ReferenceType	{strcpy($$.type,$1.type);}	
+PrimitiveType   {strcpy($$.type,$1.type);type = $$.type;}		
+| ReferenceType	{strcpy($$.type,$1.type);type = $$.type;}	
 ;
 
 PrimitiveType:
@@ -181,17 +182,13 @@ QUESTION EXTENDS ReferenceType
 ;
 
 ClassDeclaration:
-ClassDeclarationHeader ClassBody {up_sym_table();}
-;
-
-ClassDeclarationHeader:
-CLASS IDENTIFIER 		{make_class_entry($2.label,yylineno,"00");}
-| ClassModifiers CLASS IDENTIFIER  {string mod = check_class_modifiers($1.label,$3.label); cout<<mod<<endl; make_class_entry($3.label,yylineno,mod);}
+CLASS IDENTIFIER ClassBody	{make_class_entry($2.label,yylineno,"00");}
+| ClassModifiers CLASS IDENTIFIER ClassBody {string mod = check_class_modifiers($1.label,$3.label); cout<<mod<<endl; make_class_entry($3.label,yylineno,mod);}
 ;
 
 ClassModifiers:
-ClassModifiers ClassModifier {strcpy($$.label,strcat($1.label,$2.label));}		
-| ClassModifier	{strcpy($$.label,$1.label);}	
+ClassModifiers ClassModifier {strcpy($$.label,strcat($1.label,$2.label)); modifiers = $$.label;}		
+| ClassModifier	{strcpy($$.label,$1.label); modifiers = $$.label;}	
 ;
 
 ClassModifier:
@@ -229,7 +226,8 @@ ClassBodyDeclarations ClassBodyDeclaration
 ClassBodyDeclaration:
 ClassMemberDeclaration		
 | StaticInitializer		
-| ConstructorDeclaration		
+| ConstructorDeclaration
+| Block {reset();}		
 ;
 
 ClassMemberDeclaration:
@@ -239,8 +237,8 @@ FieldDeclaration
 ;
 
 FieldDeclaration:
-Type VariableDeclaratorList SEMI_COLON		
-| ClassModifiers Type VariableDeclaratorList SEMI_COLON		
+Type VariableDeclaratorList SEMI_COLON	{type.clear();}	
+| ClassModifiers Type VariableDeclaratorList SEMI_COLON {modifiers.clear();type.clear();}		
 ;
 
 VariableDeclaratorList:
@@ -249,10 +247,10 @@ VariableDeclaratorList COMMA VariableDeclarator
 ;
 
 VariableDeclarator:
-IDENTIFIER EQUALS VariableInitializer   {string x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}		
-| IDENTIFIER Dims EQUALS VariableInitializer	{string x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}	
-| IDENTIFIER	{string x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}	
-| IDENTIFIER Dims	{string x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}		
+IDENTIFIER EQUALS VariableInitializer   {string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}		
+| IDENTIFIER Dims EQUALS VariableInitializer	{string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}	
+| IDENTIFIER	{string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); make_entry($1.label,type,yylineno,x);}	
+| IDENTIFIER Dims	{string x; if(modifiers.size()==0) x = check_method_modifiers(temp); else x = check_method_modifiers(modifiers); vector<int> v($2.dims,0); make_array_entry($1.label,type,yylineno,v,x);}		
 ;
 
 VariableInitializer:
@@ -261,14 +259,10 @@ Expression
 ;
 
 MethodDeclaration:
-MethodHeader MethodBody	 {up_sym_table();}
-;
-
-MethodHeader:
-VOID MethodDeclarator 	{make_func_entry($2.label,"void",arguments,yylineno,"0000",$2.dims); add_arguments(arguments); arguments.clear();}	
-| Type MethodDeclarator 	{make_func_entry($2.label,$1.type,arguments,yylineno,"0000",$2.dims); add_arguments(arguments); arguments.clear();}	
-| ClassModifiers VOID MethodDeclarator  {string x = check_method_modifiers($1.label); make_func_entry($3.label,"void",arguments,yylineno,x,$2.dims); add_arguments(arguments); arguments.clear();}
-| ClassModifiers Type MethodDeclarator  {string x = check_method_modifiers($1.label); make_func_entry($3.label,$2.type,arguments,yylineno,x,$2.dims); add_arguments(arguments); arguments.clear();}	
+VOID MethodDeclarator MethodBody	{make_func_entry($2.label,"void",arguments,yylineno,"0000",$2.dims); add_arguments(arguments,$2.label); arguments.clear();}	
+| Type MethodDeclarator MethodBody	{make_func_entry($2.label,$1.type,arguments,yylineno,"0000",$2.dims); add_arguments(arguments,$2.label); arguments.clear();}	
+| ClassModifiers VOID MethodDeclarator MethodBody  {string x = check_method_modifiers($1.label); make_func_entry($3.label,"void",arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}
+| ClassModifiers Type MethodDeclarator MethodBody {string x = check_method_modifiers($1.label); make_func_entry($3.label,$2.type,arguments,yylineno,x,$2.dims); add_arguments(arguments,$3.label); arguments.clear();}	
 ;
 
 MethodDeclarator:
@@ -386,8 +380,8 @@ BlockStatements BlockStatement
 BlockStatement:
 Type VariableDeclaratorList SEMI_COLON		
 | VAR VariableDeclaratorList SEMI_COLON		
-| FINAL Type VariableDeclaratorList SEMI_COLON		
-| FINAL VAR VariableDeclaratorList SEMI_COLON		
+| FINAL Type VariableDeclaratorList SEMI_COLON	{temp.clear();}	
+| FINAL VAR VariableDeclaratorList SEMI_COLON	{temp.clear();}	
 | Statement		
 ;
 

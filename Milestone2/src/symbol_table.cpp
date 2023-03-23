@@ -2,6 +2,7 @@
 
 list_sym_table* global_sym_table;
 sym_table* curr_sym_table;
+sym_table* dirty_sym_table;
 sym_table* default_sym_table;
 map<sym_table*, sym_table*> parent;
 string curr_file;
@@ -9,6 +10,22 @@ string curr_file;
 void init_symbol_table(){
     curr_sym_table = default_sym_table;
     global_sym_table = new list_sym_table;
+}
+
+void new_scope(){
+    parent.insert(make_pair(dirty_sym_table,curr_sym_table));
+    curr_sym_table = dirty_sym_table;
+    dirty_sym_table = new sym_table;
+}
+
+void old_scope(){
+    sym_table* temp = curr_sym_table;
+    curr_sym_table = parent[curr_sym_table];
+    dirty_sym_table = temp;
+}
+
+void reset(){
+    dirty_sym_table = new sym_table;
 }
 
 bool check(string name){
@@ -20,17 +37,6 @@ bool check(string name){
         else return true;
     }
     return true;
-}
-
-void make_symbol_table(string name){
-    sym_table* new_sym_table = new sym_table;
-    if(curr_sym_table ==  default_sym_table){
-        (*global_sym_table).insert(make_pair(name,new_sym_table));
-        parent.insert(make_pair(new_sym_table,default_sym_table));
-    }else{
-        parent.insert(make_pair(new_sym_table,curr_sym_table));
-    }
-    curr_sym_table = new_sym_table;
 }
 
 sym_entry* curr_look_up(sym_table* table, string name){
@@ -59,8 +65,9 @@ void make_func_entry(string name, string type, vector<tuple<string,string,int,bo
     (*curr_sym_table)[name]->arguments = args;
     (*curr_sym_table)[name]->normal = 2;
     (*curr_sym_table)[name]->dimension = dims;
-    make_symbol_table(name);
-}
+    (*curr_sym_table)[name]->child = dirty_sym_table;
+    reset();
+}    
 
 void make_array_entry(string name, string type, int line_number, vector<int> dims, string modifiers){
     make_entry(name,type,line_number,modifiers);
@@ -71,7 +78,9 @@ void make_array_entry(string name, string type, int line_number, vector<int> dim
 void make_class_entry(string name, int line_number, string modifiers){
     make_entry(name,name,line_number, modifiers);
     (*curr_sym_table)[name]->normal = 3;
-    make_symbol_table(name);
+    (*curr_sym_table)[name]->child = dirty_sym_table;
+    (*global_sym_table).insert(make_pair(name,curr_sym_table));
+    reset();
 }
 
 string check_class_modifiers(string str, string name){
@@ -105,10 +114,6 @@ string check_method_modifiers(string str){
         exit(1);
     }
     return ans;
-}
-
-void up_sym_table(){
-    curr_sym_table = parent[curr_sym_table];
 }
 
 void check_gst(string name){

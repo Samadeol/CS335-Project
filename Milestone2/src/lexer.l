@@ -2,6 +2,10 @@
 #include<bits/stdc++.h>
 using namespace std;
 #include "parser.tab.h"
+#include "symbol_table.cpp"
+
+extern string type;
+extern string temp;
 
 %}
 
@@ -177,8 +181,8 @@ YIELD                        yield
 {GREATER_THAN_GREATER_THAN_EQUALS}              {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_EQUALS;} 
 {GREATER_THAN_GREATER_THAN_GREATER_THAN}        {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN;} 
 {GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS} {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS;}
-{LEFT_CURLY_BRACE}                              {strcpy(yylval.item.label,yytext); return LEFT_CURLY_BRACE;}
-{LEFT_PARANTHESIS}                              {strcpy(yylval.item.label,yytext); return LEFT_PARANTHESIS;}
+{LEFT_CURLY_BRACE}                              {strcpy(yylval.item.label,yytext); new_scope(); return LEFT_CURLY_BRACE;}
+{LEFT_PARANTHESIS}                              {strcpy(yylval.item.label,yytext); old_scope(); return LEFT_PARANTHESIS;}
 {LEFT_SQUARE_BRACE}                             {strcpy(yylval.item.label,yytext); return LEFT_SQUARE_BRACE;}
 {LESS_THAN}                                     {strcpy(yylval.item.label,yytext); return LESS_THAN;}
 {LESS_THAN_EQUALS}                              {strcpy(yylval.item.label,yytext); return LESS_THAN_EQUALS;}
@@ -207,7 +211,7 @@ YIELD                        yield
 {YIELD}                                         {strcpy(yylval.item.label,yytext); return YIELD;}    
 {WHILE}                                         {strcpy(yylval.item.label,yytext); return WHILE;}    
 {VOID}                                          {strcpy(yylval.item.label,yytext); return VOID;}
-{VAR}                                           {strcpy(yylval.item.label,yytext); return VAR;}
+{VAR}                                           {strcpy(yylval.item.label,yytext); type = "var"; return VAR;}
 {TRY}                                           {strcpy(yylval.item.label,yytext); return TRY;}
 {TILDA}                                         {strcpy(yylval.item.label,yytext); return TILDA;}
 {INTEGER_LITERAL}                               {strcpy(yylval.item.label,yytext); return INTEGER_LITERAL;}
@@ -232,7 +236,7 @@ YIELD                        yield
 {FOR}                                           {strcpy(yylval.item.label,yytext); return FOR;}
 {FLOAT_POINT_TYPE}                              {strcpy(yylval.item.label,yytext); return FLOAT_POINT_TYPE;}
 {FINALLY}                                       {strcpy(yylval.item.label,yytext); return FINALLY;}
-{FINAL}                                         {strcpy(yylval.item.label,yytext); return FINAL;}
+{FINAL}                                         {strcpy(yylval.item.label,yytext); temp="2"; return FINAL;}
 {EXTENDS}                                       {strcpy(yylval.item.label,yytext); return EXTENDS;}
 {ELSE}                                          {strcpy(yylval.item.label,yytext); return ELSE;}
 {CONTINUE}                                      {strcpy(yylval.item.label,yytext); return CONTINUE;}

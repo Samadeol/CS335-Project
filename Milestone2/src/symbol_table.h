@@ -13,7 +13,7 @@ typedef struct sym_entry{
     int dimension;
     string modifiers;
     vector<int> dims;
-    map<string, sym_entry*> child;
+    map<string, sym_entry*> *child;
     vector<tuple<string,string, int, bool, bool> > arguments;
 
 }sym_entry;
