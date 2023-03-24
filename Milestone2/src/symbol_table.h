@@ -7,9 +7,9 @@ typedef struct sym_entry{
     string source_file;
     string value;
     int line_number;
-    int normal; //normal->0 = basic  normal->1 = array  normal->2 = func  normal->3 = class/interface
     int size;
     int offset;
+    bool isfunc;
     string modifiers;
     vector<int> dims;
     map<string, sym_entry*> *child;

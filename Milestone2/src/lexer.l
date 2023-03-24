@@ -4,8 +4,6 @@ using namespace std;
 #include "parser.tab.h"
 #include "symbol_table.h"
 
-extern string type;
-extern string temp;
 
 %}
 
@@ -138,7 +136,6 @@ STRING_LITERAL               \"{STRING_CHARACTER_BASIC}*\"
 SUPER                        super
 SYNCHRONIZED                 synchronized
 TEXTBLOCK                    \"\"\"{TEXT_BLOCK_WHITE_SPACE}*{LINE_TERMINATOR}([^\\\"]|\"([^\\\"])|\"\"([^\\\"]))*\"\"\"
-THIS                         this
 THROW                        throw 
 THROWS                       throws 
 TILDA                        "~"
@@ -211,14 +208,13 @@ YIELD                        yield
 {YIELD}                                         {strcpy(yylval.item.label,yytext); return YIELD;}    
 {WHILE}                                         {strcpy(yylval.item.label,yytext); return WHILE;}    
 {VOID}                                          {strcpy(yylval.item.label,yytext); return VOID;}
-{VAR}                                           {strcpy(yylval.item.label,yytext); type = "var"; return VAR;}
+{VAR}                                           {strcpy(yylval.item.label,yytext); return VAR;}
 {TRY}                                           {strcpy(yylval.item.label,yytext); return TRY;}
 {TILDA}                                         {strcpy(yylval.item.label,yytext); return TILDA;}
 {INTEGER_LITERAL}                               {strcpy(yylval.item.label,yytext); return INTEGER_LITERAL;}
 {TEXTBLOCK}                                     {strcpy(yylval.item.label,yytext); return TEXTBLOCK;}    
 {THROWS}                                        {strcpy(yylval.item.label,yytext); return THROWS;}
 {THROW}                                         {strcpy(yylval.item.label,yytext); return THROW;}
-{THIS}                                          {strcpy(yylval.item.label,yytext); return THIS;}
 {SYNCHRONIZED}                                  {strcpy(yylval.item.label,yytext); return SYNCHRONIZED;}    
 {SUPER}                                         {strcpy(yylval.item.label,yytext); return SUPER;}
 {STATIC}                                        {strcpy(yylval.item.label,yytext); return STATIC;}
@@ -236,7 +232,7 @@ YIELD                        yield
 {FOR}                                           {strcpy(yylval.item.label,yytext); return FOR;}
 {FLOAT_POINT_TYPE}                              {strcpy(yylval.item.label,yytext); return FLOAT_POINT_TYPE;}
 {FINALLY}                                       {strcpy(yylval.item.label,yytext); return FINALLY;}
-{FINAL}                                         {strcpy(yylval.item.label,yytext); temp="2"; return FINAL;}
+{FINAL}                                         {strcpy(yylval.item.label,yytext); return FINAL;}
 {EXTENDS}                                       {strcpy(yylval.item.label,yytext); return EXTENDS;}
 {ELSE}                                          {strcpy(yylval.item.label,yytext); return ELSE;}
 {CONTINUE}                                      {strcpy(yylval.item.label,yytext); return CONTINUE;}

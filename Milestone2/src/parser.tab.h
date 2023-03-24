@@ -131,16 +131,15 @@ extern int yydebug;
     SUPER = 337,
     SYNCHRONIZED = 338,
     TEXTBLOCK = 339,
-    THIS = 340,
-    THROW = 341,
-    THROWS = 342,
-    TILDA = 343,
-    TRIPLE_DOT = 344,
-    TRY = 345,
-    VAR = 346,
-    VOID = 347,
-    WHILE = 348,
-    YIELD = 349
+    THROW = 340,
+    THROWS = 341,
+    TILDA = 342,
+    TRIPLE_DOT = 343,
+    TRY = 344,
+    VAR = 345,
+    VOID = 346,
+    WHILE = 347,
+    YIELD = 348
   };
 #endif
 
@@ -148,7 +147,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 57 "parser.y"
+#line 55 "parser.y"
 
     struct {
         char label[1000];
@@ -157,7 +156,7 @@ union YYSTYPE
         bool lit;
     }item;
 
-#line 161 "parser.tab.h"
+#line 160 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
