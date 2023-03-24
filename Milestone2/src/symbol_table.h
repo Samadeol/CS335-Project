@@ -7,13 +7,10 @@ typedef struct sym_entry{
     string source_file;
     string value;
     int line_number;
-    int size;
-    int offset;
     bool isfunc;
     string modifiers;
-    vector<int> dims;
     map<string, sym_entry*> *child;
-    vector<tuple<string,string,bool, bool> > arguments;
+    vector<tuple<string,string,int,int> > arguments;
 
 }sym_entry;
 
@@ -35,7 +32,7 @@ bool check(string name);
 sym_entry* curr_look_up(sym_table* table, string name);
 sym_table* gst_look_up(string name);
 void make_entry(string name, string type, int line_number, string modifiers);
-void make_func_entry(string name, string type, vector<tuple<string,string,bool,bool> > args, int line_number, string modifiers);
+void make_func_entry(string name, string type, vector<tuple<string,string,int,int> > args, int line_number, string modifiers);
 string check_class_modifiers(string str);
 void make_array_entry(string name, string type, int line_number, string modifiers);
 void make_class_entry(string name, int line_number, string modifiers);

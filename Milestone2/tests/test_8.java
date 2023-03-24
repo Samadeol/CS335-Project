@@ -67,10 +67,10 @@ class GFG
     public static void main (String[] args)
     {
         int n = 90;
-        System.out.println(count(n));
+        // System.out.println(count(n));
  
         n = 143;
-        System.out.println(count(n));
+        // System.out.println(count(n));
     }
 }
  

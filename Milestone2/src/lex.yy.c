@@ -1290,12 +1290,12 @@ YY_RULE_SETUP
 case 30:
 YY_RULE_SETUP
 #line 181 "lexer.l"
-{strcpy(yylval.item.label,yytext); new_scope(); return LEFT_CURLY_BRACE;}
+{strcpy(yylval.item.label,yytext); return LEFT_CURLY_BRACE;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 182 "lexer.l"
-{strcpy(yylval.item.label,yytext); old_scope(); return LEFT_PARANTHESIS;}
+{strcpy(yylval.item.label,yytext); return LEFT_PARANTHESIS;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP

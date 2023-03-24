@@ -3,8 +3,31 @@
 sym_table* curr_sym_table;
 sym_table* dirty_sym_table;
 sym_table* default_sym_table;
+sym_table* print_table;
 map<sym_table*, sym_table*> parent;
+extern int yylineno;
 string curr_file;
+string out_file_name;
+bool first_parse;
+
+void print(string name){
+    fstream fout;
+    string file_name = out_file_name+name;
+    fout.open(file_name,ios::out);
+    fout<<"Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments"<<endl;
+    for(auto it:*print_table){
+        string mod = "";
+        if(it.second->modifiers[0]=='1') mod+="public ";
+        if(it.second->modifiers[1]=='1') mod+="private ";
+        if(it.second->modifiers[2]=='1') mod+="final ";
+        if(it.second->modifiers[3]=='1') mod+="static ";
+        string t;
+        if(it.second->isfunc) t="Yes";
+        else t="No";
+        fout<<it.first<<","<<it.second->line_number<<","<<it.second->type<<","<<mod<<","<<t<<","<<it.second->arguments.size()<<endl;
+    }
+    print_table = new sym_table;
+}
 
 void init_symbol_table(){
     default_sym_table = new sym_table;
@@ -12,17 +35,27 @@ void init_symbol_table(){
     dirty_sym_table = new sym_table;
 }
 
+void second_init(){
+    curr_sym_table = default_sym_table;
+    dirty_sym_table = new sym_table;
+    print_table = new sym_table;
+}
+
 void new_scope(){
-    parent.insert(make_pair(dirty_sym_table,curr_sym_table));
+    if(parent.find(dirty_sym_table) == parent.end()) parent.insert(make_pair(dirty_sym_table,curr_sym_table));
     curr_sym_table = dirty_sym_table;
     dirty_sym_table = new sym_table;
+    // cout<<"new scope ";
+    // cout<<curr_sym_table->size()<<endl;
 }
 
 void old_scope(){
     sym_table* temp = curr_sym_table;
     curr_sym_table = parent[curr_sym_table];
     dirty_sym_table = temp;
-    if(dirty_sym_table->size() == 0) parent.erase(dirty_sym_table);
+    if(!first_parse){
+        for(auto it:*dirty_sym_table) print_table->insert(it);
+    }
 }
 
 void reset(){
@@ -30,13 +63,37 @@ void reset(){
 }
 
 bool check(string name){
-    if((*curr_sym_table).find(name)==(*curr_sym_table).end()) return false;
-    else return true;
+    if(curr_sym_table == default_sym_table){
+        if((*curr_sym_table).find(name)==(*curr_sym_table).end()) return true;
+        else return false;
+    }
+    if((*dirty_sym_table).find(name)!=(*dirty_sym_table).end()) return false;
+    sym_table* temp = curr_sym_table;
+    while(temp!=default_sym_table){
+        if((*curr_sym_table).find(name)==(*curr_sym_table).end()) temp = parent[temp];
+        else  return false;
+    }
+    return true;
+}
+
+void make_dirty_entry(string name, string type, int line_number, string modifiers){
+    sym_entry* new_sym_entry = new sym_entry;
+    if(check(name)) (*dirty_sym_table).insert(make_pair(name,new_sym_entry));
+    (*dirty_sym_table)[name]->line_number = line_number;
+    (*dirty_sym_table)[name]->source_file = curr_file;
+    (*dirty_sym_table)[name]->type = type;
+    (*dirty_sym_table)[name]->isfunc = false;
+    (*dirty_sym_table)[name]->modifiers = modifiers;
 }
 
 void make_entry(string name, string type, int line_number, string modifiers){
     sym_entry* new_sym_entry = new sym_entry;
-    if(check(name)) (*curr_sym_table).insert(make_pair(name,new_sym_entry));
+    if(check(name)){
+        (*curr_sym_table)[name]=new_sym_entry;
+    }else{
+        cout<<name<<" already declared in this scope. Line number "<<line_number<<endl;
+        exit(1);
+    }
     (*curr_sym_table)[name]->line_number = line_number;
     (*curr_sym_table)[name]->source_file = curr_file;
     (*curr_sym_table)[name]->type = type;
@@ -44,10 +101,15 @@ void make_entry(string name, string type, int line_number, string modifiers){
     (*curr_sym_table)[name]->modifiers = modifiers;
 }
 
-void make_func_entry(string name, string type, vector<tuple<string,string,bool,bool> > args, int line_number, string modifiers){
+void make_func_entry(string name, string type, vector<tuple<string,string,int,int> > args, int line_number, string modifiers){
     make_entry(name,type,line_number,modifiers);
     (*curr_sym_table)[name]->arguments = args;
     (*curr_sym_table)[name]->child = dirty_sym_table;
+    (*curr_sym_table)[name]->isfunc = true;
+    for(int i=0;i<args.size();i++){
+        if(get<2>(args[i])) make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0010");
+        else make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0000");
+    }
     reset();
 }
 
@@ -57,16 +119,8 @@ void make_class_entry(string name, int line_number, string modifiers){
     reset();
 }
 
-void make_dirty_entry(string name, string type, int line_number, string modifiers){
-    sym_entry* new_sym_entry = new sym_entry;
-    if(check(name)) (*dirty_sym_table).insert(make_pair(name,new_sym_entry));
-    (*dirty_sym_table)[name]->line_number = line_number;
-    (*dirty_sym_table)[name]->source_file = curr_file;
-    (*dirty_sym_table)[name]->type = type;
-    (*dirty_sym_table)[name]->modifiers = modifiers;
-}
-
 string find_in_scope(string name){
+    if((*dirty_sym_table).find(name)!=(*dirty_sym_table).end()) return (*dirty_sym_table)[name]->type;
     string t,p;
     for(int i=0;i<name.size();i++){
         if(name[i]=='.') break;
@@ -76,50 +130,195 @@ string find_in_scope(string name){
     while(temp!=default_sym_table){
         if((*temp).find(t)!=(*temp).end()){
             if(t.size()==name.size()) return (*temp)[t]->type;
-            else temp2 = (*temp)[t]->child;
+            else{
+                if((*temp)[t]->child == NULL) {
+                    cout<<name<<" not declared in this scope "<<yylineno<<endl;
+                    exit(1);
+                }
+                else temp2 = (*temp)[t]->child;
             break;
+            }
         }
         temp = parent[temp];
     }
     if(temp==default_sym_table){
-        if((*global_sym_table).find(t)==(*global_sym_table).end()){
-            cout<<t<<" not declared in this scope"<<endl;
+        if((*default_sym_table).find(t)==(*default_sym_table).end()){
+            cout<<t<<" not declared in this scope "<<yylineno<<endl;
             exit(1);
         }
-        else temp2 = (*global_sym_table)[t];
+        else temp2 = (*default_sym_table)[t]->child;
     }
     for(int i=t.size()+1;i<name.size();i++){
         if(name[i]=='.'){
             if((*temp2).find(p)==(*temp2).end()){
-                cout<<name.substr(0,i)<<" not declared in this scope"<<endl;
+                cout<<name.substr(0,i)<<" not declared in this scope "<<yylineno<<endl;
                 exit(1);
-            }else temp2 = (*temp2)[p]->child;
+            }else{
+                if((*temp)[p]->child == NULL) {
+                    cout<<name<<" not declared in this scope "<<yylineno<<endl;
+                    exit(1);
+                }
+                else temp2 = (*temp)[p]->child;
+            }
             p.clear();
         }
         else p.push_back(name[i]);
     }
     if((*temp2).find(p)==(*temp2).end()){
-        cout<<name<<" not declared in this scope"<<endl;
+        cout<<name<<" not declared in this scope "<<yylineno<<endl;
         exit(1);
     }
     return (*temp2)[p]->type;
 }
 
-string expression_type(string type1, string type2, string op){
-    vector<string> types {"boolean","char","int","float"};
+string expression_type(int line_num, string type1, string type2, string op){
+    vector<string> types {"boolean","char","byte","short","int","long","float","double","String"};
+    int a=-1,b=-1;
+    if(type1=="") a=0;
+    if(type2=="") b=0;
+    for(int i=0;i<types.size();i++){
+        if(type1 == types[i]) a=i+1;
+        if(type2 == types[i]) b=i+1;
+    }
+    if(type2[0]=='*'){
+        type1 = type1+type2;
+        return type1;
+    }
+    if(type2.substr(0,type1.size())==type1) return type2;
     vector<string>  ops1 = {"++","--","+","-","*","/","%"};
     if(op=="&&" || op=="||"){
-        if(type1=="boolean" && type2=="boolean")return "boolean";
+        if(a==1 && b==1)return "boolean";
         else{
-            cout<<"Invalid operand types for operator: "<<op<<endl;
+            cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
             exit(1);
         }
     }
-
+    if(op == "declare" || op == "=" || op == "*=" || op == "/=" || op=="+=" || op == "-=" || op == "<<=" || op==">>=" || op==">>>=" || op=="&=" || op=="^=" || op == "|="){
+        if(b==0 && op=="declare") return type1;
+        if(a==1){
+            if(b==1 && (op=="declare" || op == "=")) return "boolean";
+            else{
+                if(op=="declare") cout<<"Invalid declaration of "<<type2<<" to "<<type1<<" in line number "<<line_num<<endl;
+                else cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+                exit(1);
+            }
+        }else if(a==2){
+            if(b>=2 && b<=6) return "char";
+            else{
+                if(op=="declare") cout<<"Invalid declaration of "<<type2<<" to "<<type1<<" in line number "<<line_num<<endl;
+                else cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+                exit(1);
+            }
+        }else if(a>=3 && a<=8){
+            if(b>1 && b<=a) return type1;
+            else{
+                if(op == "declare") cout<<"Invalid declaration of "<<type2<<" to "<<type1<<" in line number "<<line_num<<endl;
+                else cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+                exit(1);
+            }
+        }else{
+            if(type1==type2 && (op=="declare" || op == "=" || (a==9 && op=="+="))) return type1;
+            else{
+                if(op=="declare") cout<<"Invalid declaration"<<type2<<" to "<<type1<<" in line number "<<line_num<<endl;
+                else cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+                exit(1);
+            }
+        }
+    }
+    if(b==0){
+        if(a>=1) return type1;
+        else{
+            cout<<"Unary Expression invalid on "<<type1<<" in line number "<<line_num<<endl;
+            exit(1);
+        }
+    }
+    if(op=="==" || op=="!=" || op=="<=" || op==">=" || op == "<" || op==">"){
+        if((a==1 && b==1)||(a==2 && b>=2 && b<=6)||(a>=3 && a<=8 && b>1 && b<=a)||(op=="==" && type2==type1)) return "boolean";
+        else{
+            cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+            exit(1);
+        }
+    }
+    if(a<2 || b<2){
+        cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+        exit(1);
+    }
+    if(a==9 || b==9){
+        if(a==b && op=="+") return type1;
+        else{
+            cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+            exit(1);
+        }
+    }
+    if(a>b) return type1;
+    else return type2;
 }
 
-string check_class_modifiers(string str, string name){
+string get_method(string name, string scope, vector<string> args){
+    if(scope==""){
+        sym_table* temp = curr_sym_table;
+        while(temp!=default_sym_table){
+            if((*temp).find(name)!=(*temp).end()){
+                if(!(*temp)[name]->isfunc){
+                    cout<<"Method "<<name<<" does not belong in this scope"<<endl;
+                }
+                if(args.size()!=(*temp)[name]->arguments.size()){
+                    cout<<"Invalid number of arguments in method call"<<endl;
+                    exit(1);
+                }
+                for(int i=0;i<args.size();i++){
+                    if(args[i]!=get<1>((*temp)[name]->arguments[i])){
+                        cout<<"Invalid argument type "<<args[i]<<" to "<<get<1>((*temp)[name]->arguments[i])<<endl;
+                        exit(1);
+                    }
+                }
+                return (*temp)[name]->type;
+            }
+            temp = parent[temp];
+        }
+        cout<<"Method dosent belong in this scope"<<endl;
+        exit(1);
+    }
+    else{
+        if((*default_sym_table).find(name)==(*default_sym_table).end()){
+            cout<<"No class of "<<name<<endl;
+            exit(1);
+        }
+        sym_table* temp = (*default_sym_table)[name]->child;
+        if((*temp).find(name)!=(*temp).end()){
+            if(!(*temp)[name]->isfunc){
+                cout<<"Method "<<name<<" does not belong in this scope"<<endl;
+            }
+            if(args.size()!=(*temp)[name]->arguments.size()){
+                cout<<"Invalid number of arguments in method call"<<endl;
+                exit(1);
+            }
+            for(int i=0;i<args.size();i++){
+                if(args[i]!=get<1>((*temp)[name]->arguments[i])){
+                    cout<<"Invalid argument type "<<args[i]<<" to "<<get<1>((*temp)[name]->arguments[i])<<endl;
+                    exit(1);
+                }
+            }
+            return (*temp)[name]->type;
+        }
+        else{
+            cout<<"Method dosent belong in "<<name<<" scope"<<endl;
+            exit(1);
+        }
+    }
+}
+
+void go_in_scope(string name){
+    //for(auto it : *curr_sym_table) cout<<it.first<<endl;
+    //cout<<(*(*default_sym_table)["Main"]->child)["main"]->type<<endl;
+    dirty_sym_table = (*curr_sym_table)[name]->child;
+    //cout<<(*dirty_sym_table)["main"]->type<<endl;
+    //cout<<"hi"<<endl;
+}
+
+string check_class_modifiers(string str){
     string ans = "00";
+    if(str == "") return ans;
     for(int i=0;i<str.size();i++){
         if((str[i]=='2' || str[i]=='0') && ans[(str[i]-'0')/2]=='0')ans[(str[i]-'0')/2]='1';
         else{
@@ -127,10 +326,6 @@ string check_class_modifiers(string str, string name){
             exit(1);
         }
     }
-    if((ans[0]=='1') && name!=curr_file.substr(0,curr_file.size()-5)){
-        cout<<"Public class "<<name<<" must be declared in file "<<name<<".java"<<endl;
-        exit(1);
-    } 
     return ans;
 }
 
@@ -151,29 +346,24 @@ string check_method_modifiers(string str){
 }
 
 void check_gst(string name){
-    if((*global_sym_table).find(name)==(*global_sym_table).end()){
+    if((*default_sym_table).find(name)==(*default_sym_table).end()){
         cout<<"No datatype or Class name of type: "<<name<<endl;
         exit(1);
     }
 }
 
 void check_constructor(string name){
-    if((*global_sym_table).find(name)==(*global_sym_table).end() || (*global_sym_table)[name]!=curr_sym_table) cout<<"Constructor should have same name as class"<<endl;
+    if((*default_sym_table).find(name)==(*default_sym_table).end() || (*default_sym_table)[name]->child!=curr_sym_table) cout<<"Constructor should have same name as class"<<endl;
+}
+
+void final_print(){
+    for(auto it:*default_sym_table){
+        print_table = it.second->child;
+        print(it.first);
+    }
 }
 
 bool check_first(){
     if(parent[curr_sym_table] == default_sym_table) return true;
     else return false;
-}
-
-void add_arguments(vector<tuple<string,string,bool, bool> > arguments, string name){
-
-}
-
-string expression_type(string type1, string type2, string op){
-
-}
-
-void error_msg(){
-
 }

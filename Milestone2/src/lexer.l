@@ -178,8 +178,8 @@ YIELD                        yield
 {GREATER_THAN_GREATER_THAN_EQUALS}              {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_EQUALS;} 
 {GREATER_THAN_GREATER_THAN_GREATER_THAN}        {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN;} 
 {GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS} {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS;}
-{LEFT_CURLY_BRACE}                              {strcpy(yylval.item.label,yytext); new_scope(); return LEFT_CURLY_BRACE;}
-{LEFT_PARANTHESIS}                              {strcpy(yylval.item.label,yytext); old_scope(); return LEFT_PARANTHESIS;}
+{LEFT_CURLY_BRACE}                              {strcpy(yylval.item.label,yytext); return LEFT_CURLY_BRACE;}
+{LEFT_PARANTHESIS}                              {strcpy(yylval.item.label,yytext); return LEFT_PARANTHESIS;}
 {LEFT_SQUARE_BRACE}                             {strcpy(yylval.item.label,yytext); return LEFT_SQUARE_BRACE;}
 {LESS_THAN}                                     {strcpy(yylval.item.label,yytext); return LESS_THAN;}
 {LESS_THAN_EQUALS}                              {strcpy(yylval.item.label,yytext); return LESS_THAN_EQUALS;}
