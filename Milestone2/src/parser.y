@@ -19,6 +19,7 @@ vector<pair<string,string> > v;
 vector<string> function_call;
 vector<tuple<string,string,int,int> > arguments;
 string curr_class_name;
+int inst_num;
 
 void yyerror(const char* error){
     fprintf (stderr, "%s | %d\n",error,yylineno);
@@ -61,6 +62,11 @@ void func(string q,string p){
         char type[100];
         int dims;
         bool lit;
+        char temp_var[1000];
+        int i_number;
+        int true_list[1000];
+        int false_list[1000];
+        int next_list[1000];
     }item;
 }
 
@@ -834,6 +840,7 @@ int main(int argc, char** argv){
     yyin = fopen(input.c_str(),"r");
     yylineno = 1;
     second_init();
+    inst_num = 0;
     yyparse();
     final_print();
     exit(0);
