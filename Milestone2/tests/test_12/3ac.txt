@@ -1,0 +1,15 @@
+0: BeginFunc BreakLoopDemo.main
+1:    #t_0 = 0
+2:    i = #t_0
+3:    #t_1 = i
+4:    #t_2 = 10
+5:    if #t_1<#t_2 goto 11
+6:    goto 13
+7:    #t_3 = i
+8:    #t_3 = #t_3 + 1
+9:    i = #t_3
+10:    goto 3
+11:    goto 7
+12:    goto 7
+13: EndFunc
+

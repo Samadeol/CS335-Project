@@ -10,6 +10,27 @@ string curr_file;
 string out_file_name;
 bool first_parse;
 
+void set_dimensions(string name,vector<int> v){
+    sym_table* temp = curr_sym_table;
+    while(temp!=default_sym_table){
+        if((*curr_sym_table).find(name)==(*curr_sym_table).end()) temp = parent[temp];
+        else {
+            (*curr_sym_table)[name]->dimension = v;
+            break;
+        }
+    }
+}
+
+vector<int> get_dimensions(string name){
+    sym_table* temp = curr_sym_table;
+    while(temp!=default_sym_table){
+        if((*curr_sym_table).find(name)==(*curr_sym_table).end()) temp = parent[temp];
+        return  (*curr_sym_table)[name]->dimension;
+    }
+    cout<<"Unexpected Error Occures"<<endl;
+    exit(1);
+}
+
 void print(string name){
     fstream fout;
     string file_name = out_file_name+name;
@@ -176,15 +197,26 @@ string expression_type(int line_num, string type1, string type2, string op){
     int a=-1,b=-1;
     if(type1=="") a=0;
     if(type2=="") b=0;
+    string t;
+    if(type2.size()!=type1.size() && type2.substr(0,type1.size())==type1) return type2;
+    if(type1[type1.size()-1]=='*'){
+        string s;
+        for(int i=0;i<type1.size();i++){
+            if(type1[i]=='*') break;
+            s.push_back(type1[i]);
+        }
+        t=type1;
+        type1=s;
+    }
     for(int i=0;i<types.size();i++){
         if(type1 == types[i]) a=i+1;
         if(type2 == types[i]) b=i+1;
     }
+    if(t.size()) type1 = t;
     if(type2[0]=='*'){
         type1 = type1+type2;
         return type1;
     }
-    if(type2.substr(0,type1.size())==type1) return type2;
     vector<string>  ops1 = {"++","--","+","-","*","/","%"};
     if(op=="&&" || op=="||"){
         if(a==1 && b==1)return "boolean";
@@ -225,17 +257,17 @@ string expression_type(int line_num, string type1, string type2, string op){
             }
         }
     }
-    if(b==0){
-        if(a>=1) return type1;
-        else{
-            cout<<"Unary Expression invalid on "<<type1<<" in line number "<<line_num<<endl;
-            exit(1);
-        }
-    }
     if(op=="==" || op=="!=" || op=="<=" || op==">=" || op == "<" || op==">"){
         if((a==1 && b==1)||(a==2 && b>=2 && b<=6)||(a>=3 && a<=8 && b>1 && b<=a)||(op=="==" && type2==type1)) return "boolean";
         else{
             cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+            exit(1);
+        }
+    }
+    if(b==0){
+        if(a>=1) return type1;
+        else{
+            cout<<"Unary Expression invalid on "<<type1<<" in line number "<<line_num<<endl;
             exit(1);
         }
     }

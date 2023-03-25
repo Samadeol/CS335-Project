@@ -1,5 +1,4 @@
 Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments
-args,2,String,,No,0
-arr,4,int*,,No,0
-i,7,int,,No,0
-sum,5,int,,No,0
+args,30,String,,No,0
+arr,32,int*,,No,0
+sum,34,int,,No,0

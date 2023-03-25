@@ -10,6 +10,7 @@ typedef struct sym_entry{
     bool isfunc;
     string modifiers;
     map<string, sym_entry*> *child;
+    vector<int> dimension;
     vector<tuple<string,string,int,int> > arguments;
 
 }sym_entry;

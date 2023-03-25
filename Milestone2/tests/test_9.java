@@ -6,6 +6,8 @@ public class GFG {
     // Main driver method
     public static void main(String[] args)
     {
+        int k[][][];
+        k = new int [5][5][7];
         int num = 5;
         int x = 0;
  
@@ -15,7 +17,7 @@ public class GFG {
  
             // inner loop for "i"th row printing
             for (int j = i; j <= num - 1; j++) {
- 
+                x = 2;
                 // First Number Space
                 // System.out.print(" ");
  

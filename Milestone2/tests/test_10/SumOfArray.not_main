@@ -1,6 +1,6 @@
 Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments
 args,4,String,,No,0
-num,8,double,,No,0
-t,7,boolean,,No,0
-x,5,int,,No,0
-y,6,int,,No,0
+i,9,int,,No,0
+j,12,int,,No,0
+num,5,int,,No,0
+x,6,int,,No,0
