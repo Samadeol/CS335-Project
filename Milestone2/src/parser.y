@@ -1,6 +1,7 @@
 %{
 #include <bits/stdc++.h>
 #include "symbol_table.cpp"
+#include "3ac.cpp"
 using namespace std;
 
 extern int yylex();
@@ -19,7 +20,7 @@ vector<pair<string,string> > v;
 vector<string> function_call;
 vector<tuple<string,string,int,int> > arguments;
 string curr_class_name;
-int inst_num;
+extern int inst_num;
 
 void yyerror(const char* error){
     fprintf (stderr, "%s | %d\n",error,yylineno);
@@ -540,12 +541,12 @@ CATCH LEFT_PARANTHESIS FormalParameter RIGHT_PARANTHESIS Block
 ;
 
 Primary:
-PrimaryNoNewArray	{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}	
+PrimaryNoNewArray	{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}	
 | ArrayCreationExpression	{if(!first_parse){$$.lit = false; strcpy($$.type,$1.type);}}	
 ;
 
 PrimaryNoNewArray:
-Literal			{if(!first_parse){$$.lit = true;strcpy($$.type,$1.type);}}	
+Literal			{if(!first_parse){$$.lit = true;strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}	
 | LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS{if(!first_parse){$$.lit = false; strcpy($$.type,$2.type);}}
 | ClassInstanceCreationExpression	{if(!first_parse){$$.lit = false; strcpy($$.type,$1.type);}}	
 | ArrayAccess		{if(!first_parse){$$.lit = false; strcpy($$.type,$1.type);}}
@@ -553,12 +554,12 @@ Literal			{if(!first_parse){$$.lit = true;strcpy($$.type,$1.type);}}
 ;
 
 Literal:
-INTEGER_LITERAL	    {if(!first_parse){strcpy($$.type,"byte");}}	
-| FLOATINGPOINT_LITERAL		{if(!first_parse){strcpy($$.type,"float");}}
-| BOOLEAN_LITERAL	{if(!first_parse){strcpy($$.type,"boolean");}}	
-| CHARACTER_LITERAL		{if(!first_parse){strcpy($$.type,"char");}}
-| STRING_LITERAL		{if(!first_parse){strcpy($$.type,"string");}}	
-| NULL_LITERAL		{if(!first_parse){strcpy($$.type,"null");}}
+INTEGER_LITERAL	    {if(!first_parse){strcpy($$.type,"byte");strcpy($$.temp_var,new_temporary().c_str());emitt("",$1.label,"",$$.temp_var,-1);$$.i_number = inst_num;}}	
+| FLOATINGPOINT_LITERAL		{if(!first_parse){strcpy($$.type,"float");strcpy($$.temp_var,new_temporary().c_str());emitt("",$1.label,"",$$.temp_var,-1);$$.i_number = inst_num;}}
+| BOOLEAN_LITERAL	{if(!first_parse){strcpy($$.type,"boolean");strcpy($$.temp_var,new_temporary().c_str());emitt("",$1.label,"",$$.temp_var,-1);$$.i_number = inst_num;}}	
+| CHARACTER_LITERAL		{if(!first_parse){strcpy($$.type,"char");strcpy($$.temp_var,new_temporary().c_str());emitt("",$1.label,"",$$.temp_var,-1);$$.i_number = inst_num;}}
+| STRING_LITERAL		{if(!first_parse){strcpy($$.type,"string");strcpy($$.temp_var,new_temporary().c_str());emitt("",$1.label,"",$$.temp_var,-1);$$.i_number = inst_num;}}	
+| NULL_LITERAL		{if(!first_parse){strcpy($$.type,"null");strcpy($$.temp_var,new_temporary().c_str());emitt("",$1.label,"",$$.temp_var,-1);$$.i_number = inst_num;}}
 ;
 
 ClassInstanceCreationExpression:
@@ -675,31 +676,31 @@ ShiftExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
 ;
 
 ShiftExpression:
-AdditiveExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
-| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
-| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
-| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
+AdditiveExpression		{if(!first_parse){strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}
+| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());string l = new_temporary(); emitt($2.label,$1.temp_var,$3.temp_var,l,-1); strcpy($$.temp_var,l.c_str()); $$.i_number = $1.i_number;}}
+| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());string l = new_temporary(); emitt($2.label,$1.temp_var,$3.temp_var,l,-1); strcpy($$.temp_var,l.c_str()); $$.i_number = $1.i_number;}}
+| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());string l = new_temporary(); emitt($2.label,$1.temp_var,$3.temp_var,l,-1); strcpy($$.temp_var,l.c_str()); $$.i_number = $1.i_number;}}
 ;
 
 AdditiveExpression:
-MultiplicativeExpression    {if(!first_parse){strcpy($$.type,$1.type);}}	
+MultiplicativeExpression    {if(!first_parse){strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}	
 | AdditiveExpression PLUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
 | AdditiveExpression MINUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
 ;
 
 MultiplicativeExpression:
-UnaryExpression		{if(!first_parse){strcpy($$.type,$1.type);}}
-| MultiplicativeExpression STAR UnaryExpression	    {if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
-| MultiplicativeExpression SLASH UnaryExpression    {if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}
-| MultiplicativeExpression PERCENT UnaryExpression	{if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());}}	
+UnaryExpression		{if(!first_parse){strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}
+| MultiplicativeExpression STAR UnaryExpression	    {if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());string l = new_temporary(); emitt($2.label,$1.temp_var,$3.temp_var,l,-1); strcpy($$.temp_var,l.c_str()); $$.i_number = $1.i_number;}}	
+| MultiplicativeExpression SLASH UnaryExpression    {if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());string l = new_temporary(); emitt($2.label,$1.temp_var,$3.temp_var,l,-1); strcpy($$.temp_var,l.c_str()); $$.i_number = $1.i_number;}}
+| MultiplicativeExpression PERCENT UnaryExpression	{if(!first_parse){string t = expression_type(yylineno,$1.type,$3.type,$2.label); strcpy($$.type,t.c_str());string l = new_temporary(); emitt($2.label,$1.temp_var,$3.temp_var,l,-1); strcpy($$.temp_var,l.c_str()); $$.i_number = $1.i_number;}}	
 ;
 
 UnaryExpression:
-PreIncrementExpression		    {if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
-| PreDecrementExpression		{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
-| PLUS UnaryExpression		    {if(!first_parse){string t = expression_type(yylineno,$2.type,"",$1.label); $$.lit = $2.lit; strcpy($$.type,t.c_str());}}
-| MINUS UnaryExpression		    {if(!first_parse){string t = expression_type(yylineno,$2.type,"",$1.label); $$.lit = $2.lit; strcpy($$.type,t.c_str());}}
-| UnaryExpressionNotPlusMinus	{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}	
+PreIncrementExpression		    {if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}
+| PreDecrementExpression		{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}
+| PLUS UnaryExpression		    {if(!first_parse){string t = expression_type(yylineno,$2.type,"",$1.label); $$.lit = $2.lit; strcpy($$.type,t.c_str());strcpy($$.temp_var,$2.temp_var);$$.i_number = $1.i_number;}}
+| MINUS UnaryExpression		    {if(!first_parse){string t = expression_type(yylineno,$2.type,"",$1.label); $$.lit = $2.lit; strcpy($$.type,t.c_str());t = new_temporary(); emitt($1.label,"",$2.temp_var,t,-1); strcpy($$.temp_var,t.c_str());$$.i_number = $1.i_number;}}
+| UnaryExpressionNotPlusMinus	{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}	
 ;
 
 PreIncrementExpression:
@@ -712,6 +713,11 @@ PLUS_PLUS UnaryExpression		{
     }
     $$.lit = false;
     strcpy($$.type,t.c_str());
+    t = new_temporary();
+    emitt("",$2.temp_var,"",t,-1);
+    emitt("+",$2.temp_var,"1",$2.temp_var,-1);
+    strcpy($$.temp_var,t.c_str());
+    $$.i_number = $2.i_number;
 }    
 }
 ;
@@ -726,12 +732,17 @@ if(!first_parse){
     }
     $$.lit = false;
     strcpy($$.type,t.c_str());
+    t = new_temporary();
+    emitt("",$2.temp_var,"",t,-1);
+    emitt("-",$2.temp_var,"1",$2.temp_var,-1);
+    strcpy($$.temp_var,t.c_str());
+    $$.i_number = $2.i_number;
 }
 }
 ;
 
 UnaryExpressionNotPlusMinus:
-PostfixExpression	{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type); strcpy($$.type,$1.type);}}
+PostfixExpression	{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type); strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}
 | TILDA UnaryExpression		
 | EXCLAIM UnaryExpression		
 | CastExpression        
@@ -745,7 +756,7 @@ LEFT_PARANTHESIS PrimitiveType RIGHT_PARANTHESIS UnaryExpression
 ;
 
 PostfixExpression:
-Primary		                    {if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
+Primary		                    {if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);strcpy($$.temp_var,$1.temp_var);$$.i_number = $1.i_number;}}
 | DotIdentifiers		        {if(!first_parse){$$.lit = false; strcpy($$.type,find_in_scope($1.label).c_str());}}
 | PostIncrementExpression		{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
 | PostDecrementExpression		{if(!first_parse){$$.lit = $1.lit; strcpy($$.type,$1.type);}}
@@ -761,6 +772,9 @@ PostfixExpression PLUS_PLUS		{
     }
     $$.lit = false;
     strcpy($$.type,t.c_str());
+    emitt("+",$1.temp_var,"1",$1.temp_var,-1);
+    strcpy($$.temp_var,$1.temp_var);
+    $$.i_number = $1.i_number;
 }
 }
 ;
@@ -775,6 +789,9 @@ PostfixExpression MINUS_MINUS	{
     }
     $$.lit = false;
     strcpy($$.type,t.c_str());
+    emitt("-",$1.temp_var,"1",$1.temp_var,-1);
+    strcpy($$.temp_var,$1.temp_var);
+    $$.i_number = $1.i_number;
     }
 }	
 ;
