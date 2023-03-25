@@ -846,7 +846,7 @@ char *yytext;
 #include<bits/stdc++.h>
 using namespace std;
 #include "parser.tab.h"
-#include "symbol_table.h"
+#include "struct.h"
 
 
 #line 853 "lex.yy.c"
@@ -1169,460 +1169,460 @@ YY_RULE_SETUP
 case 6:
 YY_RULE_SETUP
 #line 157 "lexer.l"
-{strcpy(yylval.item.label,yytext); return TRIPLE_DOT;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return TRIPLE_DOT;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 158 "lexer.l"
-{strcpy(yylval.item.label,yytext); return AMPERSAND;} 
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return AMPERSAND;} 
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 159 "lexer.l"
-{strcpy(yylval.item.label,yytext); return AMPERSAND_AMPERSAND;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return AMPERSAND_AMPERSAND;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 160 "lexer.l"
-{strcpy(yylval.item.label,yytext); return AMPERSAND_EQUALS;} 
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return AMPERSAND_EQUALS;} 
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 161 "lexer.l"
-{strcpy(yylval.item.label,yytext); return ARROW_RIGHT;}  
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return ARROW_RIGHT;}  
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 162 "lexer.l"
-{strcpy(yylval.item.label,yytext); return BAR;}  
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BAR;}  
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 163 "lexer.l"
-{strcpy(yylval.item.label,yytext); return BAR_BAR;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BAR_BAR;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 164 "lexer.l"
-{strcpy(yylval.item.label,yytext); return BAR_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BAR_EQUALS;}
 	YY_BREAK
 case 14:
 /* rule 14 can match eol */
 YY_RULE_SETUP
 #line 165 "lexer.l"
-{strcpy(yylval.item.label,yytext); return CHARACTER_LITERAL;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return CHARACTER_LITERAL;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 166 "lexer.l"
-{strcpy(yylval.item.label,yytext); return COLON;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return COLON;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 167 "lexer.l"
-{strcpy(yylval.item.label,yytext); return COMMA;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return COMMA;}   
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 168 "lexer.l"
-{strcpy(yylval.item.label,yytext); return DOT;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return DOT;}   
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 169 "lexer.l"
-{strcpy(yylval.item.label,yytext); return DOUBLE_COLON;} 
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return DOUBLE_COLON;} 
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 170 "lexer.l"
-{strcpy(yylval.item.label,yytext); return EQUALS;} 
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EQUALS;} 
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 171 "lexer.l"
-{strcpy(yylval.item.label,yytext); return EQUALS_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EQUALS_EQUALS;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 172 "lexer.l"
-{strcpy(yylval.item.label,yytext); return EXCLAIM;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EXCLAIM;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 173 "lexer.l"
-{strcpy(yylval.item.label,yytext); return EXCLAIM_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EXCLAIM_EQUALS;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 174 "lexer.l"
-{strcpy(yylval.item.label,yytext); return FLOATINGPOINT_LITERAL;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FLOATINGPOINT_LITERAL;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 175 "lexer.l"
-{strcpy(yylval.item.label,yytext); return GREATER_THAN;} 
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN;} 
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 176 "lexer.l"
-{strcpy(yylval.item.label,yytext); return GREATER_THAN_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_EQUALS;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 177 "lexer.l"
-{strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_GREATER_THAN;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 178 "lexer.l"
-{strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_EQUALS;} 
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_GREATER_THAN_EQUALS;} 
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 179 "lexer.l"
-{strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN;} 
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN;} 
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 180 "lexer.l"
-{strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 181 "lexer.l"
-{strcpy(yylval.item.label,yytext); return LEFT_CURLY_BRACE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LEFT_CURLY_BRACE;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 182 "lexer.l"
-{strcpy(yylval.item.label,yytext); return LEFT_PARANTHESIS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LEFT_PARANTHESIS;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 183 "lexer.l"
-{strcpy(yylval.item.label,yytext); return LEFT_SQUARE_BRACE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LEFT_SQUARE_BRACE;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 184 "lexer.l"
-{strcpy(yylval.item.label,yytext); return LESS_THAN;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LESS_THAN;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 185 "lexer.l"
-{strcpy(yylval.item.label,yytext); return LESS_THAN_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LESS_THAN_EQUALS;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 186 "lexer.l"
-{strcpy(yylval.item.label,yytext); return LESS_THAN_LESS_THAN;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LESS_THAN_LESS_THAN;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 187 "lexer.l"
-{strcpy(yylval.item.label,yytext); return LESS_THAN_LESS_THAN_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LESS_THAN_LESS_THAN_EQUALS;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 188 "lexer.l"
-{strcpy(yylval.item.label,yytext); return MINUS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return MINUS;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 189 "lexer.l"
-{strcpy(yylval.item.label,yytext); return MINUS_EQUALS;}  
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return MINUS_EQUALS;}  
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 190 "lexer.l"
-{strcpy(yylval.item.label,yytext); return MINUS_MINUS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return MINUS_MINUS;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 191 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PACKAGE;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PACKAGE;}   
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 192 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PERCENT;} 
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PERCENT;} 
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 193 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PERCENT_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PERCENT_EQUALS;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 194 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PLUS;}           
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PLUS;}           
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 195 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PLUS_EQUALS;}  
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PLUS_EQUALS;}  
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 196 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PLUS_PLUS;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PLUS_PLUS;}   
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 197 "lexer.l"
-{strcpy(yylval.item.label,yytext); return POWER;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return POWER;}   
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 198 "lexer.l"
-{strcpy(yylval.item.label,yytext); return POWER_EQUALS;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return POWER_EQUALS;}   
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
 #line 199 "lexer.l"
-{strcpy(yylval.item.label,yytext); return QUESTION;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return QUESTION;}   
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 200 "lexer.l"
-{strcpy(yylval.item.label,yytext); return RIGHT_CURLY_BRACE;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return RIGHT_CURLY_BRACE;}   
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
 #line 201 "lexer.l"
-{strcpy(yylval.item.label,yytext); return RIGHT_PARANTHESIS;}   
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return RIGHT_PARANTHESIS;}   
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
 #line 202 "lexer.l"
-{strcpy(yylval.item.label,yytext); return RIGHT_SQUARE_BRACE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return RIGHT_SQUARE_BRACE;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
 #line 203 "lexer.l"
-{strcpy(yylval.item.label,yytext); return SEMI_COLON;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SEMI_COLON;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
 #line 204 "lexer.l"
-{strcpy(yylval.item.label,yytext); return SLASH;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SLASH;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
 #line 205 "lexer.l"
-{strcpy(yylval.item.label,yytext); return SLASH_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SLASH_EQUALS;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
 #line 206 "lexer.l"
-{strcpy(yylval.item.label,yytext); return STAR;}    
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STAR;}    
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
 #line 207 "lexer.l"
-{strcpy(yylval.item.label,yytext); return STAR_EQUALS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STAR_EQUALS;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
 #line 208 "lexer.l"
-{strcpy(yylval.item.label,yytext); return YIELD;}    
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return YIELD;}    
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
 #line 209 "lexer.l"
-{strcpy(yylval.item.label,yytext); return WHILE;}    
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return WHILE;}    
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
 #line 210 "lexer.l"
-{strcpy(yylval.item.label,yytext); return VOID;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return VOID;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
 #line 211 "lexer.l"
-{strcpy(yylval.item.label,yytext); return VAR;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return VAR;}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
 #line 212 "lexer.l"
-{strcpy(yylval.item.label,yytext); return TRY;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return TRY;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
 #line 213 "lexer.l"
-{strcpy(yylval.item.label,yytext); return TILDA;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return TILDA;}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
 #line 214 "lexer.l"
-{strcpy(yylval.item.label,yytext); return INTEGER_LITERAL;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return INTEGER_LITERAL;}
 	YY_BREAK
 case 64:
 /* rule 64 can match eol */
 YY_RULE_SETUP
 #line 215 "lexer.l"
-{strcpy(yylval.item.label,yytext); return TEXTBLOCK;}    
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return TEXTBLOCK;}    
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
 #line 216 "lexer.l"
-{strcpy(yylval.item.label,yytext); return THROWS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return THROWS;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
 #line 217 "lexer.l"
-{strcpy(yylval.item.label,yytext); return THROW;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return THROW;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
 #line 218 "lexer.l"
-{strcpy(yylval.item.label,yytext); return SYNCHRONIZED;}    
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SYNCHRONIZED;}    
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
 #line 219 "lexer.l"
-{strcpy(yylval.item.label,yytext); return SUPER;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SUPER;}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
 #line 220 "lexer.l"
-{strcpy(yylval.item.label,yytext); return STATIC;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STATIC;}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
 #line 221 "lexer.l"
-{strcpy(yylval.item.label,yytext); return RETURN;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return RETURN;}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
 #line 222 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PUBLIC;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PUBLIC;}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
 #line 223 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PRIVATE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PRIVATE;}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
 #line 224 "lexer.l"
-{strcpy(yylval.item.label,yytext); return PERMITS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PERMITS;}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
 #line 225 "lexer.l"
-{strcpy(yylval.item.label,yytext); return NULL_LITERAL;}    
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return NULL_LITERAL;}    
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
 #line 226 "lexer.l"
-{strcpy(yylval.item.label,yytext); return NEW;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return NEW;}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
 #line 227 "lexer.l"
-{strcpy(yylval.item.label,yytext); return INTERFACE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return INTERFACE;}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
 #line 228 "lexer.l"
-{strcpy(yylval.item.label,yytext); return INTEGRAL_TYPE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return INTEGRAL_TYPE;}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
 #line 229 "lexer.l"
-{strcpy(yylval.item.label,yytext); return IMPORT;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return IMPORT;}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
 #line 230 "lexer.l"
-{strcpy(yylval.item.label,yytext); return IMPLEMENTS;}    
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return IMPLEMENTS;}    
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
 #line 231 "lexer.l"
-{strcpy(yylval.item.label,yytext); return IF;}    
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return IF;}    
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
 #line 232 "lexer.l"
-{strcpy(yylval.item.label,yytext); return FOR;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FOR;}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
 #line 233 "lexer.l"
-{strcpy(yylval.item.label,yytext); return FLOAT_POINT_TYPE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FLOAT_POINT_TYPE;}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
 #line 234 "lexer.l"
-{strcpy(yylval.item.label,yytext); return FINALLY;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FINALLY;}
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
 #line 235 "lexer.l"
-{strcpy(yylval.item.label,yytext); return FINAL;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FINAL;}
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
 #line 236 "lexer.l"
-{strcpy(yylval.item.label,yytext); return EXTENDS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EXTENDS;}
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
 #line 237 "lexer.l"
-{strcpy(yylval.item.label,yytext); return ELSE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return ELSE;}
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
 #line 238 "lexer.l"
-{strcpy(yylval.item.label,yytext); return CONTINUE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return CONTINUE;}
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
 #line 239 "lexer.l"
-{strcpy(yylval.item.label,yytext); return CLASS;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return CLASS;}
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
 #line 240 "lexer.l"
-{strcpy(yylval.item.label,yytext); return CATCH;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return CATCH;}
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
 #line 241 "lexer.l"
-{strcpy(yylval.item.label,yytext); return BREAK;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BREAK;}
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
 #line 242 "lexer.l"
-{strcpy(yylval.item.label,yytext); return BOOLEAN_TYPE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BOOLEAN_TYPE;}
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
 #line 243 "lexer.l"
-{strcpy(yylval.item.label,yytext); return BOOLEAN_LITERAL;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BOOLEAN_LITERAL;}
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
 #line 244 "lexer.l"
-{strcpy(yylval.item.label,yytext); return ASSERT;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return ASSERT;}
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
 #line 245 "lexer.l"
-{strcpy(yylval.item.label,yytext); return STRING_TYPE;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STRING_TYPE;}
 	YY_BREAK
 case 95:
 /* rule 95 can match eol */
 YY_RULE_SETUP
 #line 246 "lexer.l"
-{strcpy(yylval.item.label,yytext); return STRING_LITERAL;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STRING_LITERAL;}
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
 #line 247 "lexer.l"
-{strcpy(yylval.item.label,yytext); return IDENTIFIER;}
+{yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return IDENTIFIER;}
 	YY_BREAK
 case 97:
 /* rule 97 can match eol */

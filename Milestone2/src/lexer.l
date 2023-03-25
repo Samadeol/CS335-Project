@@ -2,7 +2,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #include "parser.tab.h"
-#include "symbol_table.h"
+#include "struct.h"
 
 
 %}
@@ -154,97 +154,97 @@ YIELD                        yield
 
 {WHITESPACE}                                    {}        
 {LINE_TERMINATOR}                               {}
-{TRIPLE_DOT}                                    {strcpy(yylval.item.label,yytext); return TRIPLE_DOT;}
-{AMPERSAND}                                     {strcpy(yylval.item.label,yytext); return AMPERSAND;} 
-{AMPERSAND_AMPERSAND}                           {strcpy(yylval.item.label,yytext); return AMPERSAND_AMPERSAND;}
-{AMPERSAND_EQUALS}                              {strcpy(yylval.item.label,yytext); return AMPERSAND_EQUALS;} 
-{ARROW_RIGHT}                                   {strcpy(yylval.item.label,yytext); return ARROW_RIGHT;}  
-{BAR}                                           {strcpy(yylval.item.label,yytext); return BAR;}  
-{BAR_BAR}                                       {strcpy(yylval.item.label,yytext); return BAR_BAR;}
-{BAR_EQUALS}                                    {strcpy(yylval.item.label,yytext); return BAR_EQUALS;}
-{CHARACTER_LITERAL}                             {strcpy(yylval.item.label,yytext); return CHARACTER_LITERAL;}
-{COLON}                                         {strcpy(yylval.item.label,yytext); return COLON;}
-{COMMA}                                         {strcpy(yylval.item.label,yytext); return COMMA;}   
-{DOT}                                           {strcpy(yylval.item.label,yytext); return DOT;}   
-{DOUBLE_COLON}                                  {strcpy(yylval.item.label,yytext); return DOUBLE_COLON;} 
-{EQUALS}                                        {strcpy(yylval.item.label,yytext); return EQUALS;} 
-{EQUALS_EQUALS}                                 {strcpy(yylval.item.label,yytext); return EQUALS_EQUALS;}
-{EXCLAIM}                                       {strcpy(yylval.item.label,yytext); return EXCLAIM;}
-{EXCLAIM_EQUALS}                                {strcpy(yylval.item.label,yytext); return EXCLAIM_EQUALS;}
-{FLOATINGPOINT_LITERAL}                         {strcpy(yylval.item.label,yytext); return FLOATINGPOINT_LITERAL;}
-{GREATER_THAN}                                  {strcpy(yylval.item.label,yytext); return GREATER_THAN;} 
-{GREATER_THAN_EQUALS}                           {strcpy(yylval.item.label,yytext); return GREATER_THAN_EQUALS;}
-{GREATER_THAN_GREATER_THAN}                     {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN;}
-{GREATER_THAN_GREATER_THAN_EQUALS}              {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_EQUALS;} 
-{GREATER_THAN_GREATER_THAN_GREATER_THAN}        {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN;} 
-{GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS} {strcpy(yylval.item.label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS;}
-{LEFT_CURLY_BRACE}                              {strcpy(yylval.item.label,yytext); return LEFT_CURLY_BRACE;}
-{LEFT_PARANTHESIS}                              {strcpy(yylval.item.label,yytext); return LEFT_PARANTHESIS;}
-{LEFT_SQUARE_BRACE}                             {strcpy(yylval.item.label,yytext); return LEFT_SQUARE_BRACE;}
-{LESS_THAN}                                     {strcpy(yylval.item.label,yytext); return LESS_THAN;}
-{LESS_THAN_EQUALS}                              {strcpy(yylval.item.label,yytext); return LESS_THAN_EQUALS;}
-{LESS_THAN_LESS_THAN}                           {strcpy(yylval.item.label,yytext); return LESS_THAN_LESS_THAN;}
-{LESS_THAN_LESS_THAN_EQUALS}                    {strcpy(yylval.item.label,yytext); return LESS_THAN_LESS_THAN_EQUALS;}
-{MINUS}                                         {strcpy(yylval.item.label,yytext); return MINUS;}
-{MINUS_EQUALS}                                  {strcpy(yylval.item.label,yytext); return MINUS_EQUALS;}  
-{MINUS_MINUS}                                   {strcpy(yylval.item.label,yytext); return MINUS_MINUS;}
-{PACKAGE}                                       {strcpy(yylval.item.label,yytext); return PACKAGE;}   
-{PERCENT}                                       {strcpy(yylval.item.label,yytext); return PERCENT;} 
-{PERCENT_EQUALS}                                {strcpy(yylval.item.label,yytext); return PERCENT_EQUALS;}
-{PLUS}                                          {strcpy(yylval.item.label,yytext); return PLUS;}           
-{PLUS_EQUALS}                                   {strcpy(yylval.item.label,yytext); return PLUS_EQUALS;}  
-{PLUS_PLUS}                                     {strcpy(yylval.item.label,yytext); return PLUS_PLUS;}   
-{POWER}                                         {strcpy(yylval.item.label,yytext); return POWER;}   
-{POWER_EQUALS}                                  {strcpy(yylval.item.label,yytext); return POWER_EQUALS;}   
-{QUESTION}                                      {strcpy(yylval.item.label,yytext); return QUESTION;}   
-{RIGHT_CURLY_BRACE}                             {strcpy(yylval.item.label,yytext); return RIGHT_CURLY_BRACE;}   
-{RIGHT_PARANTHESIS}                             {strcpy(yylval.item.label,yytext); return RIGHT_PARANTHESIS;}   
-{RIGHT_SQUARE_BRACE}                            {strcpy(yylval.item.label,yytext); return RIGHT_SQUARE_BRACE;}
-{SEMI_COLON}                                    {strcpy(yylval.item.label,yytext); return SEMI_COLON;}
-{SLASH}                                         {strcpy(yylval.item.label,yytext); return SLASH;}
-{SLASH_EQUALS}                                  {strcpy(yylval.item.label,yytext); return SLASH_EQUALS;}
-{STAR}                                          {strcpy(yylval.item.label,yytext); return STAR;}    
-{STAR_EQUALS}                                   {strcpy(yylval.item.label,yytext); return STAR_EQUALS;}
-{YIELD}                                         {strcpy(yylval.item.label,yytext); return YIELD;}    
-{WHILE}                                         {strcpy(yylval.item.label,yytext); return WHILE;}    
-{VOID}                                          {strcpy(yylval.item.label,yytext); return VOID;}
-{VAR}                                           {strcpy(yylval.item.label,yytext); return VAR;}
-{TRY}                                           {strcpy(yylval.item.label,yytext); return TRY;}
-{TILDA}                                         {strcpy(yylval.item.label,yytext); return TILDA;}
-{INTEGER_LITERAL}                               {strcpy(yylval.item.label,yytext); return INTEGER_LITERAL;}
-{TEXTBLOCK}                                     {strcpy(yylval.item.label,yytext); return TEXTBLOCK;}    
-{THROWS}                                        {strcpy(yylval.item.label,yytext); return THROWS;}
-{THROW}                                         {strcpy(yylval.item.label,yytext); return THROW;}
-{SYNCHRONIZED}                                  {strcpy(yylval.item.label,yytext); return SYNCHRONIZED;}    
-{SUPER}                                         {strcpy(yylval.item.label,yytext); return SUPER;}
-{STATIC}                                        {strcpy(yylval.item.label,yytext); return STATIC;}
-{RETURN}                                        {strcpy(yylval.item.label,yytext); return RETURN;}
-{PUBLIC}                                        {strcpy(yylval.item.label,yytext); return PUBLIC;}
-{PRIVATE}                                       {strcpy(yylval.item.label,yytext); return PRIVATE;}
-{PERMITS}                                       {strcpy(yylval.item.label,yytext); return PERMITS;}
-{NULL_LITERAL}                                  {strcpy(yylval.item.label,yytext); return NULL_LITERAL;}    
-{NEW}                                           {strcpy(yylval.item.label,yytext); return NEW;}
-{INTERFACE}                                     {strcpy(yylval.item.label,yytext); return INTERFACE;}
-{INTEGRAL_TYPE}                                 {strcpy(yylval.item.label,yytext); return INTEGRAL_TYPE;}
-{IMPORT}                                        {strcpy(yylval.item.label,yytext); return IMPORT;}
-{IMPLEMENTS}                                    {strcpy(yylval.item.label,yytext); return IMPLEMENTS;}    
-{IF}                                            {strcpy(yylval.item.label,yytext); return IF;}    
-{FOR}                                           {strcpy(yylval.item.label,yytext); return FOR;}
-{FLOAT_POINT_TYPE}                              {strcpy(yylval.item.label,yytext); return FLOAT_POINT_TYPE;}
-{FINALLY}                                       {strcpy(yylval.item.label,yytext); return FINALLY;}
-{FINAL}                                         {strcpy(yylval.item.label,yytext); return FINAL;}
-{EXTENDS}                                       {strcpy(yylval.item.label,yytext); return EXTENDS;}
-{ELSE}                                          {strcpy(yylval.item.label,yytext); return ELSE;}
-{CONTINUE}                                      {strcpy(yylval.item.label,yytext); return CONTINUE;}
-{CLASS}                                         {strcpy(yylval.item.label,yytext); return CLASS;}
-{CATCH}                                         {strcpy(yylval.item.label,yytext); return CATCH;}
-{BREAK}                                         {strcpy(yylval.item.label,yytext); return BREAK;}
-{BOOLEAN_TYPE}                                  {strcpy(yylval.item.label,yytext); return BOOLEAN_TYPE;}
-{BOOLEAN_LITERAL}                               {strcpy(yylval.item.label,yytext); return BOOLEAN_LITERAL;}
-{ASSERT}                                        {strcpy(yylval.item.label,yytext); return ASSERT;}
-{STRING_TYPE}                                   {strcpy(yylval.item.label,yytext); return STRING_TYPE;}
-{STRING_LITERAL}                                {strcpy(yylval.item.label,yytext); return STRING_LITERAL;}
-{IDENTIFIER}                                    {strcpy(yylval.item.label,yytext); return IDENTIFIER;}
+{TRIPLE_DOT}                                    {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return TRIPLE_DOT;}
+{AMPERSAND}                                     {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return AMPERSAND;} 
+{AMPERSAND_AMPERSAND}                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return AMPERSAND_AMPERSAND;}
+{AMPERSAND_EQUALS}                              {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return AMPERSAND_EQUALS;} 
+{ARROW_RIGHT}                                   {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return ARROW_RIGHT;}  
+{BAR}                                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BAR;}  
+{BAR_BAR}                                       {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BAR_BAR;}
+{BAR_EQUALS}                                    {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BAR_EQUALS;}
+{CHARACTER_LITERAL}                             {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return CHARACTER_LITERAL;}
+{COLON}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return COLON;}
+{COMMA}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return COMMA;}   
+{DOT}                                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return DOT;}   
+{DOUBLE_COLON}                                  {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return DOUBLE_COLON;} 
+{EQUALS}                                        {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EQUALS;} 
+{EQUALS_EQUALS}                                 {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EQUALS_EQUALS;}
+{EXCLAIM}                                       {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EXCLAIM;}
+{EXCLAIM_EQUALS}                                {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EXCLAIM_EQUALS;}
+{FLOATINGPOINT_LITERAL}                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FLOATINGPOINT_LITERAL;}
+{GREATER_THAN}                                  {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN;} 
+{GREATER_THAN_EQUALS}                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_EQUALS;}
+{GREATER_THAN_GREATER_THAN}                     {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_GREATER_THAN;}
+{GREATER_THAN_GREATER_THAN_EQUALS}              {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_GREATER_THAN_EQUALS;} 
+{GREATER_THAN_GREATER_THAN_GREATER_THAN}        {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN;} 
+{GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS} {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS;}
+{LEFT_CURLY_BRACE}                              {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LEFT_CURLY_BRACE;}
+{LEFT_PARANTHESIS}                              {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LEFT_PARANTHESIS;}
+{LEFT_SQUARE_BRACE}                             {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LEFT_SQUARE_BRACE;}
+{LESS_THAN}                                     {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LESS_THAN;}
+{LESS_THAN_EQUALS}                              {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LESS_THAN_EQUALS;}
+{LESS_THAN_LESS_THAN}                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LESS_THAN_LESS_THAN;}
+{LESS_THAN_LESS_THAN_EQUALS}                    {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return LESS_THAN_LESS_THAN_EQUALS;}
+{MINUS}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return MINUS;}
+{MINUS_EQUALS}                                  {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return MINUS_EQUALS;}  
+{MINUS_MINUS}                                   {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return MINUS_MINUS;}
+{PACKAGE}                                       {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PACKAGE;}   
+{PERCENT}                                       {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PERCENT;} 
+{PERCENT_EQUALS}                                {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PERCENT_EQUALS;}
+{PLUS}                                          {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PLUS;}           
+{PLUS_EQUALS}                                   {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PLUS_EQUALS;}  
+{PLUS_PLUS}                                     {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PLUS_PLUS;}   
+{POWER}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return POWER;}   
+{POWER_EQUALS}                                  {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return POWER_EQUALS;}   
+{QUESTION}                                      {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return QUESTION;}   
+{RIGHT_CURLY_BRACE}                             {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return RIGHT_CURLY_BRACE;}   
+{RIGHT_PARANTHESIS}                             {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return RIGHT_PARANTHESIS;}   
+{RIGHT_SQUARE_BRACE}                            {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return RIGHT_SQUARE_BRACE;}
+{SEMI_COLON}                                    {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SEMI_COLON;}
+{SLASH}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SLASH;}
+{SLASH_EQUALS}                                  {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SLASH_EQUALS;}
+{STAR}                                          {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STAR;}    
+{STAR_EQUALS}                                   {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STAR_EQUALS;}
+{YIELD}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return YIELD;}    
+{WHILE}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return WHILE;}    
+{VOID}                                          {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return VOID;}
+{VAR}                                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return VAR;}
+{TRY}                                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return TRY;}
+{TILDA}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return TILDA;}
+{INTEGER_LITERAL}                               {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return INTEGER_LITERAL;}
+{TEXTBLOCK}                                     {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return TEXTBLOCK;}    
+{THROWS}                                        {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return THROWS;}
+{THROW}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return THROW;}
+{SYNCHRONIZED}                                  {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SYNCHRONIZED;}    
+{SUPER}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return SUPER;}
+{STATIC}                                        {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STATIC;}
+{RETURN}                                        {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return RETURN;}
+{PUBLIC}                                        {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PUBLIC;}
+{PRIVATE}                                       {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PRIVATE;}
+{PERMITS}                                       {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return PERMITS;}
+{NULL_LITERAL}                                  {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return NULL_LITERAL;}    
+{NEW}                                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return NEW;}
+{INTERFACE}                                     {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return INTERFACE;}
+{INTEGRAL_TYPE}                                 {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return INTEGRAL_TYPE;}
+{IMPORT}                                        {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return IMPORT;}
+{IMPLEMENTS}                                    {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return IMPLEMENTS;}    
+{IF}                                            {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return IF;}    
+{FOR}                                           {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FOR;}
+{FLOAT_POINT_TYPE}                              {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FLOAT_POINT_TYPE;}
+{FINALLY}                                       {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FINALLY;}
+{FINAL}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return FINAL;}
+{EXTENDS}                                       {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return EXTENDS;}
+{ELSE}                                          {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return ELSE;}
+{CONTINUE}                                      {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return CONTINUE;}
+{CLASS}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return CLASS;}
+{CATCH}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return CATCH;}
+{BREAK}                                         {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BREAK;}
+{BOOLEAN_TYPE}                                  {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BOOLEAN_TYPE;}
+{BOOLEAN_LITERAL}                               {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return BOOLEAN_LITERAL;}
+{ASSERT}                                        {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return ASSERT;}
+{STRING_TYPE}                                   {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STRING_TYPE;}
+{STRING_LITERAL}                                {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return STRING_LITERAL;}
+{IDENTIFIER}                                    {yylval.item = new struct Item; strcpy(yylval.item->label,yytext); return IDENTIFIER;}
 {COMMENT}                                       {}
 <<EOF>> {yyterminate();}
 

@@ -70,6 +70,7 @@
 
 #include <bits/stdc++.h>
 #include "symbol_table.cpp"
+#include "struct.h"
 using namespace std;
 
 extern int yylex();
@@ -121,7 +122,7 @@ void func(string q,string p){
 
 
 
-#line 125 "parser.tab.c"
+#line 126 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -267,21 +268,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 59 "parser.y"
+#line 60 "parser.y"
 
-    struct {
-        char label[1000];
-        char type[100];
-        int dims;
-        bool lit;
-        char temp_var[1000];
-        int i_number;
-        int true_list[1000];
-        int false_list[1000];
-        int next_list[1000];
-    }item;
+    struct Item* item;
 
-#line 285 "parser.tab.c"
+#line 276 "parser.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -682,36 +673,36 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    80,    80,    82,    83,    86,    87,    88,    89,    90,
-      91,    92,    96,   100,   101,   105,   106,   107,   108,   112,
-     116,   120,   124,   128,   129,   133,   134,   138,   139,   143,
-     144,   145,   149,   150,   154,   155,   159,   163,   164,   168,
-     172,   173,   177,   178,   181,   185,   186,   190,   191,   192,
-     193,   197,   198,   202,   203,   207,   208,   209,   213,   214,
-     215,   219,   226,   236,   237,   241,   242,   243,   244,   248,
-     251,   252,   253,   254,   257,   261,   262,   266,   267,   271,
-     272,   273,   274,   275,   276,   280,   281,   285,   286,   289,
-     293,   294,   298,   299,   303,   304,   309,   310,   314,   315,
-     319,   320,   324,   333,   342,   346,   347,   348,   349,   350,
-     351,   355,   356,   357,   358,   359,   363,   364,   365,   366,
-     367,   368,   369,   370,   371,   372,   376,   380,   384,   388,
-     392,   393,   394,   395,   396,   397,   398,   401,   405,   409,
-     413,   418,   419,   423,   427,   431,   432,   436,   437,   441,
-     442,   443,   444,   445,   446,   447,   448,   452,   453,   454,
-     455,   456,   457,   458,   459,   463,   464,   468,   477,   488,
-     492,   493,   497,   501,   505,   506,   510,   514,   515,   519,
-     520,   524,   528,   529,   530,   534,   535,   539,   543,   544,
-     548,   549,   550,   551,   552,   556,   557,   558,   559,   560,
-     561,   565,   569,   570,   574,   575,   579,   580,   581,   582,
-     586,   587,   588,   589,   593,   594,   598,   602,   603,   607,
-     608,   609,   610,   611,   612,   613,   614,   615,   616,   617,
-     618,   619,   620,   621,   622,   623,   624,   625,   626,   627,
-     628,   629,   630,   634,   635,   639,   640,   644,   645,   649,
-     650,   654,   655,   659,   660,   664,   665,   666,   670,   671,
-     672,   673,   674,   678,   679,   680,   681,   685,   686,   687,
-     691,   692,   693,   694,   698,   699,   700,   701,   702,   706,
-     720,   734,   735,   736,   737,   741,   742,   743,   744,   748,
-     749,   750,   751,   755,   769
+       0,    71,    71,    73,    74,    77,    78,    79,    80,    81,
+      82,    83,    87,    91,    92,    96,    97,    98,    99,   103,
+     107,   111,   115,   119,   120,   124,   125,   129,   130,   134,
+     135,   136,   140,   141,   145,   146,   150,   154,   155,   159,
+     163,   164,   168,   169,   172,   176,   177,   181,   182,   183,
+     184,   188,   189,   193,   194,   198,   199,   200,   204,   205,
+     206,   210,   217,   227,   228,   232,   233,   234,   235,   239,
+     242,   243,   244,   245,   248,   252,   253,   257,   258,   262,
+     263,   264,   265,   266,   267,   271,   272,   276,   277,   280,
+     284,   285,   289,   290,   294,   295,   300,   301,   305,   306,
+     310,   311,   315,   324,   333,   337,   338,   339,   340,   341,
+     342,   346,   347,   348,   349,   350,   354,   355,   356,   357,
+     358,   359,   360,   361,   362,   363,   367,   371,   375,   379,
+     383,   384,   385,   386,   387,   388,   389,   392,   396,   400,
+     404,   409,   410,   414,   418,   422,   423,   427,   428,   432,
+     433,   434,   435,   436,   437,   438,   439,   443,   444,   445,
+     446,   447,   448,   449,   450,   454,   455,   459,   468,   479,
+     483,   484,   488,   492,   496,   497,   501,   505,   506,   510,
+     511,   515,   519,   520,   521,   525,   526,   530,   534,   535,
+     539,   540,   541,   542,   543,   547,   548,   549,   550,   551,
+     552,   556,   560,   561,   565,   566,   570,   571,   572,   573,
+     577,   578,   579,   580,   584,   585,   589,   593,   594,   598,
+     599,   600,   601,   602,   603,   604,   605,   606,   607,   608,
+     609,   610,   611,   612,   613,   614,   615,   616,   617,   618,
+     619,   620,   621,   625,   626,   630,   631,   635,   636,   640,
+     641,   645,   646,   650,   651,   655,   656,   657,   661,   662,
+     663,   664,   665,   669,   670,   671,   672,   676,   677,   678,
+     682,   683,   684,   685,   689,   690,   691,   692,   693,   697,
+     711,   725,   726,   727,   728,   732,   733,   734,   735,   739,
+     740,   741,   742,   746,   760
 };
 #endif
 
@@ -2361,1195 +2352,1195 @@ yyreduce:
   switch (yyn)
     {
   case 3:
-#line 82 "parser.y"
+#line 73 "parser.y"
                            {new_scope();}
-#line 2367 "parser.tab.c"
+#line 2358 "parser.tab.c"
     break;
 
   case 4:
-#line 83 "parser.y"
+#line 74 "parser.y"
                                 {old_scope();}
-#line 2373 "parser.tab.c"
+#line 2364 "parser.tab.c"
     break;
 
   case 27:
-#line 138 "parser.y"
-                {strcpy((yyval.item).type,(yyvsp[0].item).type);}
-#line 2379 "parser.tab.c"
+#line 129 "parser.y"
+                {strcpy((yyval.item)->type,(yyvsp[0].item)->type);}
+#line 2370 "parser.tab.c"
     break;
 
   case 28:
-#line 139 "parser.y"
-                {strcpy((yyval.item).type,(yyvsp[0].item).type);}
-#line 2385 "parser.tab.c"
+#line 130 "parser.y"
+                {strcpy((yyval.item)->type,(yyvsp[0].item)->type);}
+#line 2376 "parser.tab.c"
     break;
 
   case 29:
-#line 143 "parser.y"
-                 {strcpy((yyval.item).type,(yyvsp[0].item).type);}
-#line 2391 "parser.tab.c"
+#line 134 "parser.y"
+                 {strcpy((yyval.item)->type,(yyvsp[0].item)->type);}
+#line 2382 "parser.tab.c"
     break;
 
   case 30:
-#line 144 "parser.y"
-                {strcpy((yyval.item).type,(yyvsp[0].item).label);}
-#line 2397 "parser.tab.c"
+#line 135 "parser.y"
+                {strcpy((yyval.item)->type,(yyvsp[0].item)->label);}
+#line 2388 "parser.tab.c"
     break;
 
   case 31:
-#line 145 "parser.y"
-                {strcpy((yyval.item).type,(yyvsp[0].item).label);}
-#line 2403 "parser.tab.c"
+#line 136 "parser.y"
+                {strcpy((yyval.item)->type,(yyvsp[0].item)->label);}
+#line 2394 "parser.tab.c"
     break;
 
   case 32:
-#line 149 "parser.y"
-                {strcpy((yyval.item).type,(yyvsp[0].item).label);}
-#line 2409 "parser.tab.c"
+#line 140 "parser.y"
+                {strcpy((yyval.item)->type,(yyvsp[0].item)->label);}
+#line 2400 "parser.tab.c"
     break;
 
   case 33:
-#line 150 "parser.y"
-                        {strcpy((yyval.item).type,(yyvsp[0].item).label);}
-#line 2415 "parser.tab.c"
+#line 141 "parser.y"
+                        {strcpy((yyval.item)->type,(yyvsp[0].item)->label);}
+#line 2406 "parser.tab.c"
     break;
 
   case 34:
-#line 154 "parser.y"
-                {check_gst((yyvsp[0].item).label); strcpy((yyval.item).type,(yyvsp[0].item).label);}
-#line 2421 "parser.tab.c"
+#line 145 "parser.y"
+                {check_gst((yyvsp[0].item)->label); strcpy((yyval.item)->type,(yyvsp[0].item)->label);}
+#line 2412 "parser.tab.c"
     break;
 
   case 35:
-#line 155 "parser.y"
-                        {strcpy((yyval.item).type,(yyvsp[0].item).type);}
-#line 2427 "parser.tab.c"
+#line 146 "parser.y"
+                        {strcpy((yyval.item)->type,(yyvsp[0].item)->type);}
+#line 2418 "parser.tab.c"
     break;
 
   case 36:
-#line 159 "parser.y"
-                {strcpy((yyval.item).type,(yyvsp[0].item).label);}
-#line 2433 "parser.tab.c"
+#line 150 "parser.y"
+                {strcpy((yyval.item)->type,(yyvsp[0].item)->label);}
+#line 2424 "parser.tab.c"
     break;
 
   case 37:
-#line 163 "parser.y"
-                                {strcpy((yyval.item).label,strcat((yyvsp[-2].item).label,strcat((yyvsp[-1].item).label,(yyvsp[0].item).label)));}
-#line 2439 "parser.tab.c"
+#line 154 "parser.y"
+                                {strcpy((yyval.item)->label,strcat((yyvsp[-2].item)->label,strcat((yyvsp[-1].item)->label,(yyvsp[0].item)->label)));}
+#line 2430 "parser.tab.c"
     break;
 
   case 38:
-#line 164 "parser.y"
-                        {strcpy((yyval.item).label,(yyvsp[0].item).label);}
-#line 2445 "parser.tab.c"
+#line 155 "parser.y"
+                        {strcpy((yyval.item)->label,(yyvsp[0].item)->label);}
+#line 2436 "parser.tab.c"
     break;
 
   case 39:
-#line 168 "parser.y"
-                        {string t; for(int i=0;i<(yyvsp[-1].item).dims;i++) t.push_back('*'); strcpy((yyval.item).type,strcat((yyvsp[-1].item).type,t.c_str()));}
-#line 2451 "parser.tab.c"
+#line 159 "parser.y"
+                        {string t; for(int i=0;i<(yyvsp[-1].item)->dims;i++) t.push_back('*'); strcpy((yyval.item)->type,strcat((yyvsp[-1].item)->type,t.c_str()));}
+#line 2442 "parser.tab.c"
     break;
 
   case 40:
-#line 172 "parser.y"
-                                          {(yyval.item).dims = (yyvsp[-2].item).dims+1;}
-#line 2457 "parser.tab.c"
+#line 163 "parser.y"
+                                          {(yyval.item)->dims = (yyvsp[-2].item)->dims+1;}
+#line 2448 "parser.tab.c"
     break;
 
   case 41:
-#line 173 "parser.y"
-                                        {(yyval.item).dims = 1;}
-#line 2463 "parser.tab.c"
+#line 164 "parser.y"
+                                        {(yyval.item)->dims = 1;}
+#line 2454 "parser.tab.c"
     break;
 
   case 42:
-#line 177 "parser.y"
-                    {strcpy((yyval.item).type,""); strcpy((yyval.item).label,(yyvsp[0].item).label); line_number = yylineno;  if(!first_parse) go_in_scope((yyvsp[0].item).label);curr_class_name = (yyvsp[0].item).label;}
-#line 2469 "parser.tab.c"
+#line 168 "parser.y"
+                    {strcpy((yyval.item)->type,""); strcpy((yyval.item)->label,(yyvsp[0].item)->label); line_number = yylineno;  if(!first_parse) go_in_scope((yyvsp[0].item)->label);curr_class_name = (yyvsp[0].item)->label;}
+#line 2460 "parser.tab.c"
     break;
 
   case 43:
-#line 178 "parser.y"
-                                    {strcpy((yyval.item).type,(yyvsp[-2].item).label); strcpy((yyval.item).label,(yyvsp[0].item).label); line_number = yylineno;  if(!first_parse) go_in_scope((yyvsp[0].item).label); curr_class_name = (yyvsp[0].item).label;}
-#line 2475 "parser.tab.c"
+#line 169 "parser.y"
+                                    {strcpy((yyval.item)->type,(yyvsp[-2].item)->label); strcpy((yyval.item)->label,(yyvsp[0].item)->label); line_number = yylineno;  if(!first_parse) go_in_scope((yyvsp[0].item)->label); curr_class_name = (yyvsp[0].item)->label;}
+#line 2466 "parser.tab.c"
     break;
 
   case 44:
-#line 181 "parser.y"
-                                        {if(first_parse){string mod = check_class_modifiers((yyvsp[-1].item).type);make_class_entry((yyvsp[-1].item).label,line_number,mod);}}
-#line 2481 "parser.tab.c"
+#line 172 "parser.y"
+                                        {cout<<(yyval.item)->true_list.size(); if(first_parse){string mod = check_class_modifiers((yyvsp[-1].item)->type);make_class_entry((yyvsp[-1].item)->label,line_number,mod);}}
+#line 2472 "parser.tab.c"
     break;
 
   case 45:
-#line 185 "parser.y"
-                             {strcpy((yyval.item).label,strcat((yyvsp[-1].item).label,(yyvsp[0].item).label));}
-#line 2487 "parser.tab.c"
+#line 176 "parser.y"
+                             {strcpy((yyval.item)->label,strcat((yyvsp[-1].item)->label,(yyvsp[0].item)->label));}
+#line 2478 "parser.tab.c"
     break;
 
   case 46:
-#line 186 "parser.y"
-                {strcpy((yyval.item).label,(yyvsp[0].item).label);}
-#line 2493 "parser.tab.c"
+#line 177 "parser.y"
+                {strcpy((yyval.item)->label,(yyvsp[0].item)->label);}
+#line 2484 "parser.tab.c"
     break;
 
   case 47:
-#line 190 "parser.y"
-            {strcpy((yyval.item).label,"0");}
-#line 2499 "parser.tab.c"
+#line 181 "parser.y"
+            {strcpy((yyval.item)->label,"0");}
+#line 2490 "parser.tab.c"
     break;
 
   case 48:
-#line 191 "parser.y"
-                {strcpy((yyval.item).label,"1");}
-#line 2505 "parser.tab.c"
+#line 182 "parser.y"
+                {strcpy((yyval.item)->label,"1");}
+#line 2496 "parser.tab.c"
     break;
 
   case 49:
-#line 192 "parser.y"
-                {strcpy((yyval.item).label,"2");}
-#line 2511 "parser.tab.c"
+#line 183 "parser.y"
+                {strcpy((yyval.item)->label,"2");}
+#line 2502 "parser.tab.c"
     break;
 
   case 50:
-#line 193 "parser.y"
-                {strcpy((yyval.item).label,"3");}
-#line 2517 "parser.tab.c"
+#line 184 "parser.y"
+                {strcpy((yyval.item)->label,"3");}
+#line 2508 "parser.tab.c"
     break;
 
   case 57:
-#line 209 "parser.y"
+#line 200 "parser.y"
         {reset();}
-#line 2523 "parser.tab.c"
+#line 2514 "parser.tab.c"
     break;
 
   case 61:
-#line 219 "parser.y"
+#line 210 "parser.y"
                                         {
     for(int i=0;i<v.size();i++){
-        string t = expression_type(yylineno,(yyvsp[-2].item).type,v[i].second,"declare");
+        string t = expression_type(yylineno,(yyvsp[-2].item)->type,v[i].second,"declare");
         if(first_parse)   make_entry(v[i].first,t,yylineno,"0000");
     }
     v.clear();	
 }
-#line 2535 "parser.tab.c"
+#line 2526 "parser.tab.c"
     break;
 
   case 62:
-#line 226 "parser.y"
+#line 217 "parser.y"
                                                         {
     for(int i=0;i<v.size();i++){
-        string t = expression_type(yylineno,(yyvsp[-2].item).type,v[i].second,"declare");
-        if(first_parse) make_entry(v[i].first,t,yylineno,check_method_modifiers((yyvsp[-3].item).label));
+        string t = expression_type(yylineno,(yyvsp[-2].item)->type,v[i].second,"declare");
+        if(first_parse) make_entry(v[i].first,t,yylineno,check_method_modifiers((yyvsp[-3].item)->label));
     }
     v.clear();
 }
-#line 2547 "parser.tab.c"
+#line 2538 "parser.tab.c"
     break;
 
   case 65:
-#line 241 "parser.y"
-                                        {if(first_parse)v.push_back(make_pair((yyvsp[-2].item).label,"")); else v.push_back(make_pair((yyvsp[-2].item).label,(yyvsp[0].item).type));}
-#line 2553 "parser.tab.c"
+#line 232 "parser.y"
+                                        {if(first_parse)v.push_back(make_pair((yyvsp[-2].item)->label,"")); else v.push_back(make_pair((yyvsp[-2].item)->label,(yyvsp[0].item)->type));}
+#line 2544 "parser.tab.c"
     break;
 
   case 66:
-#line 242 "parser.y"
-                {v.push_back(make_pair((yyvsp[0].item).label,""));}
-#line 2559 "parser.tab.c"
+#line 233 "parser.y"
+                {v.push_back(make_pair((yyvsp[0].item)->label,""));}
+#line 2550 "parser.tab.c"
     break;
 
   case 67:
-#line 243 "parser.y"
-                        {string t; for(int i=0;i<(yyvsp[0].item).dims;i++) t.push_back('*'); v.push_back(make_pair((yyvsp[-1].item).label,t));}
-#line 2565 "parser.tab.c"
+#line 234 "parser.y"
+                        {string t; for(int i=0;i<(yyvsp[0].item)->dims;i++) t.push_back('*'); v.push_back(make_pair((yyvsp[-1].item)->label,t));}
+#line 2556 "parser.tab.c"
     break;
 
   case 68:
-#line 244 "parser.y"
-                                                 {if(first_parse){string t; for(int i=0;i<(yyvsp[-2].item).dims;i++) t.push_back('*'); v.push_back(make_pair((yyvsp[-3].item).label,t));}else{if((yyvsp[-2].item).dims == (yyvsp[0].item).dims) v.push_back(make_pair((yyvsp[-3].item).label,(yyvsp[0].item).type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}}}
-#line 2571 "parser.tab.c"
+#line 235 "parser.y"
+                                                 {if(first_parse){string t; for(int i=0;i<(yyvsp[-2].item)->dims;i++) t.push_back('*'); v.push_back(make_pair((yyvsp[-3].item)->label,t));}else{if((yyvsp[-2].item)->dims == (yyvsp[0].item)->dims) v.push_back(make_pair((yyvsp[-3].item)->label,(yyvsp[0].item)->type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}}}
+#line 2562 "parser.tab.c"
     break;
 
   case 69:
-#line 248 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2577 "parser.tab.c"
+#line 239 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2568 "parser.tab.c"
     break;
 
   case 70:
-#line 251 "parser.y"
-                        {if((yyvsp[0].item).dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl; exit(1);} strcpy((yyval.item).label,(yyvsp[0].item).label); strcpy((yyval.item).type,"void0000"); line_number = yylineno; if(!first_parse)go_in_scope((yyvsp[0].item).label);}
-#line 2583 "parser.tab.c"
+#line 242 "parser.y"
+                        {if((yyvsp[0].item)->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl; exit(1);} strcpy((yyval.item)->label,(yyvsp[0].item)->label); strcpy((yyval.item)->type,"void0000"); line_number = yylineno; if(!first_parse)go_in_scope((yyvsp[0].item)->label);}
+#line 2574 "parser.tab.c"
     break;
 
   case 71:
-#line 252 "parser.y"
-                        {string t; for(int i=0;i<(yyvsp[0].item).dims;i++) t.push_back('*'); strcpy((yyval.item).label,(yyvsp[0].item).label); strcpy((yyval.item).type,strcat((yyvsp[-1].item).type,(t+"0000").c_str())); line_number = yylineno; if(!first_parse)go_in_scope((yyvsp[0].item).label);}
-#line 2589 "parser.tab.c"
+#line 243 "parser.y"
+                        {string t; for(int i=0;i<(yyvsp[0].item)->dims;i++) t.push_back('*'); strcpy((yyval.item)->label,(yyvsp[0].item)->label); strcpy((yyval.item)->type,strcat((yyvsp[-1].item)->type,(t+"0000").c_str())); line_number = yylineno; if(!first_parse)go_in_scope((yyvsp[0].item)->label);}
+#line 2580 "parser.tab.c"
     break;
 
   case 72:
-#line 253 "parser.y"
-                                        {if((yyvsp[-1].item).dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl;exit(1);} string x = check_method_modifiers((yyvsp[-2].item).label); strcpy((yyval.item).label,(yyvsp[0].item).label); strcpy((yyval.item).type,("void"+x).c_str()); line_number = yylineno; if(!first_parse)go_in_scope((yyvsp[0].item).label);}
-#line 2595 "parser.tab.c"
+#line 244 "parser.y"
+                                        {if((yyvsp[-1].item)->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl;exit(1);} string x = check_method_modifiers((yyvsp[-2].item)->label); strcpy((yyval.item)->label,(yyvsp[0].item)->label); strcpy((yyval.item)->type,("void"+x).c_str()); line_number = yylineno; if(!first_parse)go_in_scope((yyvsp[0].item)->label);}
+#line 2586 "parser.tab.c"
     break;
 
   case 73:
-#line 254 "parser.y"
-                                        {string t; for(int i=0;i<(yyvsp[-1].item).dims;i++) t.push_back('*'); strcpy((yyval.item).label,(yyvsp[0].item).label); string x = check_method_modifiers((yyvsp[-2].item).label); strcpy((yyval.item).type,strcat((yyvsp[-1].item).type,(t+x).c_str())); line_number = yylineno; if(!first_parse)go_in_scope((yyvsp[0].item).label);}
-#line 2601 "parser.tab.c"
+#line 245 "parser.y"
+                                        {string t; for(int i=0;i<(yyvsp[-1].item)->dims;i++) t.push_back('*'); strcpy((yyval.item)->label,(yyvsp[0].item)->label); string x = check_method_modifiers((yyvsp[-2].item)->label); strcpy((yyval.item)->type,strcat((yyvsp[-1].item)->type,(t+x).c_str())); line_number = yylineno; if(!first_parse)go_in_scope((yyvsp[0].item)->label);}
+#line 2592 "parser.tab.c"
     break;
 
   case 74:
-#line 257 "parser.y"
-                                        {if(first_parse){string x = (yyvsp[-1].item).type; make_func_entry((yyvsp[-1].item).label,x.substr(0,x.size()-4),arguments,line_number,x.substr(x.size()-4,4)); arguments.clear();}else{print(curr_class_name+"."+(yyvsp[-1].item).label);}}
-#line 2607 "parser.tab.c"
+#line 248 "parser.y"
+                                        {if(first_parse){string x = (yyvsp[-1].item)->type; make_func_entry((yyvsp[-1].item)->label,x.substr(0,x.size()-4),arguments,line_number,x.substr(x.size()-4,4)); arguments.clear();}else{print(curr_class_name+"."+(yyvsp[-1].item)->label);}}
+#line 2598 "parser.tab.c"
     break;
 
   case 75:
-#line 261 "parser.y"
-            {strcpy((yyval.item).label,(yyvsp[0].item).label); (yyval.item).dims = 0;}
-#line 2613 "parser.tab.c"
+#line 252 "parser.y"
+            {strcpy((yyval.item)->label,(yyvsp[0].item)->label); (yyval.item)->dims = 0;}
+#line 2604 "parser.tab.c"
     break;
 
   case 76:
-#line 262 "parser.y"
-                        {strcpy((yyval.item).label,(yyvsp[-1].item).label); (yyval.item).dims = (yyvsp[0].item).dims;}
-#line 2619 "parser.tab.c"
+#line 253 "parser.y"
+                        {strcpy((yyval.item)->label,(yyvsp[-1].item)->label); (yyval.item)->dims = (yyvsp[0].item)->dims;}
+#line 2610 "parser.tab.c"
     break;
 
   case 79:
-#line 271 "parser.y"
-                    {if(first_parse){arguments.push_back(make_tuple((yyvsp[0].item).label,(yyvsp[-1].item).type,0,0));}}
-#line 2625 "parser.tab.c"
+#line 262 "parser.y"
+                    {if(first_parse){arguments.push_back(make_tuple((yyvsp[0].item)->label,(yyvsp[-1].item)->type,0,0));}}
+#line 2616 "parser.tab.c"
     break;
 
   case 80:
-#line 272 "parser.y"
-                                        {if(first_parse){arguments.push_back(make_tuple((yyvsp[0].item).label,(yyvsp[-1].item).type,0,1));}}
-#line 2631 "parser.tab.c"
+#line 263 "parser.y"
+                                        {if(first_parse){arguments.push_back(make_tuple((yyvsp[0].item)->label,(yyvsp[-1].item)->type,0,1));}}
+#line 2622 "parser.tab.c"
     break;
 
   case 81:
-#line 273 "parser.y"
-                                {if(first_parse){string t; for(int i=0;i<(yyvsp[0].item).dims;i++) t.push_back('*'); arguments.push_back(make_tuple((yyvsp[-1].item).label,strcat((yyvsp[-2].item).type,t.c_str()),0,0));}}
-#line 2637 "parser.tab.c"
+#line 264 "parser.y"
+                                {if(first_parse){string t; for(int i=0;i<(yyvsp[0].item)->dims;i++) t.push_back('*'); arguments.push_back(make_tuple((yyvsp[-1].item)->label,strcat((yyvsp[-2].item)->type,t.c_str()),0,0));}}
+#line 2628 "parser.tab.c"
     break;
 
   case 82:
-#line 274 "parser.y"
-                                        {if(first_parse){string t; for(int i=0;i<(yyvsp[-1].item).dims;i++) t.push_back('*'); arguments.push_back(make_tuple((yyvsp[-1].item).label,strcat((yyvsp[-3].item).type,t.c_str()),0,1));}}
-#line 2643 "parser.tab.c"
+#line 265 "parser.y"
+                                        {if(first_parse){string t; for(int i=0;i<(yyvsp[-1].item)->dims;i++) t.push_back('*'); arguments.push_back(make_tuple((yyvsp[-1].item)->label,strcat((yyvsp[-3].item)->type,t.c_str()),0,1));}}
+#line 2634 "parser.tab.c"
     break;
 
   case 83:
-#line 275 "parser.y"
-                                        {if(first_parse){arguments.push_back(make_tuple((yyvsp[0].item).label,(yyvsp[-2].item).type,1,0));}}
-#line 2649 "parser.tab.c"
+#line 266 "parser.y"
+                                        {if(first_parse){arguments.push_back(make_tuple((yyvsp[0].item)->label,(yyvsp[-2].item)->type,1,0));}}
+#line 2640 "parser.tab.c"
     break;
 
   case 84:
-#line 276 "parser.y"
-                                                {if(first_parse){arguments.push_back(make_tuple((yyvsp[0].item).label,(yyvsp[-2].item).type,1,1));}}
-#line 2655 "parser.tab.c"
+#line 267 "parser.y"
+                                                {if(first_parse){arguments.push_back(make_tuple((yyvsp[0].item)->label,(yyvsp[-2].item)->type,1,1));}}
+#line 2646 "parser.tab.c"
     break;
 
   case 87:
-#line 285 "parser.y"
-            {strcpy((yyval.item).type,"0000"); strcpy((yyval.item).label,(yyvsp[0].item).label); line_number = yylineno;  if(!first_parse) go_in_scope((yyvsp[0].item).label);}
-#line 2661 "parser.tab.c"
+#line 276 "parser.y"
+            {strcpy((yyval.item)->type,"0000"); strcpy((yyval.item)->label,(yyvsp[0].item)->label); line_number = yylineno;  if(!first_parse) go_in_scope((yyvsp[0].item)->label);}
+#line 2652 "parser.tab.c"
     break;
 
   case 88:
-#line 286 "parser.y"
-                            {string x = check_method_modifiers((yyvsp[-1].item).label); strcpy((yyval.item).type,x.c_str()); strcpy((yyval.item).label,(yyvsp[0].item).label);  line_number = yylineno; if(!first_parse) go_in_scope((yyvsp[0].item).label);}
-#line 2667 "parser.tab.c"
+#line 277 "parser.y"
+                            {string x = check_method_modifiers((yyvsp[-1].item)->label); strcpy((yyval.item)->type,x.c_str()); strcpy((yyval.item)->label,(yyvsp[0].item)->label);  line_number = yylineno; if(!first_parse) go_in_scope((yyvsp[0].item)->label);}
+#line 2658 "parser.tab.c"
     break;
 
   case 89:
-#line 289 "parser.y"
-                                             {if(first_parse){check_constructor((yyvsp[0].item).label); make_func_entry((yyvsp[-1].item).label,(yyvsp[-1].item).label,arguments,line_number,(yyvsp[-1].item).type); arguments.clear();}}
-#line 2673 "parser.tab.c"
+#line 280 "parser.y"
+                                             {if(first_parse){check_constructor((yyvsp[0].item)->label); make_func_entry((yyvsp[-1].item)->label,(yyvsp[-1].item)->label,arguments,line_number,(yyvsp[-1].item)->type); arguments.clear();}}
+#line 2664 "parser.tab.c"
     break;
 
   case 94:
-#line 303 "parser.y"
-                                {if(!first_parse){function_call.push_back((yyvsp[0].item).type);}}
-#line 2679 "parser.tab.c"
+#line 294 "parser.y"
+                                {if(!first_parse){function_call.push_back((yyvsp[0].item)->type);}}
+#line 2670 "parser.tab.c"
     break;
 
   case 95:
-#line 304 "parser.y"
-                {if(!first_parse){function_call.push_back((yyvsp[0].item).type);}}
-#line 2685 "parser.tab.c"
+#line 295 "parser.y"
+                {if(!first_parse){function_call.push_back((yyvsp[0].item)->type);}}
+#line 2676 "parser.tab.c"
     break;
 
   case 96:
-#line 309 "parser.y"
-                                {if(first_parse) make_class_entry((yyvsp[-1].item).label,yylineno,"00");}
-#line 2691 "parser.tab.c"
+#line 300 "parser.y"
+                                {if(first_parse) make_class_entry((yyvsp[-1].item)->label,yylineno,"00");}
+#line 2682 "parser.tab.c"
     break;
 
   case 97:
-#line 310 "parser.y"
-                                                {if(first_parse){string mod = check_class_modifiers((yyvsp[-3].item).label); make_class_entry((yyvsp[-1].item).label,yylineno,mod);}}
-#line 2697 "parser.tab.c"
+#line 301 "parser.y"
+                                                {if(first_parse){string mod = check_class_modifiers((yyvsp[-3].item)->label); make_class_entry((yyvsp[-1].item)->label,yylineno,mod);}}
+#line 2688 "parser.tab.c"
     break;
 
   case 102:
-#line 324 "parser.y"
+#line 315 "parser.y"
                                         {
     if(!first_parse){
         for(int i=0;i<v.size();i++){
-            string t = expression_type(yylineno,(yyvsp[-2].item).type,v[i].second,"declare");
+            string t = expression_type(yylineno,(yyvsp[-2].item)->type,v[i].second,"declare");
             make_entry(v[i].first,t,yylineno,"0000");
         }
     }	
     v.clear();
 }
-#line 2711 "parser.tab.c"
+#line 2702 "parser.tab.c"
     break;
 
   case 103:
-#line 333 "parser.y"
+#line 324 "parser.y"
                                                 {
     if(!first_parse){
         for(int i=0;i<v.size();i++){
-            string t = expression_type(yylineno,(yyvsp[-2].item).type,v[i].second,"declare");
+            string t = expression_type(yylineno,(yyvsp[-2].item)->type,v[i].second,"declare");
             make_entry(v[i].first,t,yylineno,"0010");
         }
     }	
     v.clear();
 }
-#line 2725 "parser.tab.c"
+#line 2716 "parser.tab.c"
     break;
 
   case 104:
-#line 342 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2731 "parser.tab.c"
+#line 333 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2722 "parser.tab.c"
     break;
 
   case 105:
-#line 346 "parser.y"
-                                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2737 "parser.tab.c"
+#line 337 "parser.y"
+                                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2728 "parser.tab.c"
     break;
 
   case 137:
-#line 401 "parser.y"
+#line 392 "parser.y"
                                                                 {if(!first_parse){reset();}}
-#line 2743 "parser.tab.c"
+#line 2734 "parser.tab.c"
     break;
 
   case 138:
-#line 405 "parser.y"
+#line 396 "parser.y"
                                             {if(!first_parse){reset();}}
-#line 2749 "parser.tab.c"
+#line 2740 "parser.tab.c"
     break;
 
   case 139:
-#line 409 "parser.y"
+#line 400 "parser.y"
                                                                     {if(!first_parse){reset();}}
-#line 2755 "parser.tab.c"
+#line 2746 "parser.tab.c"
     break;
 
   case 140:
-#line 413 "parser.y"
+#line 404 "parser.y"
                                                         {if(!first_parse){reset();}}
-#line 2761 "parser.tab.c"
+#line 2752 "parser.tab.c"
     break;
 
   case 143:
-#line 423 "parser.y"
-                                                                {if(!first_parse){string t = (yyvsp[-2].item).type; if(t!="boolean"){cout<<"Expression must be of type boolean in line number "<<yylineno<<endl;exit(1);} reset();}}
-#line 2767 "parser.tab.c"
+#line 414 "parser.y"
+                                                                {if(!first_parse){string t = (yyvsp[-2].item)->type; if(t!="boolean"){cout<<"Expression must be of type boolean in line number "<<yylineno<<endl;exit(1);} reset();}}
+#line 2758 "parser.tab.c"
     break;
 
   case 144:
-#line 427 "parser.y"
-                                                                                {if(!first_parse){string t = (yyvsp[-2].item).type; if(t!="boolean"){cout<<"Expression must be of type boolean in line number "<<yylineno<<endl;exit(1);} reset();}}
-#line 2773 "parser.tab.c"
+#line 418 "parser.y"
+                                                                                {if(!first_parse){string t = (yyvsp[-2].item)->type; if(t!="boolean"){cout<<"Expression must be of type boolean in line number "<<yylineno<<endl;exit(1);} reset();}}
+#line 2764 "parser.tab.c"
     break;
 
   case 149:
-#line 441 "parser.y"
+#line 432 "parser.y"
                                                                         {if(!first_parse){reset();}}
-#line 2779 "parser.tab.c"
+#line 2770 "parser.tab.c"
     break;
 
   case 150:
-#line 442 "parser.y"
+#line 433 "parser.y"
                                                                                     {if(!first_parse){reset();}}
-#line 2785 "parser.tab.c"
+#line 2776 "parser.tab.c"
     break;
 
   case 151:
-#line 443 "parser.y"
-                                                                                                {if(!first_parse){string t = (yyvsp[-3].item).type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
-#line 2791 "parser.tab.c"
+#line 434 "parser.y"
+                                                                                                {if(!first_parse){string t = (yyvsp[-3].item)->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
+#line 2782 "parser.tab.c"
     break;
 
   case 152:
-#line 444 "parser.y"
-                                                                                                        {if(!first_parse){string t = (yyvsp[-4].item).type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
-#line 2797 "parser.tab.c"
+#line 435 "parser.y"
+                                                                                                        {if(!first_parse){string t = (yyvsp[-4].item)->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
+#line 2788 "parser.tab.c"
     break;
 
   case 153:
-#line 445 "parser.y"
+#line 436 "parser.y"
                                                                                                 {if(!first_parse){reset();}}
-#line 2803 "parser.tab.c"
+#line 2794 "parser.tab.c"
     break;
 
   case 154:
-#line 446 "parser.y"
+#line 437 "parser.y"
                                                                                                         {if(!first_parse){reset();}}
-#line 2809 "parser.tab.c"
+#line 2800 "parser.tab.c"
     break;
 
   case 155:
-#line 447 "parser.y"
-                                                                                                        {if(!first_parse){string t = (yyvsp[-3].item).type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
-#line 2815 "parser.tab.c"
+#line 438 "parser.y"
+                                                                                                        {if(!first_parse){string t = (yyvsp[-3].item)->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
+#line 2806 "parser.tab.c"
     break;
 
   case 156:
-#line 448 "parser.y"
-                                                                                                                {if(!first_parse){string t = (yyvsp[-4].item).type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
-#line 2821 "parser.tab.c"
+#line 439 "parser.y"
+                                                                                                                {if(!first_parse){string t = (yyvsp[-4].item)->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
+#line 2812 "parser.tab.c"
     break;
 
   case 157:
-#line 452 "parser.y"
+#line 443 "parser.y"
                                                                                  {if(!first_parse){reset();}}
-#line 2827 "parser.tab.c"
+#line 2818 "parser.tab.c"
     break;
 
   case 158:
-#line 453 "parser.y"
+#line 444 "parser.y"
                                                                                              {if(!first_parse){reset();}}
-#line 2833 "parser.tab.c"
+#line 2824 "parser.tab.c"
     break;
 
   case 159:
-#line 454 "parser.y"
-                                                                                                        {if(!first_parse){string t = (yyvsp[-3].item).type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
-#line 2839 "parser.tab.c"
+#line 445 "parser.y"
+                                                                                                        {if(!first_parse){string t = (yyvsp[-3].item)->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
+#line 2830 "parser.tab.c"
     break;
 
   case 160:
-#line 455 "parser.y"
-                                                                                                                {if(!first_parse){string t = (yyvsp[-4].item).type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
-#line 2845 "parser.tab.c"
+#line 446 "parser.y"
+                                                                                                                {if(!first_parse){string t = (yyvsp[-4].item)->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
+#line 2836 "parser.tab.c"
     break;
 
   case 161:
-#line 456 "parser.y"
+#line 447 "parser.y"
                                                                                                         {if(!first_parse){reset();}}
-#line 2851 "parser.tab.c"
+#line 2842 "parser.tab.c"
     break;
 
   case 162:
-#line 457 "parser.y"
+#line 448 "parser.y"
                                                                                                                 {if(!first_parse){reset();}}
-#line 2857 "parser.tab.c"
+#line 2848 "parser.tab.c"
     break;
 
   case 163:
-#line 458 "parser.y"
-                                                                                                                {if(!first_parse){string t = (yyvsp[-3].item).type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
-#line 2863 "parser.tab.c"
+#line 449 "parser.y"
+                                                                                                                {if(!first_parse){string t = (yyvsp[-3].item)->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
+#line 2854 "parser.tab.c"
     break;
 
   case 164:
-#line 459 "parser.y"
-                                                                                                                        {if(!first_parse){string t = (yyvsp[-4].item).type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
-#line 2869 "parser.tab.c"
+#line 450 "parser.y"
+                                                                                                                        {if(!first_parse){string t = (yyvsp[-4].item)->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();}}
+#line 2860 "parser.tab.c"
     break;
 
   case 167:
-#line 468 "parser.y"
+#line 459 "parser.y"
                            {
     if(!first_parse){
         for(int i=0;i<v.size();i++){
-            string t = expression_type(yylineno,(yyvsp[-1].item).type,v[i].second,"declare");
+            string t = expression_type(yylineno,(yyvsp[-1].item)->type,v[i].second,"declare");
             make_dirty_entry(v[i].first,t,yylineno,"0000");
         }
     }	
     v.clear();
 }
-#line 2883 "parser.tab.c"
+#line 2874 "parser.tab.c"
     break;
 
   case 168:
-#line 477 "parser.y"
+#line 468 "parser.y"
                                    {
     if(!first_parse){
         for(int i=0;i<v.size();i++){
-            string t = expression_type(yylineno,(yyvsp[-2].item).type,v[i].second,"declare");
+            string t = expression_type(yylineno,(yyvsp[-2].item)->type,v[i].second,"declare");
             make_dirty_entry(v[i].first,t,yylineno,"0010");
         }
     }
     v.clear();
 }
-#line 2897 "parser.tab.c"
+#line 2888 "parser.tab.c"
     break;
 
   case 172:
-#line 497 "parser.y"
+#line 488 "parser.y"
                                                                                                 {if(!first_parse){reset();}}
-#line 2903 "parser.tab.c"
+#line 2894 "parser.tab.c"
     break;
 
   case 173:
-#line 501 "parser.y"
+#line 492 "parser.y"
                                                                                                                 {if(!first_parse){reset();}}
-#line 2909 "parser.tab.c"
+#line 2900 "parser.tab.c"
     break;
 
   case 188:
-#line 543 "parser.y"
-                        {if(!first_parse){(yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2915 "parser.tab.c"
+#line 534 "parser.y"
+                        {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2906 "parser.tab.c"
     break;
 
   case 189:
-#line 544 "parser.y"
-                                {if(!first_parse){(yyval.item).lit = false; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2921 "parser.tab.c"
+#line 535 "parser.y"
+                                {if(!first_parse){(yyval.item)->lit = false; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2912 "parser.tab.c"
     break;
 
   case 190:
-#line 548 "parser.y"
-                        {if(!first_parse){(yyval.item).lit = true;strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2927 "parser.tab.c"
+#line 539 "parser.y"
+                        {if(!first_parse){(yyval.item)->lit = true;strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2918 "parser.tab.c"
     break;
 
   case 191:
-#line 549 "parser.y"
-                                               {if(!first_parse){(yyval.item).lit = false; strcpy((yyval.item).type,(yyvsp[-1].item).type);}}
-#line 2933 "parser.tab.c"
+#line 540 "parser.y"
+                                               {if(!first_parse){(yyval.item)->lit = false; strcpy((yyval.item)->type,(yyvsp[-1].item)->type);}}
+#line 2924 "parser.tab.c"
     break;
 
   case 192:
-#line 550 "parser.y"
-                                        {if(!first_parse){(yyval.item).lit = false; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2939 "parser.tab.c"
+#line 541 "parser.y"
+                                        {if(!first_parse){(yyval.item)->lit = false; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2930 "parser.tab.c"
     break;
 
   case 193:
-#line 551 "parser.y"
-                        {if(!first_parse){(yyval.item).lit = false; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2945 "parser.tab.c"
+#line 542 "parser.y"
+                        {if(!first_parse){(yyval.item)->lit = false; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2936 "parser.tab.c"
     break;
 
   case 194:
-#line 552 "parser.y"
-                                {if(!first_parse){(yyval.item).lit = false; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2951 "parser.tab.c"
+#line 543 "parser.y"
+                                {if(!first_parse){(yyval.item)->lit = false; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2942 "parser.tab.c"
     break;
 
   case 195:
-#line 556 "parser.y"
-                    {if(!first_parse){strcpy((yyval.item).type,"byte");}}
-#line 2957 "parser.tab.c"
+#line 547 "parser.y"
+                    {if(!first_parse){strcpy((yyval.item)->type,"byte");}}
+#line 2948 "parser.tab.c"
     break;
 
   case 196:
-#line 557 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,"float");}}
-#line 2963 "parser.tab.c"
+#line 548 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,"float");}}
+#line 2954 "parser.tab.c"
     break;
 
   case 197:
-#line 558 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,"boolean");}}
-#line 2969 "parser.tab.c"
+#line 549 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,"boolean");}}
+#line 2960 "parser.tab.c"
     break;
 
   case 198:
-#line 559 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,"char");}}
-#line 2975 "parser.tab.c"
+#line 550 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,"char");}}
+#line 2966 "parser.tab.c"
     break;
 
   case 199:
-#line 560 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,"string");}}
-#line 2981 "parser.tab.c"
+#line 551 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,"string");}}
+#line 2972 "parser.tab.c"
     break;
 
   case 200:
-#line 561 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,"null");}}
-#line 2987 "parser.tab.c"
+#line 552 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,"null");}}
+#line 2978 "parser.tab.c"
     break;
 
   case 201:
-#line 565 "parser.y"
-                                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 2993 "parser.tab.c"
+#line 556 "parser.y"
+                                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 2984 "parser.tab.c"
     break;
 
   case 202:
-#line 569 "parser.y"
-                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label); strcpy((yyval.item).type,get_method(t,t,function_call).c_str());}}
-#line 2999 "parser.tab.c"
+#line 560 "parser.y"
+                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label); strcpy((yyval.item)->type,get_method(t,t,function_call).c_str());}}
+#line 2990 "parser.tab.c"
     break;
 
   case 203:
-#line 570 "parser.y"
-                                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-3].item).label); strcpy((yyval.item).type,get_method(t,t,function_call).c_str());}}
-#line 3005 "parser.tab.c"
+#line 561 "parser.y"
+                                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-3].item)->label); strcpy((yyval.item)->type,get_method(t,t,function_call).c_str());}}
+#line 2996 "parser.tab.c"
     break;
 
   case 204:
-#line 574 "parser.y"
-                                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-3].item).label); if(t[t.size()-1]!='*'){cout<<"Accessing Higher Dimensions of "<<(yyvsp[-3].item).label<<" in line number "<<yylineno<<endl; exit(1);} strcpy((yyval.item).type,(t.substr(0,t.size()-1)).c_str());}}
-#line 3011 "parser.tab.c"
+#line 565 "parser.y"
+                                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-3].item)->label); if(t[t.size()-1]!='*'){cout<<"Accessing Higher Dimensions of "<<(yyvsp[-3].item)->label<<" in line number "<<yylineno<<endl; exit(1);} strcpy((yyval.item)->type,(t.substr(0,t.size()-1)).c_str());}}
+#line 3002 "parser.tab.c"
     break;
 
   case 205:
-#line 575 "parser.y"
-                                                                                {if(!first_parse){string t = (yyvsp[-3].item).type; if(t[t.size()-1]!='*'){cout<<"Accessing Higher Dimensions of "<<(yyvsp[-3].item).type<<" in line number "<<yylineno<<endl; exit(1);} strcpy((yyval.item).type,(t.substr(0,t.size()-1)).c_str());}}
-#line 3017 "parser.tab.c"
+#line 566 "parser.y"
+                                                                                {if(!first_parse){string t = (yyvsp[-3].item)->type; if(t[t.size()-1]!='*'){cout<<"Accessing Higher Dimensions of "<<(yyvsp[-3].item)->type<<" in line number "<<yylineno<<endl; exit(1);} strcpy((yyval.item)->type,(t.substr(0,t.size()-1)).c_str());}}
+#line 3008 "parser.tab.c"
     break;
 
   case 206:
-#line 579 "parser.y"
-                                                        {if(!first_parse){strcpy((yyval.item).type,get_method((yyvsp[-2].item).label,"",function_call).c_str());}}
-#line 3023 "parser.tab.c"
+#line 570 "parser.y"
+                                                        {if(!first_parse){strcpy((yyval.item)->type,get_method((yyvsp[-2].item)->label,"",function_call).c_str());}}
+#line 3014 "parser.tab.c"
     break;
 
   case 207:
-#line 580 "parser.y"
-                                                                {if(!first_parse){strcpy((yyval.item).type,get_method((yyvsp[-3].item).label,"",function_call).c_str());function_call.clear();}}
-#line 3029 "parser.tab.c"
+#line 571 "parser.y"
+                                                                {if(!first_parse){strcpy((yyval.item)->type,get_method((yyvsp[-3].item)->label,"",function_call).c_str());function_call.clear();}}
+#line 3020 "parser.tab.c"
     break;
 
   case 208:
-#line 581 "parser.y"
-                                                                                {if(!first_parse){strcpy((yyval.item).type,get_method((yyvsp[-2].item).label,find_in_scope((yyvsp[-4].item).label),function_call).c_str());}}
-#line 3035 "parser.tab.c"
+#line 572 "parser.y"
+                                                                                {if(!first_parse){strcpy((yyval.item)->type,get_method((yyvsp[-2].item)->label,find_in_scope((yyvsp[-4].item)->label),function_call).c_str());}}
+#line 3026 "parser.tab.c"
     break;
 
   case 209:
-#line 582 "parser.y"
-                                                                                        {if(!first_parse){strcpy((yyval.item).type,get_method((yyvsp[-3].item).label,find_in_scope((yyvsp[-5].item).label),function_call).c_str()); function_call.clear();}}
-#line 3041 "parser.tab.c"
+#line 573 "parser.y"
+                                                                                        {if(!first_parse){strcpy((yyval.item)->type,get_method((yyvsp[-3].item)->label,find_in_scope((yyvsp[-5].item)->label),function_call).c_str()); function_call.clear();}}
+#line 3032 "parser.tab.c"
     break;
 
   case 210:
-#line 586 "parser.y"
-                                {if(!first_parse){string t; for(int i=0;i<(yyvsp[0].item).dims;i++) t.push_back('*'); strcpy((yyval.item).type,strcat((yyvsp[-1].item).type,t.c_str()));(yyval.item).dims = (yyvsp[0].item).dims;}}
-#line 3047 "parser.tab.c"
+#line 577 "parser.y"
+                                {if(!first_parse){string t; for(int i=0;i<(yyvsp[0].item)->dims;i++) t.push_back('*'); strcpy((yyval.item)->type,strcat((yyvsp[-1].item)->type,t.c_str()));(yyval.item)->dims = (yyvsp[0].item)->dims;}}
+#line 3038 "parser.tab.c"
     break;
 
   case 211:
-#line 587 "parser.y"
-                                        {if(!first_parse){string t; for(int i=0;i<(yyvsp[-1].item).dims;i++) t.push_back('*'); for(int i=0;i<(yyvsp[0].item).dims;i++) t.push_back('*'); strcpy((yyval.item).type,strcat((yyvsp[-2].item).type,t.c_str()));(yyval.item).dims = (yyvsp[-1].item).dims + (yyvsp[0].item).dims;}}
-#line 3053 "parser.tab.c"
+#line 578 "parser.y"
+                                        {if(!first_parse){string t; for(int i=0;i<(yyvsp[-1].item)->dims;i++) t.push_back('*'); for(int i=0;i<(yyvsp[0].item)->dims;i++) t.push_back('*'); strcpy((yyval.item)->type,strcat((yyvsp[-2].item)->type,t.c_str()));(yyval.item)->dims = (yyvsp[-1].item)->dims + (yyvsp[0].item)->dims;}}
+#line 3044 "parser.tab.c"
     break;
 
   case 212:
-#line 588 "parser.y"
-                                {if(!first_parse){string t; for(int i=0;i<(yyvsp[0].item).dims;i++) t.push_back('*'); strcpy((yyval.item).type,strcat((yyvsp[-1].item).type,t.c_str()));(yyval.item).dims = (yyvsp[0].item).dims;}}
-#line 3059 "parser.tab.c"
+#line 579 "parser.y"
+                                {if(!first_parse){string t; for(int i=0;i<(yyvsp[0].item)->dims;i++) t.push_back('*'); strcpy((yyval.item)->type,strcat((yyvsp[-1].item)->type,t.c_str()));(yyval.item)->dims = (yyvsp[0].item)->dims;}}
+#line 3050 "parser.tab.c"
     break;
 
   case 213:
-#line 589 "parser.y"
-                                        {if(!first_parse){string t; for(int i=0;i<(yyvsp[-1].item).dims;i++) t.push_back('*'); for(int i=0;i<(yyvsp[0].item).dims;i++) t.push_back('*'); strcpy((yyval.item).type,strcat((yyvsp[-2].item).type,t.c_str()));(yyval.item).dims = (yyvsp[-1].item).dims + (yyvsp[0].item).dims;}}
-#line 3065 "parser.tab.c"
+#line 580 "parser.y"
+                                        {if(!first_parse){string t; for(int i=0;i<(yyvsp[-1].item)->dims;i++) t.push_back('*'); for(int i=0;i<(yyvsp[0].item)->dims;i++) t.push_back('*'); strcpy((yyval.item)->type,strcat((yyvsp[-2].item)->type,t.c_str()));(yyval.item)->dims = (yyvsp[-1].item)->dims + (yyvsp[0].item)->dims;}}
+#line 3056 "parser.tab.c"
     break;
 
   case 214:
-#line 593 "parser.y"
-                                                                {if(!first_parse){(yyval.item).dims = (yyvsp[-3].item).dims+1; string t = (yyvsp[-1].item).type; if(t!="int" && t!="byte" && t!="short" && t!="long") {cout<<"Array size must be of integer type. Line number: "<<yylineno<<endl; exit(1);}}}
-#line 3071 "parser.tab.c"
+#line 584 "parser.y"
+                                                                {if(!first_parse){(yyval.item)->dims = (yyvsp[-3].item)->dims+1; string t = (yyvsp[-1].item)->type; if(t!="int" && t!="byte" && t!="short" && t!="long") {cout<<"Array size must be of integer type. Line number: "<<yylineno<<endl; exit(1);}}}
+#line 3062 "parser.tab.c"
     break;
 
   case 215:
-#line 594 "parser.y"
-                                                                {if(!first_parse){(yyval.item).dims=1; string t = (yyvsp[-1].item).type; if(t!="int" && t!="byte" && t!="short" && t!="long") {cout<<"Array size must be of integer type. Line number: "<<yylineno<<endl; exit(1);}}}
-#line 3077 "parser.tab.c"
+#line 585 "parser.y"
+                                                                {if(!first_parse){(yyval.item)->dims=1; string t = (yyvsp[-1].item)->type; if(t!="int" && t!="byte" && t!="short" && t!="long") {cout<<"Array size must be of integer type. Line number: "<<yylineno<<endl; exit(1);}}}
+#line 3068 "parser.tab.c"
     break;
 
   case 216:
-#line 598 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3083 "parser.tab.c"
+#line 589 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3074 "parser.tab.c"
     break;
 
   case 217:
-#line 602 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3089 "parser.tab.c"
+#line 593 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3080 "parser.tab.c"
     break;
 
   case 218:
-#line 603 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3095 "parser.tab.c"
+#line 594 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3086 "parser.tab.c"
     break;
 
   case 219:
-#line 607 "parser.y"
-                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3101 "parser.tab.c"
+#line 598 "parser.y"
+                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3092 "parser.tab.c"
     break;
 
   case 220:
-#line 608 "parser.y"
-                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3107 "parser.tab.c"
+#line 599 "parser.y"
+                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3098 "parser.tab.c"
     break;
 
   case 221:
-#line 609 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3113 "parser.tab.c"
+#line 600 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3104 "parser.tab.c"
     break;
 
   case 222:
-#line 610 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3119 "parser.tab.c"
+#line 601 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3110 "parser.tab.c"
     break;
 
   case 223:
-#line 611 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3125 "parser.tab.c"
+#line 602 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3116 "parser.tab.c"
     break;
 
   case 224:
-#line 612 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3131 "parser.tab.c"
+#line 603 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3122 "parser.tab.c"
     break;
 
   case 225:
-#line 613 "parser.y"
-                                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3137 "parser.tab.c"
+#line 604 "parser.y"
+                                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3128 "parser.tab.c"
     break;
 
   case 226:
-#line 614 "parser.y"
-                                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3143 "parser.tab.c"
+#line 605 "parser.y"
+                                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3134 "parser.tab.c"
     break;
 
   case 227:
-#line 615 "parser.y"
-                                                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3149 "parser.tab.c"
+#line 606 "parser.y"
+                                                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3140 "parser.tab.c"
     break;
 
   case 228:
-#line 616 "parser.y"
-                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3155 "parser.tab.c"
+#line 607 "parser.y"
+                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3146 "parser.tab.c"
     break;
 
   case 229:
-#line 617 "parser.y"
-                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3161 "parser.tab.c"
+#line 608 "parser.y"
+                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3152 "parser.tab.c"
     break;
 
   case 230:
-#line 618 "parser.y"
-                                      {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3167 "parser.tab.c"
+#line 609 "parser.y"
+                                      {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3158 "parser.tab.c"
     break;
 
   case 231:
-#line 619 "parser.y"
-                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3173 "parser.tab.c"
+#line 610 "parser.y"
+                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3164 "parser.tab.c"
     break;
 
   case 232:
-#line 620 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3179 "parser.tab.c"
+#line 611 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3170 "parser.tab.c"
     break;
 
   case 233:
-#line 621 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3185 "parser.tab.c"
+#line 612 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3176 "parser.tab.c"
     break;
 
   case 234:
-#line 622 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3191 "parser.tab.c"
+#line 613 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3182 "parser.tab.c"
     break;
 
   case 235:
-#line 623 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3197 "parser.tab.c"
+#line 614 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3188 "parser.tab.c"
     break;
 
   case 236:
-#line 624 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3203 "parser.tab.c"
+#line 615 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3194 "parser.tab.c"
     break;
 
   case 237:
-#line 625 "parser.y"
-                                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3209 "parser.tab.c"
+#line 616 "parser.y"
+                                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3200 "parser.tab.c"
     break;
 
   case 238:
-#line 626 "parser.y"
-                                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3215 "parser.tab.c"
+#line 617 "parser.y"
+                                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3206 "parser.tab.c"
     break;
 
   case 239:
-#line 627 "parser.y"
-                                                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3221 "parser.tab.c"
+#line 618 "parser.y"
+                                                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3212 "parser.tab.c"
     break;
 
   case 240:
-#line 628 "parser.y"
-                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3227 "parser.tab.c"
+#line 619 "parser.y"
+                                                        {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3218 "parser.tab.c"
     break;
 
   case 241:
-#line 629 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3233 "parser.tab.c"
+#line 620 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3224 "parser.tab.c"
     break;
 
   case 242:
-#line 630 "parser.y"
-                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item).label);strcpy((yyval.item).type,expression_type(yylineno,t,(yyvsp[0].item).type,(yyvsp[-1].item).label).c_str());}}
-#line 3239 "parser.tab.c"
+#line 621 "parser.y"
+                                                {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());}}
+#line 3230 "parser.tab.c"
     break;
 
   case 243:
-#line 634 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3245 "parser.tab.c"
+#line 625 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3236 "parser.tab.c"
     break;
 
   case 244:
-#line 635 "parser.y"
-                                                                                {if(!first_parse){string s = (yyvsp[-4].item).type; if(s!="boolean"){cout<<"First expression has to be boolean"<<endl;exit(1);};}}
-#line 3251 "parser.tab.c"
+#line 626 "parser.y"
+                                                                                {if(!first_parse){string s = (yyvsp[-4].item)->type; if(s!="boolean"){cout<<"First expression has to be boolean"<<endl;exit(1);};}}
+#line 3242 "parser.tab.c"
     break;
 
   case 245:
-#line 639 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3257 "parser.tab.c"
+#line 630 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3248 "parser.tab.c"
     break;
 
   case 246:
-#line 640 "parser.y"
-                                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3263 "parser.tab.c"
+#line 631 "parser.y"
+                                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3254 "parser.tab.c"
     break;
 
   case 247:
-#line 644 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3269 "parser.tab.c"
+#line 635 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3260 "parser.tab.c"
     break;
 
   case 248:
-#line 645 "parser.y"
-                                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3275 "parser.tab.c"
+#line 636 "parser.y"
+                                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3266 "parser.tab.c"
     break;
 
   case 249:
-#line 649 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3281 "parser.tab.c"
+#line 640 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3272 "parser.tab.c"
     break;
 
   case 250:
-#line 650 "parser.y"
-                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3287 "parser.tab.c"
+#line 641 "parser.y"
+                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3278 "parser.tab.c"
     break;
 
   case 251:
-#line 654 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3293 "parser.tab.c"
+#line 645 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3284 "parser.tab.c"
     break;
 
   case 252:
-#line 655 "parser.y"
-                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3299 "parser.tab.c"
+#line 646 "parser.y"
+                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3290 "parser.tab.c"
     break;
 
   case 253:
-#line 659 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3305 "parser.tab.c"
+#line 650 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3296 "parser.tab.c"
     break;
 
   case 254:
-#line 660 "parser.y"
-                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3311 "parser.tab.c"
+#line 651 "parser.y"
+                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3302 "parser.tab.c"
     break;
 
   case 255:
-#line 664 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3317 "parser.tab.c"
+#line 655 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3308 "parser.tab.c"
     break;
 
   case 256:
-#line 665 "parser.y"
-                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3323 "parser.tab.c"
+#line 656 "parser.y"
+                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3314 "parser.tab.c"
     break;
 
   case 257:
-#line 666 "parser.y"
-                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3329 "parser.tab.c"
+#line 657 "parser.y"
+                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3320 "parser.tab.c"
     break;
 
   case 258:
-#line 670 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3335 "parser.tab.c"
+#line 661 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3326 "parser.tab.c"
     break;
 
   case 259:
-#line 671 "parser.y"
-                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3341 "parser.tab.c"
+#line 662 "parser.y"
+                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3332 "parser.tab.c"
     break;
 
   case 260:
-#line 672 "parser.y"
-                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3347 "parser.tab.c"
+#line 663 "parser.y"
+                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3338 "parser.tab.c"
     break;
 
   case 261:
-#line 673 "parser.y"
-                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3353 "parser.tab.c"
+#line 664 "parser.y"
+                                                                {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3344 "parser.tab.c"
     break;
 
   case 262:
-#line 674 "parser.y"
-                                                            {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3359 "parser.tab.c"
+#line 665 "parser.y"
+                                                            {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3350 "parser.tab.c"
     break;
 
   case 263:
-#line 678 "parser.y"
-                                {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3365 "parser.tab.c"
+#line 669 "parser.y"
+                                {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3356 "parser.tab.c"
     break;
 
   case 264:
-#line 679 "parser.y"
-                                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3371 "parser.tab.c"
+#line 670 "parser.y"
+                                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3362 "parser.tab.c"
     break;
 
   case 265:
-#line 680 "parser.y"
-                                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3377 "parser.tab.c"
+#line 671 "parser.y"
+                                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3368 "parser.tab.c"
     break;
 
   case 266:
-#line 681 "parser.y"
-                                                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3383 "parser.tab.c"
+#line 672 "parser.y"
+                                                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3374 "parser.tab.c"
     break;
 
   case 267:
-#line 685 "parser.y"
-                            {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3389 "parser.tab.c"
+#line 676 "parser.y"
+                            {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3380 "parser.tab.c"
     break;
 
   case 268:
-#line 686 "parser.y"
-                                                            {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3395 "parser.tab.c"
+#line 677 "parser.y"
+                                                            {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3386 "parser.tab.c"
     break;
 
   case 269:
-#line 687 "parser.y"
-                                                            {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3401 "parser.tab.c"
+#line 678 "parser.y"
+                                                            {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3392 "parser.tab.c"
     break;
 
   case 270:
-#line 691 "parser.y"
-                        {if(!first_parse){strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3407 "parser.tab.c"
+#line 682 "parser.y"
+                        {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3398 "parser.tab.c"
     break;
 
   case 271:
-#line 692 "parser.y"
-                                                    {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3413 "parser.tab.c"
+#line 683 "parser.y"
+                                                    {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3404 "parser.tab.c"
     break;
 
   case 272:
-#line 693 "parser.y"
-                                                    {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3419 "parser.tab.c"
+#line 684 "parser.y"
+                                                    {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3410 "parser.tab.c"
     break;
 
   case 273:
-#line 694 "parser.y"
-                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item).type,(yyvsp[0].item).type,(yyvsp[-1].item).label); strcpy((yyval.item).type,t.c_str());}}
-#line 3425 "parser.tab.c"
+#line 685 "parser.y"
+                                                        {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());}}
+#line 3416 "parser.tab.c"
     break;
 
   case 274:
-#line 698 "parser.y"
-                                    {if(!first_parse){(yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3431 "parser.tab.c"
+#line 689 "parser.y"
+                                    {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3422 "parser.tab.c"
     break;
 
   case 275:
-#line 699 "parser.y"
-                                        {if(!first_parse){(yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3437 "parser.tab.c"
+#line 690 "parser.y"
+                                        {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3428 "parser.tab.c"
     break;
 
   case 276:
-#line 700 "parser.y"
-                                    {if(!first_parse){string t = expression_type(yylineno,(yyvsp[0].item).type,"",(yyvsp[-1].item).label); (yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,t.c_str());}}
-#line 3443 "parser.tab.c"
+#line 691 "parser.y"
+                                    {if(!first_parse){string t = expression_type(yylineno,(yyvsp[0].item)->type,"",(yyvsp[-1].item)->label); (yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,t.c_str());}}
+#line 3434 "parser.tab.c"
     break;
 
   case 277:
-#line 701 "parser.y"
-                                    {if(!first_parse){string t = expression_type(yylineno,(yyvsp[0].item).type,"",(yyvsp[-1].item).label); (yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,t.c_str());}}
-#line 3449 "parser.tab.c"
+#line 692 "parser.y"
+                                    {if(!first_parse){string t = expression_type(yylineno,(yyvsp[0].item)->type,"",(yyvsp[-1].item)->label); (yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,t.c_str());}}
+#line 3440 "parser.tab.c"
     break;
 
   case 278:
-#line 702 "parser.y"
-                                {if(!first_parse){(yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3455 "parser.tab.c"
+#line 693 "parser.y"
+                                {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3446 "parser.tab.c"
     break;
 
   case 279:
-#line 706 "parser.y"
+#line 697 "parser.y"
                                         {
     if(!first_parse){
-    string t = expression_type(yylineno,(yyvsp[0].item).type,"",(yyvsp[-1].item).label);
-    if((yyvsp[0].item).lit == true){
+    string t = expression_type(yylineno,(yyvsp[0].item)->type,"",(yyvsp[-1].item)->label);
+    if((yyvsp[0].item)->lit == true){
         cout<<"Cannot apply increment/decrement operation on a literal"<<endl;
         exit(1);
     }
-    (yyval.item).lit = false;
-    strcpy((yyval.item).type,t.c_str());
+    (yyval.item)->lit = false;
+    strcpy((yyval.item)->type,t.c_str());
 }    
 }
-#line 3471 "parser.tab.c"
+#line 3462 "parser.tab.c"
     break;
 
   case 280:
-#line 720 "parser.y"
+#line 711 "parser.y"
                                         {
 if(!first_parse){
-    string t = expression_type(yylineno,(yyvsp[0].item).type,"",(yyvsp[-1].item).label);
-    if((yyvsp[0].item).lit == true){
+    string t = expression_type(yylineno,(yyvsp[0].item)->type,"",(yyvsp[-1].item)->label);
+    if((yyvsp[0].item)->lit == true){
         cout<<"Cannot apply increment/decrement operation on a literal"<<endl;
         exit(1);
     }
-    (yyval.item).lit = false;
-    strcpy((yyval.item).type,t.c_str());
+    (yyval.item)->lit = false;
+    strcpy((yyval.item)->type,t.c_str());
 }
 }
-#line 3487 "parser.tab.c"
+#line 3478 "parser.tab.c"
     break;
 
   case 281:
-#line 734 "parser.y"
-                        {if(!first_parse){(yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,(yyvsp[0].item).type); strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3493 "parser.tab.c"
+#line 725 "parser.y"
+                        {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type); strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3484 "parser.tab.c"
     break;
 
   case 289:
-#line 748 "parser.y"
-                                    {if(!first_parse){(yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3499 "parser.tab.c"
+#line 739 "parser.y"
+                                    {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3490 "parser.tab.c"
     break;
 
   case 290:
-#line 749 "parser.y"
-                                        {if(!first_parse){(yyval.item).lit = false; strcpy((yyval.item).type,find_in_scope((yyvsp[0].item).label).c_str());}}
-#line 3505 "parser.tab.c"
+#line 740 "parser.y"
+                                        {if(!first_parse){(yyval.item)->lit = false; strcpy((yyval.item)->type,find_in_scope((yyvsp[0].item)->label).c_str());}}
+#line 3496 "parser.tab.c"
     break;
 
   case 291:
-#line 750 "parser.y"
-                                        {if(!first_parse){(yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3511 "parser.tab.c"
+#line 741 "parser.y"
+                                        {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3502 "parser.tab.c"
     break;
 
   case 292:
-#line 751 "parser.y"
-                                        {if(!first_parse){(yyval.item).lit = (yyvsp[0].item).lit; strcpy((yyval.item).type,(yyvsp[0].item).type);}}
-#line 3517 "parser.tab.c"
+#line 742 "parser.y"
+                                        {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);}}
+#line 3508 "parser.tab.c"
     break;
 
   case 293:
-#line 755 "parser.y"
+#line 746 "parser.y"
                                         {
     if(!first_parse){
-    string t = expression_type(yylineno,(yyvsp[-1].item).type,"",(yyvsp[0].item).label);
-    if((yyvsp[-1].item).lit == true){
+    string t = expression_type(yylineno,(yyvsp[-1].item)->type,"",(yyvsp[0].item)->label);
+    if((yyvsp[-1].item)->lit == true){
         cout<<"Cannot apply increment operation on a literal"<<endl;
         exit(1);
     }
-    (yyval.item).lit = false;
-    strcpy((yyval.item).type,t.c_str());
+    (yyval.item)->lit = false;
+    strcpy((yyval.item)->type,t.c_str());
 }
 }
-#line 3533 "parser.tab.c"
+#line 3524 "parser.tab.c"
     break;
 
   case 294:
-#line 769 "parser.y"
+#line 760 "parser.y"
                                 {
     if(!first_parse){
-    string t = expression_type(yylineno,(yyvsp[-1].item).type,"",(yyvsp[0].item).label);
-    if((yyvsp[-1].item).lit == true){
+    string t = expression_type(yylineno,(yyvsp[-1].item)->type,"",(yyvsp[0].item)->label);
+    if((yyvsp[-1].item)->lit == true){
         cout<<"Cannot apply increment operation on a literal"<<endl;
         exit(1);
     }
-    (yyval.item).lit = false;
-    strcpy((yyval.item).type,t.c_str());
+    (yyval.item)->lit = false;
+    strcpy((yyval.item)->type,t.c_str());
     }
 }
-#line 3549 "parser.tab.c"
+#line 3540 "parser.tab.c"
     break;
 
 
-#line 3553 "parser.tab.c"
+#line 3544 "parser.tab.c"
 
       default: break;
     }
@@ -3787,7 +3778,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 783 "parser.y"
+#line 774 "parser.y"
 
 
 int main(int argc, char** argv){
