@@ -1,6 +1,0 @@
-Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments
-args,2,String*,,No,0
-n,4,int,,No,0
-r,3,int,,No,0
-sum,3,int,,No,0
-temp,3,int,,No,0

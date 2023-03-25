@@ -33,7 +33,7 @@ vector<int> get_dimensions(string name){
 
 void print(string name){
     fstream fout;
-    string file_name = out_file_name+name;
+    string file_name = out_file_name+name+".csv";
     fout.open(file_name,ios::out);
     fout<<"Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments"<<endl;
     for(auto it:*print_table){

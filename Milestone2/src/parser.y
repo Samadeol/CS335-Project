@@ -244,7 +244,7 @@ IDENTIFIER EQUALS VariableInitializer   {if(first_parse)v.push_back(make_pair($1
 }}	
 | IDENTIFIER	{v.push_back(make_pair($1->label,""));}	
 | IDENTIFIER Dims	{string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}		
-| IDENTIFIER Dims EQUALS ArrayCreationExpression {if(first_parse){string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}else{if($2->dims == $4->dims) v.push_back(make_pair($1->label,$4->type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}$$->dimension = $4->dimension; array_func($1->label,$4->dimension,$4->type);}}
+| IDENTIFIER Dims EQUALS ArrayCreationExpression {if(first_parse){string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}else{if($2->dims == $4->dims) v.push_back(make_pair($1->label,$4->type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}array_func($1->label,$4->dimension,$4->type);$$->dimension = $4->dimension; }}
 ;
 
 VariableInitializer:
@@ -557,7 +557,7 @@ PrimaryNoNewArray:
 Literal			{if(!first_parse){$$->lit = true;strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}	
 | LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS{if(!first_parse){$$->lit = false; strcpy($$->type,$2->type);$$->true_list = $2->true_list; $$->false_list = $2->false_list; $$->i_number = $2->i_number;}}
 | ClassInstanceCreationExpression	{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);}}	
-| ArrayAccess		{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);}}
+| ArrayAccess		{if(!first_parse){$$->lit = false;  strcpy($$->type,$1->type);}}
 | MethodInvocation		{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);}}
 ;
 
@@ -580,7 +580,7 @@ NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){string 
 ;
 
 ArrayAccess:
-DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count!=$2->dims){cout<<"Accessing Higher/Lower Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} strcpy($$->type,$1->type);vector<int> s = get_dimensions($1->label);strcpy($$->temp_var,array_access($1->label,s,$2->dimension).c_str()); cout<<$$->label;}}	
+DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str()); vector<int> s = get_dimensions($1->label);strcpy($$->temp_var,array_access($1->label,s,$2->dimension).c_str());}}	
 ;
 
 MethodInvocation:
@@ -619,8 +619,8 @@ DotIdentifiers EQUALS Expression	{
         string p = $1->type;
         $$->i_number = $3->i_number;
         if($3->dimension.size()){
-            set_dimensions($1->label,$3->dimension);
             array_func($1->label,$3->dimension,$3->type);
+            set_dimensions($1->label,$3->dimension);
         }
         else if(p=="boolean"){
             emitt("","true","",$1->label,-1);
@@ -643,18 +643,17 @@ DotIdentifiers EQUALS Expression	{
 | DotIdentifiers AMPERSAND_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("&",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
 | DotIdentifiers POWER_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());$$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("^",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
 | DotIdentifiers BAR_EQUALS Expression{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("|",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| ArrayAccess EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess STAR_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess SLASH_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess PERCENT_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess PLUS_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess MINUS_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess LESS_THAN_LESS_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess GREATER_THAN_GREATER_THAN_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess AMPERSAND_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess POWER_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
-| ArrayAccess BAR_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());}}
+| ArrayAccess EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("*",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess SLASH_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("/",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}	
+| ArrayAccess PERCENT_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("\%",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}	
+| ArrayAccess PLUS_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("+",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess MINUS_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("-",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess LESS_THAN_LESS_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("<<",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt(">>",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt(">>>",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess AMPERSAND_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("&",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess POWER_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());$$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("^",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess BAR_EQUALS Expression{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("|",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
 ;
 
 ConditionalExpression:
