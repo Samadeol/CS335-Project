@@ -1,17 +1,14 @@
-class PalindromeExample{  
- public static void main(String args[]){  
-  int r,sum=0,temp;    
-  int n=454;//It is the number variable to be checked for palindrome  
-  
-  temp=n;    
-  while(n>0){    
-   r=n%10;  //getting remainder  
-   sum=sum*10+r;    
-   n=n/10;    
-}    
-//   if(temp==sum)    
-//    System.out.println("palindrome number ");    
-//   else    
-//    System.out.println("not palindrome");    
-}  
-} 
+class HelloWorld {
+    public static void main(String[] args) {
+        int x=10;
+        int y=11;
+        int z=5;
+        int a[]=new int [9];
+        if(x<100 || x>200  && z==5)
+            y=10;
+        
+        for(int i=3;i<4;i++){
+            z++;
+        }
+    }
+}

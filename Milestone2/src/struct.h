@@ -1,7 +1,4 @@
-#ifndef Item_H
-#define Item_H
-
-struct Item {
+struct Item{
         char label[1000];
         char type[100];
         int dims;
@@ -11,6 +8,5 @@ struct Item {
         vector<int>true_list;
         vector<int>false_list;
         vector<int>next_list;
+        vector<int>dimension;
 };
-
-#endif

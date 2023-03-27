@@ -3,12 +3,6 @@ compile: parser.y lexer.l
 	flex lexer.l
 	g++ lex.yy.c parser.tab.c -o output
 
-dot: output
-	./../helpers/dot.sh
-
-ast:
-	./../helpers/ast.sh
-
 clean:
 	rm -r parser.tab.c
 	rm -r parser.tab.h
