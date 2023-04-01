@@ -555,9 +555,9 @@ PrimaryNoNewArray	{if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type)
 
 PrimaryNoNewArray:
 Literal			{if(!first_parse){$$->lit = true;strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}	
-| LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS{if(!first_parse){$$->lit = false; strcpy($$->type,$2->type);$$->true_list = $2->true_list; $$->false_list = $2->false_list; $$->i_number = $2->i_number;}}
+| LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS{if(!first_parse){$$->lit = false; strcpy($$->type,$2->type);strcpy($$->temp_var,$2->temp_var);$$->true_list = $2->true_list; $$->false_list = $2->false_list; $$->i_number = $2->i_number;}}
 | ClassInstanceCreationExpression	{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);}}	
-| ArrayAccess		{if(!first_parse){$$->lit = false;  strcpy($$->type,$1->type);}}
+| ArrayAccess		{if(!first_parse){$$->lit = false;  strcpy($$->type,$1->type);$$->i_number = $1->i_number;}}
 | MethodInvocation		{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);}}
 ;
 
@@ -580,7 +580,7 @@ NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){string 
 ;
 
 ArrayAccess:
-DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str());vector<int> s = get_dimensions($1->label); strcpy($$->temp_var,array_access($1->label,s,$2->dimension).c_str());}}	
+DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str());vector<int> s = get_dimensions($1->label); strcpy($$->temp_var,array_access($1->label,s,$2->dimension).c_str()); $$->i_number = $2->i_number;}}	
 ;
 
 MethodInvocation:
