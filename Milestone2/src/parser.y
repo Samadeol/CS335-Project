@@ -643,7 +643,23 @@ DotIdentifiers EQUALS Expression	{
 | DotIdentifiers AMPERSAND_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("&",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
 | DotIdentifiers POWER_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());$$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("^",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
 | DotIdentifiers BAR_EQUALS Expression{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("|",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| ArrayAccess EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("*",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess EQUALS Expression{
+    if(!first_parse){
+        string t = find_in_scope($1->label);
+        strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());
+        string p = $1->type;
+        $$->i_number = $3->i_number;
+        if(p=="boolean"){
+            emitt("","true","",$1->temp_var,-1);
+            backpatch($3->true_list,inst_num-1);
+            emitt("","false","",$1->temp_var,-1);
+            backpatch($3->false_list,inst_num-1);
+        }else{
+            emitt("",$3->temp_var,"",$1->temp_var,-1);
+        }
+    }
+}
+| ArrayAccess STAR_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("*",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
 | ArrayAccess SLASH_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("/",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}	
 | ArrayAccess PERCENT_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("\%",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}	
 | ArrayAccess PLUS_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("+",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
