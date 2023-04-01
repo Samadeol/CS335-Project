@@ -24,8 +24,9 @@ void set_dimensions(string name,vector<int> v){
 vector<int> get_dimensions(string name){
     sym_table* temp = curr_sym_table;
     while(temp!=default_sym_table){
-        if((*curr_sym_table).find(name)==(*curr_sym_table).end()) temp = parent[temp];
-        return  (*curr_sym_table)[name]->dimension;
+        if((*temp).find(name)==(*temp).end())
+            temp = parent[temp];
+        else return  (*temp)[name]->dimension;
     }
     cout<<"Unexpected Error Occures"<<endl;
     exit(1);

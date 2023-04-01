@@ -580,7 +580,7 @@ NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){string 
 ;
 
 ArrayAccess:
-DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str()); vector<int> s = get_dimensions($1->label);strcpy($$->temp_var,array_access($1->label,s,$2->dimension).c_str());}}	
+DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str());vector<int> s = get_dimensions($1->label); strcpy($$->temp_var,array_access($1->label,s,$2->dimension).c_str());}}	
 ;
 
 MethodInvocation:
@@ -599,7 +599,7 @@ NEW PrimitiveType DimExprs 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i
 
 DimExprs:
 DimExprs LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE	{if(!first_parse){$$->dims = $1->dims+1; string t = $3->type; if(t!="int" && t!="byte" && t!="short" && t!="long") {cout<<"Array size must be of integer type. Line number: "<<yylineno<<endl; exit(1);}$1->dimension.push_back(reduce($3->temp_var)); $$->dimension = $1->dimension; $$->i_number = $1->i_number;}}	
-| LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		{if(!first_parse){$$->dims=1; string t = $2->type; if(t!="int" && t!="byte" && t!="short" && t!="long") {cout<<"Array size must be of integer type. Line number: "<<yylineno<<endl; exit(1);} $$->dimension.push_back(reduce($2->temp_var)); $$->i_number = $2->i_number;}}
+| LEFT_SQUARE_BRACE Expression RIGHT_SQUARE_BRACE		{if(!first_parse){$$->dims=1; string t = $2->type; if(t!="int" && t!="byte" && t!="short" && t!="long") {cout<<"Array size must be of integer type. Line number: "<<yylineno<<endl; exit(1);} $$->dimension.push_back(reduce($2->temp_var));$$->i_number = $2->i_number;}}
 ;
 
 Expression:
