@@ -476,7 +476,7 @@ Type VariableDeclaratorList{
     if(!first_parse){
         for(int i=0;i<v.size();i++){
             string t = expression_type(yylineno,$1->type,v[i].second,"declare");
-            make_dirty_entry(v[i].first,t,yylineno,"0000");
+            make_dirty_entry(v[i].first,t,yylineno,"0000",1);
         }
         $$->i_number = $2->i_number;
     }	
@@ -486,7 +486,7 @@ Type VariableDeclaratorList{
     if(!first_parse){
         for(int i=0;i<v.size();i++){
             string t = expression_type(yylineno,$1->type,v[i].second,"declare");
-            make_dirty_entry(v[i].first,t,yylineno,"0010");
+            make_dirty_entry(v[i].first,t,yylineno,"0010",1);
         }
         $$->i_number = $3->i_number;
     }
@@ -566,7 +566,7 @@ INTEGER_LITERAL	    {if(!first_parse){strcpy($$->type,"byte");strcpy($$->temp_va
 | FLOATINGPOINT_LITERAL		{if(!first_parse){strcpy($$->type,"float");strcpy($$->temp_var,new_temporary().c_str());emitt("",$1->label,"",$$->temp_var,-1);$$->i_number = inst_num-1;}}
 | BOOLEAN_LITERAL	{if(!first_parse){strcpy($$->type,"boolean");strcpy($$->temp_var,new_temporary().c_str());emitt("",$1->label,"",$$->temp_var,-1);$$->i_number = inst_num-1;}}	
 | CHARACTER_LITERAL		{if(!first_parse){strcpy($$->type,"char");strcpy($$->temp_var,new_temporary().c_str());emitt("",$1->label,"",$$->temp_var,-1);$$->i_number = inst_num-1;}}
-| STRING_LITERAL		{if(!first_parse){strcpy($$->type,"string");strcpy($$->temp_var,new_temporary().c_str());emitt("",$1->label,"",$$->temp_var,-1);$$->i_number = inst_num-1;}}	
+| STRING_LITERAL		{if(!first_parse){strcpy($$->type,"String");strcpy($$->temp_var,new_temporary().c_str());emitt("",$1->label,"",$$->temp_var,-1);$$->i_number = inst_num-1;}}	
 | NULL_LITERAL		{if(!first_parse){strcpy($$->type,"null");strcpy($$->temp_var,new_temporary().c_str());emitt("",$1->label,"",$$->temp_var,-1);$$->i_number = inst_num-1;}}
 ;
 

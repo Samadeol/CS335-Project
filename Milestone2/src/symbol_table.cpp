@@ -108,7 +108,7 @@ int get_size(string type){
     else return 4;
 }
 
-void make_dirty_entry(string name, string type, int line_number, string modifiers){
+void make_dirty_entry(string name, string type, int line_number, string modifiers, int t){
     sym_entry* new_sym_entry = new sym_entry;
     if(check(name)) (*dirty_sym_table).insert(make_pair(name,new_sym_entry));
     int size = get_size(type);
@@ -118,6 +118,8 @@ void make_dirty_entry(string name, string type, int line_number, string modifier
     (*dirty_sym_table)[name]->isfunc = false;
     (*dirty_sym_table)[name]->modifiers = modifiers;
     (*dirty_sym_table)[name]->size = size;
+    (*dirty_sym_table)[name]->offset = offset;
+    offset+=t*size;
 }
 
 void make_entry(string name, string type, int line_number, string modifiers){
@@ -134,10 +136,8 @@ void make_entry(string name, string type, int line_number, string modifiers){
     (*curr_sym_table)[name]->type = type;
     (*curr_sym_table)[name]->isfunc = false;
     (*curr_sym_table)[name]->modifiers = modifiers;
-    if(first_parse){
-        (*curr_sym_table)[name]->offset = offset;
-        offset+=size;
-    }
+    (*curr_sym_table)[name]->offset = offset;
+    offset+=size;
     (*curr_sym_table)[name]->size = size;
 
 }
@@ -149,11 +149,13 @@ void make_func_entry(string name, string type, vector<tuple<string,string,int,in
     (*curr_sym_table)[name]->isfunc = true;
     int size = get_size(type);
     (*curr_sym_table)[name]->offset = 0;
-    offset-=size;
+    size = offset - size;
+    offset = -size;
     for(int i=0;i<args.size();i++){
         if(get<2>(args[i])) make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0010");
-        else make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0000");
+        else make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0000",-1);
     }
+    offset = size;
     reset();
 }
 
@@ -173,26 +175,24 @@ string find_in_scope(string name){
         t.push_back(name[i]);
     }
     sym_table* temp = curr_sym_table,*temp2;
-    while(temp!=default_sym_table){
+    while(1){
         if((*temp).find(t)!=(*temp).end()){
             if(t.size()==name.size()) return (*temp)[t]->type;
             else{
-                if((*temp)[t]->child == NULL) {
+                string class_name = (*temp)[t]->type;
+                if((*default_sym_table)[class_name]->child == NULL) {
                     cout<<name<<" not declared in this scope "<<yylineno<<endl;
                     exit(1);
                 }
-                else temp2 = (*temp)[t]->child;
+                else temp2 = (*default_sym_table)[class_name]->child;
             break;
             }
         }
-        temp = parent[temp];
-    }
-    if(temp==default_sym_table){
-        if((*default_sym_table).find(t)==(*default_sym_table).end()){
-            cout<<t<<" not declared in this scope "<<yylineno<<endl;
+        if(temp==default_sym_table){
+            cout<<temp<<" not declared in this scope"<<endl;
             exit(1);
         }
-        else temp2 = (*default_sym_table)[t]->child;
+        temp = parent[temp];
     }
     for(int i=t.size()+1;i<name.size();i++){
         if(name[i]=='.'){
