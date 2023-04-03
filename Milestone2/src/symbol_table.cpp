@@ -8,6 +8,7 @@ map<sym_table*, sym_table*> parent;
 extern int yylineno;
 string curr_file;
 string out_file_name;
+int offset;
 bool first_parse;
 
 void set_dimensions(string name,vector<int> v){
@@ -36,7 +37,7 @@ void print(string name){
     fstream fout;
     string file_name = out_file_name+name+".csv";
     fout.open(file_name,ios::out);
-    fout<<"Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments"<<endl;
+    fout<<"Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size"<<endl;
     for(auto it:*print_table){
         string mod = "";
         if(it.second->modifiers[0]=='1') mod+="public ";
@@ -46,12 +47,13 @@ void print(string name){
         string t;
         if(it.second->isfunc) t="Yes";
         else t="No";
-        fout<<it.first<<","<<it.second->line_number<<","<<it.second->type<<","<<mod<<","<<t<<","<<it.second->arguments.size()<<endl;
+        fout<<it.first<<","<<it.second->line_number<<","<<it.second->type<<","<<mod<<","<<t<<","<<it.second->arguments.size()<<","<<it.second->offset<<","<<it.second->size<<endl;
     }
     print_table = new sym_table;
 }
 
 void init_symbol_table(){
+    offset=0;
     default_sym_table = new sym_table;
     curr_sym_table = default_sym_table;
     dirty_sym_table = new sym_table;
@@ -98,14 +100,24 @@ bool check(string name){
     return true;
 }
 
+int get_size(string type){
+    if(type.substr(0,3)=="int" || type.substr(0,5)=="float") return 4;
+    else if(type.substr(0,4)=="char" || type.substr(0,4)=="short") return 2;
+    else if(type.substr(0,4)=="byte") return 1;
+    else if(type.substr(0,4)=="long" || type.substr(0,6)=="double") return 8;
+    else return 4;
+}
+
 void make_dirty_entry(string name, string type, int line_number, string modifiers){
     sym_entry* new_sym_entry = new sym_entry;
     if(check(name)) (*dirty_sym_table).insert(make_pair(name,new_sym_entry));
+    int size = get_size(type);
     (*dirty_sym_table)[name]->line_number = line_number;
     (*dirty_sym_table)[name]->source_file = curr_file;
     (*dirty_sym_table)[name]->type = type;
     (*dirty_sym_table)[name]->isfunc = false;
     (*dirty_sym_table)[name]->modifiers = modifiers;
+    (*dirty_sym_table)[name]->size = size;
 }
 
 void make_entry(string name, string type, int line_number, string modifiers){
@@ -116,11 +128,18 @@ void make_entry(string name, string type, int line_number, string modifiers){
         cout<<name<<" already declared in this scope. Line number "<<line_number<<endl;
         exit(1);
     }
+    int size = get_size(type);
     (*curr_sym_table)[name]->line_number = line_number;
     (*curr_sym_table)[name]->source_file = curr_file;
     (*curr_sym_table)[name]->type = type;
     (*curr_sym_table)[name]->isfunc = false;
     (*curr_sym_table)[name]->modifiers = modifiers;
+    if(first_parse){
+        (*curr_sym_table)[name]->offset = offset;
+        offset+=size;
+    }
+    (*curr_sym_table)[name]->size = size;
+
 }
 
 void make_func_entry(string name, string type, vector<tuple<string,string,int,int> > args, int line_number, string modifiers){
@@ -128,6 +147,9 @@ void make_func_entry(string name, string type, vector<tuple<string,string,int,in
     (*curr_sym_table)[name]->arguments = args;
     (*curr_sym_table)[name]->child = dirty_sym_table;
     (*curr_sym_table)[name]->isfunc = true;
+    int size = get_size(type);
+    (*curr_sym_table)[name]->offset = 0;
+    offset-=size;
     for(int i=0;i<args.size();i++){
         if(get<2>(args[i])) make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0010");
         else make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0000");
@@ -138,6 +160,8 @@ void make_func_entry(string name, string type, vector<tuple<string,string,int,in
 void make_class_entry(string name, int line_number, string modifiers){
     make_entry(name,name,line_number,modifiers);
     (*curr_sym_table)[name]->child = dirty_sym_table;
+    (*curr_sym_table)[name]->size = offset-4;
+    offset=0;
     reset();
 }
 

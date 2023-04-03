@@ -1,0 +1,4 @@
+Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
+args,2,String,,No,0,0,4
+x,3,int,,No,0,0,4
+y,4,int,,No,0,0,4

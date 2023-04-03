@@ -26,10 +26,10 @@ void emitt(string op,string arg1, string arg2, string result, int idx){
 string array_access(string name, vector<int> a, vector<int> b){
     string t = new_temporary();
     for(int i=0;i<a.size();i++){
-        if(i==0) emitt("*","#_t"+to_string(a[i]),"#_t"+to_string(b[i]),t,-1);
+        if(i==0) emitt("*","#t_"+to_string(a[i]),"#t_"+to_string(b[i]),t,-1);
         else{
             string s = new_temporary();
-            emitt("*","#_t"+to_string(a[i]),"#_t"+to_string(b[i]),s,-1);
+            emitt("*","#t_"+to_string(a[i]),"#t_"+to_string(b[i]),s,-1);
             emitt("+",t,s,t,-1);
         }
     }

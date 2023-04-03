@@ -8,6 +8,8 @@ typedef struct sym_entry{
     string value;
     int line_number;
     bool isfunc;
+    int offset;
+    int size;
     string modifiers;
     map<string, sym_entry*> *child;
     vector<int> dimension;
