@@ -1,0 +1,34 @@
+0: BeginFunc test_11.main
+1:    #t_1 = 12
+2:    push_param #t_1
+3:    stack_pointer +8
+4:    call alloc 1
+5:    stack_pointer -8
+6:    #t_0 = pop 4
+7:    pop 4
+8:    h = #t_0
+9:    #t_2 = h
+10:    push_param #t_2
+11:    stack_pointer +8
+12:    call hero.add
+13:    stack_pointer -8
+14:    #t_3 = pop 4
+15:    pop 4
+16:    c = #t_3
+17: EndFunc
+
+18: BeginFunc hero.add
+19:    h = *(stack_pointer-8)
+20:    #t_4 = h
+21:    #t_5 = 4
+22:    #t_6 = *(#t_4 + #t_5)
+23:    #t_7 = h
+24:    #t_8 = 8
+25:    #t_9 = *(#t_7 + #t_8)
+26:    #t_10 = #t_6 +int #t_9
+27:    c = #t_10
+28:    #t_11 = c
+29:    *(stack_pointer-4) = #t_11
+30:    goto 31
+31: EndFunc
+

@@ -1,2 +1,4 @@
 Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
-main,2,void,public static ,Yes,1,0,8
+a,6,int,,No,0,-8,4
+b,6,int,,No,0,-12,4
+c,7,int,,No,0,4,4

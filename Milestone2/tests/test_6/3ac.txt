@@ -1,79 +1,81 @@
 0: BeginFunc SumOfArray.not_main
-1:    #t_0 = 5
-2:    num = #t_0
-3:    #t_1 = 0
-4:    x = #t_1
-5:    #t_2 = 1
-6:    i = #t_2
-7:    #t_3 = i
-8:    #t_4 = num
-9:    if #t_3<=#t_4 goto 15
-10:    goto 63
-11:    #t_5 = i
-12:    #t_5 = #t_5 +int 1
-13:    i = #t_5
-14:    goto 7
-15:    #t_6 = i
-16:    #t_7 = 1
-17:    #t_8 = #t_6 -int #t_7
-18:    x = #t_8
-19:    #t_9 = i
-20:    j = #t_9
-21:    #t_10 = j
-22:    #t_11 = num
-23:    #t_12 = 1
-24:    #t_13 = #t_11 -int #t_12
-25:    if #t_10<=#t_13 goto 31
-26:    goto 34
-27:    #t_14 = j
-28:    #t_14 = #t_14 +int 1
-29:    j = #t_14
-30:    goto 21
-31:    #t_15 = 2
-32:    x = #t_15
-33:    goto 27
-34:    #t_16 = 0
-35:    j = #t_16
-36:    #t_17 = j
-37:    #t_18 = x
-38:    if #t_17<=#t_18 goto 44
-39:    goto 45
-40:    #t_19 = j
-41:    #t_19 = #t_19 +int 1
-42:    j = #t_19
-43:    goto 36
-44:    goto 40
-45:    #t_20 = 1
-46:    j = #t_20
-47:    #t_21 = j
-48:    #t_22 = x
-49:    if #t_21<=#t_22 goto 55
-50:    goto 61
-51:    #t_23 = j
-52:    #t_23 = #t_23 +int 1
-53:    j = #t_23
-54:    goto 47
-55:    #t_24 = j
-56:    #t_25 = 2
-57:    if #t_24==#t_25 goto 59
-58:    goto 51
-59:    goto 51
-60:    goto 51
-61:    goto -1
-62:    goto 11
-63: EndFunc
+1:    args = popparam
+2:    #t_0 = 5
+3:    num = #t_0
+4:    #t_1 = 0
+5:    x = #t_1
+6:    #t_2 = 1
+7:    i = #t_2
+8:    #t_3 = i
+9:    #t_4 = num
+10:    if #t_3<=#t_4 goto 16
+11:    goto 64
+12:    #t_5 = i
+13:    #t_5 = #t_5 +int 1
+14:    i = #t_5
+15:    goto 8
+16:    #t_6 = i
+17:    #t_7 = 1
+18:    #t_8 = #t_6 -int #t_7
+19:    x = #t_8
+20:    #t_9 = i
+21:    j = #t_9
+22:    #t_10 = j
+23:    #t_11 = num
+24:    #t_12 = 1
+25:    #t_13 = #t_11 -int #t_12
+26:    if #t_10<=#t_13 goto 32
+27:    goto 35
+28:    #t_14 = j
+29:    #t_14 = #t_14 +int 1
+30:    j = #t_14
+31:    goto 22
+32:    #t_15 = 2
+33:    x = #t_15
+34:    goto 28
+35:    #t_16 = 0
+36:    j = #t_16
+37:    #t_17 = j
+38:    #t_18 = x
+39:    if #t_17<=#t_18 goto 45
+40:    goto 46
+41:    #t_19 = j
+42:    #t_19 = #t_19 +int 1
+43:    j = #t_19
+44:    goto 37
+45:    goto 41
+46:    #t_20 = 1
+47:    j = #t_20
+48:    #t_21 = j
+49:    #t_22 = x
+50:    if #t_21<=#t_22 goto 56
+51:    goto 62
+52:    #t_23 = j
+53:    #t_23 = #t_23 +int 1
+54:    j = #t_23
+55:    goto 48
+56:    #t_24 = j
+57:    #t_25 = 2
+58:    if #t_24==#t_25 goto 60
+59:    goto 52
+60:    goto 52
+61:    goto 52
+62:    goto 64
+63:    goto 12
+64: EndFunc
 
-64: BeginFunc SumOfArray.main
-65:    #t_26 = 5
-66:    #t_27 = 4
-67:    #t_28 = #t_26 * #t_27
-68:    array arr = create_memory(#t_28)
-69:    #t_29 = 1
-70:    #t_30 = #t_27 * #t_29
-71:    #t_31 = 3
-72:    #t_32 = cast_to_int* #t_31
-73:    *(arr + #t_30) = #t_32
-74:    #t_33 = 0
-75:    sum = #t_33
-76: EndFunc
+65: BeginFunc SumOfArray.main
+66:    args = popparam
+67:    #t_26 = 5
+68:    #t_27 = 4
+69:    #t_28 = #t_26 * #t_27
+70:    array arr = create_memory(#t_28)
+71:    #t_29 = 1
+72:    #t_30 = #t_27 * #t_29
+73:    #t_31 = 3
+74:    #t_32 = cast_to_int* #t_31
+75:    *(arr + #t_30) = #t_32
+76:    #t_33 = 0
+77:    sum = #t_33
+78: EndFunc
 

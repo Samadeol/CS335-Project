@@ -1,0 +1,5 @@
+Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
+id,14,int,,No,0,4,4
+main,16,void,public static ,Yes,1,0,8
+name,13,int,,No,0,0,4
+roll,15,int,,No,0,8,4

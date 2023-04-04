@@ -52,7 +52,15 @@ void print3AC_code(){
     tac_file.open(file_name);
     for(int i=0;i<code.size();i++){
         if(code[i].op == "array"){
-            tac_file<<i<<":    array "<<code[i].result<<" = create_memory("<<code[i].arg1<<")"<<"\n";
+            emitt("string","push_param "+code[i].arg1,"","",-1);
+            emitt("string","stack_pointer +8","","",-1);
+            emitt("string","call alloc 1","","",-1);
+            emitt("string","stack_pointer -8","","",-1);
+            emitt("","pop 4","",code[i].result,-1);
+            emitt("string","pop 4","","",-1);
+        }
+        else if(code[i].op == "string"){
+            tac_file<<i<<":    "<<code[i].arg1<<endl;
         }
         else if(code[i].op == "cast"){
             tac_file<<i<<":    "<<code[i].result<<" = cast_to_"<<code[i].arg2<<" "<<code[i].arg1<<endl;

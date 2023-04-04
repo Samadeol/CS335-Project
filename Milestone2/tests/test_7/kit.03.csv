@@ -1,0 +1,5 @@
+Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
+args,16,String,,No,0,-8,4
+k,17,kit,,No,0,4,4
+main,3,void,public static ,Yes,1,0,8
+ob,2,kit,,No,0,0,4

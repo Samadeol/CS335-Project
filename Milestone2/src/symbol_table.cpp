@@ -9,6 +9,7 @@ map<sym_table*, sym_table*> parent;
 extern int yylineno;
 string curr_file;
 string out_file_name;
+extern string curr_class_name;
 int offset;
 bool first_parse;
 
@@ -119,8 +120,9 @@ void make_dirty_entry(string name, string type, int line_number, string modifier
     (*dirty_sym_table)[name]->isfunc = false;
     (*dirty_sym_table)[name]->modifiers = modifiers;
     (*dirty_sym_table)[name]->size = size;
+    if(t==-1) offset-=size;
     (*dirty_sym_table)[name]->offset = offset;
-    offset+=t*size;
+    if(t==1) offset+=size;
 }
 
 void make_entry(string name, string type, int line_number, string modifiers){
@@ -156,6 +158,7 @@ void make_func_entry(string name, string type, vector<tuple<string,string,int,in
         if(get<2>(args[i])) make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0010",-1);
         else make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0000",-1);
     }
+    (*curr_sym_table)[name]->size = -offset;
     offset = temp;
     reset();
 }
@@ -177,6 +180,10 @@ string find_in_scope(string name, char (&label)[1000]){
         t.push_back(name[i]);
     }
     sym_table* temp = curr_sym_table,*temp2;
+    // if(t=="this") {
+    //     final_name=curr_class_name;
+    //     temp2 = (*default_sym_table)[curr_class_name]->child;}
+    // else temp2 == NULL;
     while(1){
         if((*temp).find(t)!=(*temp).end()){
             if(t.size()==name.size()) return (*temp)[t]->type;
@@ -333,7 +340,7 @@ string expression_type(int line_num, string type1, string type2, string op){
     else return type2;
 }
 
-string get_method(string name, string scope, vector<string> args){
+string get_method(string name, string scope, vector<pair<string,string > > args, string l){
     if(scope==""){
         sym_table* temp = curr_sym_table;
         while(temp!=default_sym_table){
@@ -346,11 +353,18 @@ string get_method(string name, string scope, vector<string> args){
                     exit(1);
                 }
                 for(int i=0;i<args.size();i++){
-                    if(args[i]!=get<1>((*temp)[name]->arguments[i])){
-                        cout<<"Invalid argument type "<<args[i]<<" to "<<get<1>((*temp)[name]->arguments[i])<<endl;
+                    if(args[i].first!=get<1>((*temp)[name]->arguments[i])){
+                        cout<<"Invalid argument type "<<args[i].first<<" to "<<get<1>((*temp)[name]->arguments[i])<<endl;
                         exit(1);
                     }
+                    emitt("string","push_param "+ args[args.size()-i-1].second,"","",-1);
                 }
+                emitt("string","stack_pointer +"+to_string((*temp)[name]->size),"","",-1);
+                emitt("string","call "+curr_class_name+"."+name,"","",-1);
+                emitt("string","stack_pointer -"+to_string((*temp)[name]->size),"","",-1);
+                int size = get_size((*temp)[name]->type);
+                if(size) emitt("","pop "+to_string(size),"",l,-1);
+                emitt("string","pop "+to_string((*temp)[name]->size-size),"","",-1);
                 return (*temp)[name]->type;
             }
             temp = parent[temp];
@@ -359,11 +373,30 @@ string get_method(string name, string scope, vector<string> args){
         exit(1);
     }
     else{
-        if((*default_sym_table).find(name)==(*default_sym_table).end()){
-            cout<<"No class of "<<name<<endl;
+        if((*default_sym_table).find(scope)==(*default_sym_table).end()){
+            cout<<"No class of "<<scope<<endl;
             exit(1);
         }
-        sym_table* temp = (*default_sym_table)[name]->child;
+        sym_table* temp = (*default_sym_table)[scope]->child;
+        if(name==scope){
+            if((*temp).find(name)==(*temp).end()){
+                if(args.size()==0){
+                    string s = new_temporary();
+                    emitt("",to_string((*default_sym_table)[scope]->size),"",s,-1);
+                    emitt("string","push_param "+s,"","",-1);
+                    emitt("string","stack_pointer +8","","",-1);
+                    emitt("string","call alloc 1","","",-1);
+                    emitt("string","stack_pointer -8","","",-1);
+                    emitt("","pop 4","",l,-1);
+                    emitt("string","pop 4","","",-1);
+                    return scope;
+                }else{
+                    cout<<"Please define a constructor appropriately"<<endl;
+                    exit(1);
+                }
+            }
+        }
+        //cout<<"ji"<<endl;
         if((*temp).find(name)!=(*temp).end()){
             if(!(*temp)[name]->isfunc){
                 cout<<"Method "<<name<<" does not belong in this scope"<<endl;
@@ -372,12 +405,25 @@ string get_method(string name, string scope, vector<string> args){
                 cout<<"Invalid number of arguments in method call"<<endl;
                 exit(1);
             }
+            if(name==scope){
+                string s = new_temporary();
+                emitt("",to_string((*default_sym_table)[scope]->size),"",s,-1);
+                emitt("string","push_param "+s,"","",-1);
+            }
             for(int i=0;i<args.size();i++){
-                if(args[i]!=get<1>((*temp)[name]->arguments[i])){
-                    cout<<"Invalid argument type "<<args[i]<<" to "<<get<1>((*temp)[name]->arguments[i])<<endl;
+                if(args[i].first!=get<1>((*temp)[name]->arguments[i])){
+                    cout<<"Invalid argument type "<<args[i].first<<" to "<<get<1>((*temp)[name]->arguments[i])<<endl;
                     exit(1);
                 }
+                emitt("string","push_param "+ args[args.size()-i-1].second,"","",-1);
             }
+            emitt("string","stack_pointer +"+to_string((*temp)[name]->size),"","",-1);
+            emitt("string","call "+scope+"."+name,"","",-1);
+            emitt("string","stack_pointer -"+to_string((*temp)[name]->size),"","",-1);
+            int size = get_size((*temp)[name]->type);
+            if(size) emitt("","pop "+to_string(size),"",l,-1);
+            if(name==scope) size-=4;
+            emitt("string","pop "+to_string((*temp)[name]->size-size),"","",-1);
             return (*temp)[name]->type;
         }
         else{
@@ -410,6 +456,7 @@ string check_class_modifiers(string str){
 
 string check_method_modifiers(string str){
     string ans = "0000";
+    //cout<<str<<endl;
     for(int i=0;i<str.size();i++){
         if(ans[str[i]-'0']=='1'){
             cout<<"Repeated Modifier used"<<endl;
@@ -434,7 +481,7 @@ void check_gst(string name){
 }
 
 void check_constructor(string name){
-    if((*default_sym_table).find(name)==(*default_sym_table).end() || (*default_sym_table)[name]->child!=curr_sym_table) cout<<"Constructor should have same name as class"<<endl;
+    if(!first_parse && ((*default_sym_table).find(name)==(*default_sym_table).end() || (*default_sym_table)[name]->child!=curr_sym_table)) cout<<"Constructor should have same name as class"<<endl;
 }
 
 void final_print(){
@@ -447,4 +494,9 @@ void final_print(){
 bool check_first(){
     if(parent[curr_sym_table] == default_sym_table) return true;
     else return false;
+}
+
+string get_offset(string name, string func){
+    int offset = (*(*curr_sym_table)[func]->child)[name]->offset;
+    return "*(stack_pointer"+ to_string(offset) +")";
 }

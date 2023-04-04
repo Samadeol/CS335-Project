@@ -17,7 +17,7 @@ fstream fout,fin;
 stack<int> st;
 int node_number=1;
 vector<pair<string,string> > v; 
-vector<string> function_call;
+vector<pair<string,string> > function_call;
 vector<tuple<string,string,int,int> > arguments;
 string curr_class_name;
 extern int inst_num;
@@ -250,13 +250,13 @@ VariableInitializer:
 Expression		{if(!first_parse){strcpy($$->type,$1->type);$$->i_number = $1->i_number;}}
 
 MethodDeclarationHeader:
-VOID MethodDeclarator   {if($2->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl; exit(1);} strcpy($$->label,$2->label); strcpy($$->type,"void0000"); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("","popparam","",get<0>(arguments[i]),-1);}}
-| Type MethodDeclarator {string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); strcpy($$->label,$2->label); strcpy($$->type,strcat($1->type,(t+"0000").c_str())); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; $$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("","popparam","",get<0>(arguments[i]),-1);}}
-| ClassModifiers VOID MethodDeclarator  {if($3->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl;exit(1);} string x = check_method_modifiers($1->label); strcpy($$->label,$3->label); strcpy($$->type,("void"+x).c_str()); line_number = yylineno; if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("","popparam","",get<0>(arguments[i]),-1);}}
-| ClassModifiers Type MethodDeclarator  {string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); strcpy($$->label,$3->label); string x = check_method_modifiers($1->label); strcpy($$->type,strcat($2->type,(t+x).c_str())); line_number = yylineno; if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("","popparam","",get<0>(arguments[i]),-1);}}
+VOID MethodDeclarator   {if($2->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl; exit(1);} strcpy($$->label,$2->label); strcpy($$->type,"void0000"); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$2->label),"",get<0>(arguments[i]),-1);}}
+| Type MethodDeclarator {string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); strcpy($$->label,$2->label); strcpy($$->type,strcat($1->type,(t+"0000").c_str())); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$2->label),"",get<0>(arguments[i]),-1);}}
+| ClassModifiers VOID MethodDeclarator  {{if($3->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl;exit(1);} string x = check_method_modifiers($1->label); strcpy($$->label,$3->label); strcpy($$->type,("void"+x).c_str()); line_number = yylineno;} if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$3->label),"",get<0>(arguments[i]),-1);}}
+| ClassModifiers Type MethodDeclarator  {{string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); string x = check_method_modifiers($1->label); strcpy($$->label,$3->label); strcpy($$->type,strcat($2->type,(t+x).c_str())); line_number = yylineno;} if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$3->label),"",get<0>(arguments[i]),-1);}}
 
 MethodDeclaration:
-MethodDeclarationHeader MethodBody	{if(first_parse){string x = $1->type; make_func_entry($1->label,x.substr(0,x.size()-4),arguments,line_number,x.substr(x.size()-4,4)); arguments.clear();}else{print(curr_class_name+"."+$1->label);emitt("end","","","",-1); $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}}
+MethodDeclarationHeader MethodBody	{if(first_parse){string x = $1->type; make_func_entry($1->label,x.substr(0,x.size()-4),arguments,line_number,x.substr(x.size()-4,4));}else{print(curr_class_name+"."+$1->label);emitt("end","","","",-1); $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}arguments.clear();}
 ;
 
 MethodDeclarator:
@@ -270,12 +270,12 @@ FormalParameterList COMMA FormalParameter
 ;
 
 FormalParameter:
-Type IDENTIFIER     {if(first_parse){arguments.push_back(make_tuple($2->label,$1->type,0,0));}}	
-| FINAL Type IDENTIFIER 		{if(first_parse){arguments.push_back(make_tuple($3->label,$2->type,0,1));}}
-| Type IDENTIFIER Dims 		{if(first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); arguments.push_back(make_tuple($2->label,strcat($1->type,t.c_str()),0,0));}}
-| FINAL Type IDENTIFIER Dims		{if(first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); arguments.push_back(make_tuple($3->label,strcat($1->type,t.c_str()),0,1));}}
-| Type TRIPLE_DOT IDENTIFIER		{if(first_parse){arguments.push_back(make_tuple($3->label,$1->type,1,0));}}
-| FINAL Type TRIPLE_DOT IDENTIFIER		{if(first_parse){arguments.push_back(make_tuple($4->label,$2->type,1,1));}}
+Type IDENTIFIER     {arguments.push_back(make_tuple($2->label,$1->type,0,0));}	
+| FINAL Type IDENTIFIER 		{arguments.push_back(make_tuple($3->label,$2->type,0,1));}
+| Type IDENTIFIER Dims 		{string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); arguments.push_back(make_tuple($2->label,strcat($1->type,t.c_str()),0,0));}
+| FINAL Type IDENTIFIER Dims		{string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); arguments.push_back(make_tuple($3->label,strcat($1->type,t.c_str()),0,1));}
+| Type TRIPLE_DOT IDENTIFIER		{arguments.push_back(make_tuple($3->label,$1->type,1,0));}
+| FINAL Type TRIPLE_DOT IDENTIFIER		{arguments.push_back(make_tuple($4->label,$2->type,1,1));}
 ;
 
 MethodBody:
@@ -302,8 +302,8 @@ LeftCurl RightCurl
 ;
 
 Expressions:
-Expressions COMMA Expression	{if(!first_parse){function_call.push_back($3->type);}}	
-| Expression	{if(!first_parse){function_call.push_back($1->type);}}	
+Expressions COMMA Expression	{if(!first_parse){function_call.push_back(make_pair($3->type,$3->temp_var));}}	
+| Expression	{if(!first_parse){function_call.push_back(make_pair($1->type,$1->temp_var));}}	
 ;
 
 
@@ -383,11 +383,11 @@ SEMI_COLON
 ;
 
 LabeledStatement:
-IDENTIFIER COLON Statement		
+IDENTIFIER COLON Statement      
 ;
 
 LabeledStatementNoShortIf:
-IDENTIFIER COLON StatementNoShortIf		
+IDENTIFIER COLON StatementNoShortIf
 ;
 
 ExpressionStatement:
@@ -400,8 +400,8 @@ Assignment		{if(!first_parse){$$->i_number = $1->i_number;}}
 | PreDecrementExpression	{if(!first_parse){$$->i_number = $1->i_number;}}	
 | PostIncrementExpression	{if(!first_parse){$$->i_number = $1->i_number;}}	
 | PostDecrementExpression	{if(!first_parse){$$->i_number = $1->i_number;}}	
-| MethodInvocation		
-| ClassInstanceCreationExpression		
+| MethodInvocation      {if(!first_parse){$$->i_number = $1->i_number;}}
+| ClassInstanceCreationExpression   {if(!first_parse){$$->i_number = $1->i_number;}}		
 		
 IfThenStatement:
 IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement	{if(!first_parse){reset(); backpatch($3->true_list,$5->i_number); $$->next_list = merge($3->false_list,$5->next_list); $$->i_number=$3->i_number; $$->true_list = $5->true_list;  $$->end_list = $5->end_list;}}	
@@ -525,7 +525,7 @@ CONTINUE SEMI_COLON		{if(!first_parse){emitt("","","","goto",-1); $$->next_list.
 
 ReturnStatement:
 RETURN SEMI_COLON		            {if(!first_parse){emitt("","","","goto",-1);$$->end_list.push_back(inst_num-1);$$->i_number = inst_num-1;}}
-|  RETURN Expression SEMI_COLON		 {if(!first_parse){emitt("","","","goto",-1);$$->i_number=$2->i_number;$$->end_list.push_back(inst_num-1);}}
+|  RETURN Expression SEMI_COLON		 {if(!first_parse){emitt("",$2->temp_var,"","*(stack_pointer-4)",-1); emitt("","","","goto",-1);$$->i_number=$2->i_number;$$->end_list.push_back(inst_num-1);}}
 ;
 
 ThrowStatement:
@@ -555,9 +555,9 @@ PrimaryNoNewArray	{if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type)
 PrimaryNoNewArray:
 Literal			{if(!first_parse){$$->lit = true;strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}	
 | LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS{if(!first_parse){$$->lit = false; strcpy($$->type,$2->type);strcpy($$->temp_var,$2->temp_var);$$->true_list = $2->true_list; $$->false_list = $2->false_list; $$->i_number = $2->i_number;}}
-| ClassInstanceCreationExpression	{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);}}	
+| ClassInstanceCreationExpression	{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type); $$->i_number = $1->i_number; strcpy($$->temp_var,$1->temp_var);}}	
 | ArrayAccess		{if(!first_parse){$$->lit = false;  strcpy($$->type,$1->type);$$->i_number = $1->i_number;}}
-| MethodInvocation		{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);}}
+| MethodInvocation		{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;}}
 ;
 
 Literal:
@@ -570,12 +570,12 @@ INTEGER_LITERAL	    {if(!first_parse){strcpy($$->type,"int");strcpy($$->temp_var
 ;
 
 ClassInstanceCreationExpression:
-UnqualifiedClassInstanceCreationExpression	{if(!first_parse){strcpy($$->type,$1->type);}}
+UnqualifiedClassInstanceCreationExpression	{if(!first_parse){strcpy($$->type,$1->type); strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;}}
 ;
 
 UnqualifiedClassInstanceCreationExpression:
-NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){string t = find_in_scope($2->label,$2->label); strcpy($$->type,get_method(t,t,function_call).c_str());}}	
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 	{if(!first_parse){string t = find_in_scope($2->label,$2->label); strcpy($$->type,get_method(t,t,function_call).c_str());}}
+NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){string l = new_temporary(); $$->i_number = inst_num; strcpy($$->temp_var,l.c_str()); string t = find_in_scope($2->label,$2->label); strcpy($$->type,get_method(t,t,function_call,l).c_str());}}	
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 	{if(!first_parse){string l = new_temporary(); $$->i_number = $3->i_number; strcpy($$->temp_var,l.c_str()); string t = find_in_scope($2->label,$2->label); strcpy($$->type,get_method(t,t,function_call,l).c_str());}}
 ;
 
 ArrayAccess:
@@ -583,10 +583,10 @@ DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label,$1
 ;
 
 MethodInvocation:
-IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){strcpy($$->type,get_method($1->label,"",function_call).c_str());}}
-| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS     {if(!first_parse){strcpy($$->type,get_method($1->label,"",function_call).c_str());function_call.clear();}}		
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call).c_str());}}
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{if(!first_parse){strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call).c_str()); function_call.clear();}}	
+IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){string l = new_temporary();$$->i_number = inst_num; strcpy($$->temp_var,l.c_str()); strcpy($$->type,get_method($1->label,"",function_call,l).c_str());}}
+| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS     {if(!first_parse){string l = new_temporary(); $$->i_number = $3->i_number;strcpy($$->temp_var,l.c_str()); strcpy($$->type,get_method($1->label,"",function_call,l).c_str());function_call.clear();}}		
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){string l = new_temporary(); $$->i_number = inst_num;strcpy($$->temp_var,l.c_str()); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call,l).c_str());}}
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{if(!first_parse){string l = new_temporary();$$->i_number = $5->i_number; strcpy($$->temp_var,l.c_str()); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call,l).c_str()); function_call.clear();}}	
 ;
 
 ArrayCreationExpression:
