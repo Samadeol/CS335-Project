@@ -168,7 +168,8 @@ void make_class_entry(string name, int line_number, string modifiers){
     reset();
 }
 
-string find_in_scope(string name){
+string find_in_scope(string name, char (&label)[1000]){
+    string final_name = name;
     if((*dirty_sym_table).find(name)!=(*dirty_sym_table).end()) return (*dirty_sym_table)[name]->type;
     string t,p;
     for(int i=0;i<name.size();i++){
@@ -181,11 +182,15 @@ string find_in_scope(string name){
             if(t.size()==name.size()) return (*temp)[t]->type;
             else{
                 string class_name = (*temp)[t]->type;
-                if((*default_sym_table)[class_name]->child == NULL) {
+                if((*default_sym_table).find(class_name) == (*default_sym_table).end()) {
                     cout<<name<<" not declared in this scope "<<yylineno<<endl;
                     exit(1);
                 }
-                else temp2 = (*default_sym_table)[class_name]->child;
+                else{
+                    final_name = new_temporary();
+                    emitt("",t,"",final_name,-1);
+                    temp2 = (*default_sym_table)[class_name]->child;
+                }
             break;
             }
         }
@@ -201,11 +206,17 @@ string find_in_scope(string name){
                 cout<<name.substr(0,i)<<" not declared in this scope "<<yylineno<<endl;
                 exit(1);
             }else{
-                if((*temp)[p]->child == NULL) {
+                string class_name = (*temp2)[p]->type;
+                if((*default_sym_table).find(class_name) == (*default_sym_table).end()) {
                     cout<<name<<" not declared in this scope "<<yylineno<<endl;
                     exit(1);
                 }
-                else temp2 = (*temp)[p]->child;
+                else{
+                    string s = new_temporary();
+                    emitt("",to_string((*temp2)[p]->offset),"",s,-1);
+                    final_name = "*("+final_name+" + "+s+")";
+                    temp2 = (*default_sym_table)[class_name]->child;
+                }
             }
             p.clear();
         }
@@ -215,6 +226,10 @@ string find_in_scope(string name){
         cout<<name<<" not declared in this scope "<<yylineno<<endl;
         exit(1);
     }
+    string s = new_temporary();
+    emitt("",to_string((*temp2)[p]->offset),"",s,-1);
+    final_name = "*("+final_name+" + "+s+")";
+    strcpy(label,final_name.c_str());
     return (*temp2)[p]->type;
 }
 

@@ -694,15 +694,15 @@ static const yytype_int16 yyrline[] =
      528,   532,   536,   537,   538,   542,   543,   547,   551,   552,
      556,   557,   558,   559,   560,   564,   565,   566,   567,   568,
      569,   573,   577,   578,   582,   586,   587,   588,   589,   593,
-     594,   595,   596,   600,   601,   605,   609,   610,   614,   635,
-     636,   637,   638,   639,   640,   641,   642,   643,   644,   645,
-     646,   663,   664,   665,   666,   667,   668,   669,   670,   671,
-     672,   673,   677,   678,   682,   683,   687,   688,   692,   693,
-     697,   698,   702,   703,   707,   708,   709,   713,   714,   715,
-     716,   717,   721,   722,   723,   724,   728,   729,   730,   734,
-     735,   736,   737,   741,   742,   743,   744,   745,   749,   768,
-     787,   788,   789,   790,   794,   795,   796,   797,   801,   802,
-     803,   804,   808,   826
+     594,   595,   596,   600,   601,   605,   609,   610,   614,   634,
+     635,   636,   637,   638,   639,   640,   641,   642,   643,   644,
+     645,   661,   662,   663,   664,   665,   666,   667,   668,   669,
+     670,   671,   675,   676,   680,   681,   685,   686,   690,   691,
+     695,   696,   700,   701,   705,   706,   707,   711,   712,   713,
+     714,   715,   719,   720,   721,   722,   726,   727,   728,   732,
+     733,   734,   735,   739,   740,   741,   742,   743,   747,   766,
+     785,   786,   787,   788,   792,   793,   794,   795,   799,   800,
+     801,   802,   806,   824
 };
 #endif
 
@@ -3373,13 +3373,12 @@ yyreduce:
     if(!first_parse){
         string t = find_in_scope((yyvsp[-2].item)->label);
         strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());
-        string p = (yyvsp[-2].item)->type;
         (yyval.item)->i_number = (yyvsp[0].item)->i_number;
         if((yyvsp[0].item)->dimension.size()){
             array_func((yyvsp[-2].item)->label,(yyvsp[0].item)->dimension,(yyvsp[0].item)->type);
             set_dimensions((yyvsp[-2].item)->label,(yyvsp[0].item)->dimension);
         }
-        else if(p=="boolean"){
+        else if(t=="boolean"){
             emitt("","true","",(yyvsp[-2].item)->label,-1);
             backpatch((yyvsp[0].item)->true_list,inst_num-1);
             emitt("","false","",(yyvsp[-2].item)->label,-1);
@@ -3390,84 +3389,83 @@ yyreduce:
         }
     }
 }
-#line 3394 "parser.tab.c"
+#line 3393 "parser.tab.c"
     break;
 
   case 219:
-#line 635 "parser.y"
+#line 634 "parser.y"
                                             {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("*"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3400 "parser.tab.c"
+#line 3399 "parser.tab.c"
     break;
 
   case 220:
-#line 636 "parser.y"
+#line 635 "parser.y"
                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("/"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3406 "parser.tab.c"
+#line 3405 "parser.tab.c"
     break;
 
   case 221:
-#line 637 "parser.y"
+#line 636 "parser.y"
                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("\%"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3412 "parser.tab.c"
+#line 3411 "parser.tab.c"
     break;
 
   case 222:
-#line 638 "parser.y"
+#line 637 "parser.y"
                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("+"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3418 "parser.tab.c"
+#line 3417 "parser.tab.c"
     break;
 
   case 223:
-#line 639 "parser.y"
+#line 638 "parser.y"
                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("-"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3424 "parser.tab.c"
+#line 3423 "parser.tab.c"
     break;
 
   case 224:
-#line 640 "parser.y"
+#line 639 "parser.y"
                                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number; string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("<<",l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3430 "parser.tab.c"
+#line 3429 "parser.tab.c"
     break;
 
   case 225:
-#line 641 "parser.y"
+#line 640 "parser.y"
                                                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number; string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt(">>",l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3436 "parser.tab.c"
+#line 3435 "parser.tab.c"
     break;
 
   case 226:
-#line 642 "parser.y"
+#line 641 "parser.y"
                                                                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number; string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt(">>>",l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3442 "parser.tab.c"
+#line 3441 "parser.tab.c"
     break;
 
   case 227:
-#line 643 "parser.y"
+#line 642 "parser.y"
                                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("&"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3448 "parser.tab.c"
+#line 3447 "parser.tab.c"
     break;
 
   case 228:
-#line 644 "parser.y"
+#line 643 "parser.y"
                                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());(yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("^"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3454 "parser.tab.c"
+#line 3453 "parser.tab.c"
     break;
 
   case 229:
-#line 645 "parser.y"
+#line 644 "parser.y"
                                       {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->label,"",l,-1); string s = new_temporary(); emitt("|"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->label,-1);}}
-#line 3460 "parser.tab.c"
+#line 3459 "parser.tab.c"
     break;
 
   case 230:
-#line 646 "parser.y"
+#line 645 "parser.y"
                                {
     if(!first_parse){
         string t = find_in_scope((yyvsp[-2].item)->label);
         strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());
-        string p = (yyvsp[-2].item)->type;
         (yyval.item)->i_number = (yyvsp[0].item)->i_number;
-        if(p=="boolean"){
+        if(t=="boolean"){
             emitt("","true","",(yyvsp[-2].item)->temp_var,-1);
             backpatch((yyvsp[0].item)->true_list,inst_num-1);
             emitt("","false","",(yyvsp[-2].item)->temp_var,-1);
@@ -3478,293 +3476,293 @@ yyreduce:
         }
     }
 }
-#line 3482 "parser.tab.c"
+#line 3480 "parser.tab.c"
     break;
 
   case 231:
-#line 663 "parser.y"
+#line 661 "parser.y"
                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("*"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3488 "parser.tab.c"
+#line 3486 "parser.tab.c"
     break;
 
   case 232:
-#line 664 "parser.y"
+#line 662 "parser.y"
                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("/"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3494 "parser.tab.c"
+#line 3492 "parser.tab.c"
     break;
 
   case 233:
-#line 665 "parser.y"
+#line 663 "parser.y"
                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("\%"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3500 "parser.tab.c"
+#line 3498 "parser.tab.c"
     break;
 
   case 234:
-#line 666 "parser.y"
+#line 664 "parser.y"
                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("+"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3506 "parser.tab.c"
+#line 3504 "parser.tab.c"
     break;
 
   case 235:
-#line 667 "parser.y"
+#line 665 "parser.y"
                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("-"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3512 "parser.tab.c"
+#line 3510 "parser.tab.c"
     break;
 
   case 236:
-#line 668 "parser.y"
+#line 666 "parser.y"
                                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number; string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("<<",l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3518 "parser.tab.c"
+#line 3516 "parser.tab.c"
     break;
 
   case 237:
-#line 669 "parser.y"
+#line 667 "parser.y"
                                                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number; string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt(">>",l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3524 "parser.tab.c"
+#line 3522 "parser.tab.c"
     break;
 
   case 238:
-#line 670 "parser.y"
+#line 668 "parser.y"
                                                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number; string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt(">>>",l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3530 "parser.tab.c"
+#line 3528 "parser.tab.c"
     break;
 
   case 239:
-#line 671 "parser.y"
+#line 669 "parser.y"
                                                         {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("&"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3536 "parser.tab.c"
+#line 3534 "parser.tab.c"
     break;
 
   case 240:
-#line 672 "parser.y"
+#line 670 "parser.y"
                                                 {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str());(yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("^"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3542 "parser.tab.c"
+#line 3540 "parser.tab.c"
     break;
 
   case 241:
-#line 673 "parser.y"
+#line 671 "parser.y"
                                    {if(!first_parse){string t = find_in_scope((yyvsp[-2].item)->label);strcpy((yyval.item)->type,expression_type(yylineno,t,(yyvsp[0].item)->type,(yyvsp[-1].item)->label).c_str()); (yyval.item)->i_number = (yyvsp[0].item)->i_number;if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt("",(yyvsp[-2].item)->temp_var,"",l,-1); string s = new_temporary(); emitt("|"+t,l,(yyvsp[0].item)->temp_var,s,-1); emitt("",s,"",(yyvsp[-2].item)->temp_var,-1);}}
-#line 3548 "parser.tab.c"
+#line 3546 "parser.tab.c"
     break;
 
   case 242:
-#line 677 "parser.y"
+#line 675 "parser.y"
                                 {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var); (yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->true_list = (yyvsp[0].item)->true_list; (yyval.item)->false_list = (yyvsp[0].item)->false_list;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3554 "parser.tab.c"
+#line 3552 "parser.tab.c"
     break;
 
   case 243:
-#line 678 "parser.y"
+#line 676 "parser.y"
                                                                                 {if(!first_parse){string s = (yyvsp[-4].item)->type; if(s!="boolean"){cout<<"First expression has to be boolean"<<endl;exit(1);}; backpatch((yyvsp[-4].item)->true_list,(yyvsp[-2].item)->i_number);}}
-#line 3560 "parser.tab.c"
+#line 3558 "parser.tab.c"
     break;
 
   case 244:
-#line 682 "parser.y"
+#line 680 "parser.y"
                                 {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var); (yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->true_list = (yyvsp[0].item)->true_list; (yyval.item)->false_list = (yyvsp[0].item)->false_list;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3566 "parser.tab.c"
+#line 3564 "parser.tab.c"
     break;
 
   case 245:
-#line 683 "parser.y"
+#line 681 "parser.y"
                                                                         {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());backpatch((yyvsp[-2].item)->false_list,(yyvsp[0].item)->i_number);(yyval.item)->false_list = (yyvsp[0].item)->false_list; (yyval.item)->true_list = merge((yyvsp[-2].item)->true_list,(yyvsp[0].item)->true_list);(yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3572 "parser.tab.c"
+#line 3570 "parser.tab.c"
     break;
 
   case 246:
-#line 687 "parser.y"
+#line 685 "parser.y"
                                 {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var); (yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->true_list = (yyvsp[0].item)->true_list; (yyval.item)->false_list = (yyvsp[0].item)->false_list;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3578 "parser.tab.c"
+#line 3576 "parser.tab.c"
     break;
 
   case 247:
-#line 688 "parser.y"
+#line 686 "parser.y"
                                                                                 {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());backpatch((yyvsp[-2].item)->true_list,(yyvsp[0].item)->i_number);(yyval.item)->true_list = (yyvsp[0].item)->true_list; (yyval.item)->false_list = merge((yyvsp[-2].item)->false_list,(yyvsp[0].item)->false_list);(yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3584 "parser.tab.c"
+#line 3582 "parser.tab.c"
     break;
 
   case 248:
-#line 692 "parser.y"
+#line 690 "parser.y"
                                 {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var); (yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->true_list = (yyvsp[0].item)->true_list; (yyval.item)->false_list = (yyvsp[0].item)->false_list;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3590 "parser.tab.c"
+#line 3588 "parser.tab.c"
     break;
 
   case 249:
-#line 693 "parser.y"
+#line 691 "parser.y"
                                                                 {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat((yyvsp[-1].item)->label,t.c_str()),(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3596 "parser.tab.c"
+#line 3594 "parser.tab.c"
     break;
 
   case 250:
-#line 697 "parser.y"
+#line 695 "parser.y"
                         {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var); (yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->true_list = (yyvsp[0].item)->true_list; (yyval.item)->false_list = (yyvsp[0].item)->false_list;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3602 "parser.tab.c"
+#line 3600 "parser.tab.c"
     break;
 
   case 251:
-#line 698 "parser.y"
+#line 696 "parser.y"
                                                         {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat((yyvsp[-1].item)->label,t.c_str()),(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3608 "parser.tab.c"
+#line 3606 "parser.tab.c"
     break;
 
   case 252:
-#line 702 "parser.y"
+#line 700 "parser.y"
                                 {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var); (yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->true_list = (yyvsp[0].item)->true_list; (yyval.item)->false_list = (yyvsp[0].item)->false_list;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3614 "parser.tab.c"
+#line 3612 "parser.tab.c"
     break;
 
   case 253:
-#line 703 "parser.y"
+#line 701 "parser.y"
                                                 {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat((yyvsp[-1].item)->label,t.c_str()),(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3620 "parser.tab.c"
+#line 3618 "parser.tab.c"
     break;
 
   case 254:
-#line 707 "parser.y"
+#line 705 "parser.y"
                         {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var); (yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->true_list = (yyvsp[0].item)->true_list; (yyval.item)->false_list = (yyvsp[0].item)->false_list;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3626 "parser.tab.c"
+#line 3624 "parser.tab.c"
     break;
 
   case 255:
-#line 708 "parser.y"
+#line 706 "parser.y"
                                                                 {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());emitt("if",strcat((yyvsp[-2].item)->temp_var,strcat((yyvsp[-1].item)->label,(yyvsp[0].item)->temp_var)),"","goto",-1);(yyval.item)->true_list.push_back(inst_num-1);emitt("","","","goto",-1); (yyval.item)->false_list.push_back(inst_num-1); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3632 "parser.tab.c"
+#line 3630 "parser.tab.c"
     break;
 
   case 256:
-#line 709 "parser.y"
+#line 707 "parser.y"
                                                                 {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());emitt("if",strcat((yyvsp[-2].item)->temp_var,strcat((yyvsp[-1].item)->label,(yyvsp[0].item)->temp_var)),"","goto",-1);(yyval.item)->true_list.push_back(inst_num-1);emitt("","","","goto",-1); (yyval.item)->false_list.push_back(inst_num-1); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3638 "parser.tab.c"
+#line 3636 "parser.tab.c"
     break;
 
   case 257:
-#line 713 "parser.y"
+#line 711 "parser.y"
                         {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var); (yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3644 "parser.tab.c"
+#line 3642 "parser.tab.c"
     break;
 
   case 258:
-#line 714 "parser.y"
+#line 712 "parser.y"
                                                         {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str()); emitt("if",strcat((yyvsp[-2].item)->temp_var,strcat((yyvsp[-1].item)->label,(yyvsp[0].item)->temp_var)),"","goto",-1);(yyval.item)->true_list.push_back(inst_num-1);emitt("","","","goto",-1); (yyval.item)->false_list.push_back(inst_num-1); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3650 "parser.tab.c"
+#line 3648 "parser.tab.c"
     break;
 
   case 259:
-#line 715 "parser.y"
+#line 713 "parser.y"
                                                                 {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());emitt("if",strcat((yyvsp[-2].item)->temp_var,strcat((yyvsp[-1].item)->label,(yyvsp[0].item)->temp_var)),"","goto",-1);(yyval.item)->true_list.push_back(inst_num-1);emitt("","","","goto",-1); (yyval.item)->false_list.push_back(inst_num-1); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3656 "parser.tab.c"
+#line 3654 "parser.tab.c"
     break;
 
   case 260:
-#line 716 "parser.y"
+#line 714 "parser.y"
                                                                 {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());emitt("if",strcat((yyvsp[-2].item)->temp_var,strcat((yyvsp[-1].item)->label,(yyvsp[0].item)->temp_var)),"","goto",-1);(yyval.item)->true_list.push_back(inst_num-1);emitt("","","","goto",-1); (yyval.item)->false_list.push_back(inst_num-1); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3662 "parser.tab.c"
+#line 3660 "parser.tab.c"
     break;
 
   case 261:
-#line 717 "parser.y"
+#line 715 "parser.y"
                                                             {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());emitt("if",strcat((yyvsp[-2].item)->temp_var,strcat((yyvsp[-1].item)->label,(yyvsp[0].item)->temp_var)),"","goto",-1);(yyval.item)->true_list.push_back(inst_num-1);emitt("","","","goto",-1); (yyval.item)->false_list.push_back(inst_num-1); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3668 "parser.tab.c"
+#line 3666 "parser.tab.c"
     break;
 
   case 262:
-#line 721 "parser.y"
+#line 719 "parser.y"
                                 {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3674 "parser.tab.c"
+#line 3672 "parser.tab.c"
     break;
 
   case 263:
-#line 722 "parser.y"
+#line 720 "parser.y"
                                                                         {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt((yyvsp[-1].item)->label,(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3680 "parser.tab.c"
+#line 3678 "parser.tab.c"
     break;
 
   case 264:
-#line 723 "parser.y"
+#line 721 "parser.y"
                                                                         {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt((yyvsp[-1].item)->label,(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3686 "parser.tab.c"
+#line 3684 "parser.tab.c"
     break;
 
   case 265:
-#line 724 "parser.y"
+#line 722 "parser.y"
                                                                                         {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt((yyvsp[-1].item)->label,(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3692 "parser.tab.c"
+#line 3690 "parser.tab.c"
     break;
 
   case 266:
-#line 728 "parser.y"
+#line 726 "parser.y"
                             {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3698 "parser.tab.c"
+#line 3696 "parser.tab.c"
     break;
 
   case 267:
-#line 729 "parser.y"
+#line 727 "parser.y"
                                                             {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat((yyvsp[-1].item)->label,t.c_str()),(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3704 "parser.tab.c"
+#line 3702 "parser.tab.c"
     break;
 
   case 268:
-#line 730 "parser.y"
+#line 728 "parser.y"
                                                             {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat((yyvsp[-1].item)->label,t.c_str()),(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3710 "parser.tab.c"
+#line 3708 "parser.tab.c"
     break;
 
   case 269:
-#line 734 "parser.y"
+#line 732 "parser.y"
                         {if(!first_parse){strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3716 "parser.tab.c"
+#line 3714 "parser.tab.c"
     break;
 
   case 270:
-#line 735 "parser.y"
+#line 733 "parser.y"
                                                     {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat((yyvsp[-1].item)->label,t.c_str()),(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3722 "parser.tab.c"
+#line 3720 "parser.tab.c"
     break;
 
   case 271:
-#line 736 "parser.y"
+#line 734 "parser.y"
                                                     {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat((yyvsp[-1].item)->label,t.c_str()),(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3728 "parser.tab.c"
+#line 3726 "parser.tab.c"
     break;
 
   case 272:
-#line 737 "parser.y"
+#line 735 "parser.y"
                                                         {if(!first_parse){string t = expression_type(yylineno,(yyvsp[-2].item)->type,(yyvsp[0].item)->type,(yyvsp[-1].item)->label); strcpy((yyval.item)->type,t.c_str());if(t!=(yyvsp[-2].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[-2].item)->temp_var,t,temp,-1); strcpy((yyvsp[-2].item)->temp_var,temp.c_str());} if(t!=(yyvsp[0].item)->type){string temp = new_temporary(); emitt("cast",(yyvsp[0].item)->temp_var,t,temp,-1); strcpy((yyvsp[0].item)->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat((yyvsp[-1].item)->label,t.c_str()),(yyvsp[-2].item)->temp_var,(yyvsp[0].item)->temp_var,l,-1); strcpy((yyval.item)->temp_var,l.c_str()); (yyval.item)->i_number = (yyvsp[-2].item)->i_number;}}
-#line 3734 "parser.tab.c"
+#line 3732 "parser.tab.c"
     break;
 
   case 273:
-#line 741 "parser.y"
+#line 739 "parser.y"
                                     {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;}}
-#line 3740 "parser.tab.c"
+#line 3738 "parser.tab.c"
     break;
 
   case 274:
-#line 742 "parser.y"
+#line 740 "parser.y"
                                         {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;}}
-#line 3746 "parser.tab.c"
+#line 3744 "parser.tab.c"
     break;
 
   case 275:
-#line 743 "parser.y"
+#line 741 "parser.y"
                                     {if(!first_parse){string t = expression_type(yylineno,(yyvsp[0].item)->type,"",(yyvsp[-1].item)->label); (yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,t.c_str());strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[-1].item)->i_number;}}
-#line 3752 "parser.tab.c"
+#line 3750 "parser.tab.c"
     break;
 
   case 276:
-#line 744 "parser.y"
+#line 742 "parser.y"
                                     {if(!first_parse){string t = expression_type(yylineno,(yyvsp[0].item)->type,"",(yyvsp[-1].item)->label); (yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,t.c_str());t = new_temporary(); emitt((yyvsp[-1].item)->label,"",(yyvsp[0].item)->temp_var,t,-1); strcpy((yyval.item)->temp_var,t.c_str());(yyval.item)->i_number = (yyvsp[-1].item)->i_number;}}
-#line 3758 "parser.tab.c"
+#line 3756 "parser.tab.c"
     break;
 
   case 277:
-#line 745 "parser.y"
+#line 743 "parser.y"
                                 {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3764 "parser.tab.c"
+#line 3762 "parser.tab.c"
     break;
 
   case 278:
-#line 749 "parser.y"
+#line 747 "parser.y"
                                         {
     if(!first_parse){
     string t = expression_type(yylineno,(yyvsp[0].item)->type,"",(yyvsp[-1].item)->label);
@@ -3781,11 +3779,11 @@ yyreduce:
     (yyval.item)->i_number = (yyvsp[0].item)->i_number;
 }    
 }
-#line 3785 "parser.tab.c"
+#line 3783 "parser.tab.c"
     break;
 
   case 279:
-#line 768 "parser.y"
+#line 766 "parser.y"
                                         {
 if(!first_parse){
     string t = expression_type(yylineno,(yyvsp[0].item)->type,"",(yyvsp[-1].item)->label);
@@ -3802,47 +3800,47 @@ if(!first_parse){
     (yyval.item)->i_number = (yyvsp[0].item)->i_number;
 }
 }
-#line 3806 "parser.tab.c"
+#line 3804 "parser.tab.c"
     break;
 
   case 280:
-#line 787 "parser.y"
+#line 785 "parser.y"
                         {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type); strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3812 "parser.tab.c"
+#line 3810 "parser.tab.c"
     break;
 
   case 282:
-#line 789 "parser.y"
+#line 787 "parser.y"
                                         {if(!first_parse){string t = (yyvsp[0].item)->type; if(t!="boolean"){cout<<"! operation only allowed on boolean in line number "<<yylineno<<endl; exit(1);}else{strcpy((yyval.item)->type,(yyvsp[0].item)->type);} (yyval.item)->true_list = (yyvsp[0].item)->false_list; (yyval.item)->false_list = (yyvsp[0].item)->true_list; (yyval.item)->i_number = (yyvsp[0].item)->i_number;}}
-#line 3818 "parser.tab.c"
+#line 3816 "parser.tab.c"
     break;
 
   case 288:
-#line 801 "parser.y"
+#line 799 "parser.y"
                                     {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;(yyval.item)->dimension = (yyvsp[0].item)->dimension;}}
-#line 3824 "parser.tab.c"
+#line 3822 "parser.tab.c"
     break;
 
   case 289:
-#line 802 "parser.y"
+#line 800 "parser.y"
                                         {if(!first_parse){(yyval.item)->lit = false; strcpy((yyval.item)->type,find_in_scope((yyvsp[0].item)->label).c_str());(yyval.item)->i_number = inst_num; string l = new_temporary(); emitt("",(yyvsp[0].item)->label,"",l,-1); strcpy((yyval.item)->temp_var,l.c_str()); strcpy((yyval.item)->label,(yyvsp[0].item)->label);}}
-#line 3830 "parser.tab.c"
+#line 3828 "parser.tab.c"
     break;
 
   case 290:
-#line 803 "parser.y"
+#line 801 "parser.y"
                                         {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;}}
-#line 3836 "parser.tab.c"
+#line 3834 "parser.tab.c"
     break;
 
   case 291:
-#line 804 "parser.y"
+#line 802 "parser.y"
                                         {if(!first_parse){(yyval.item)->lit = (yyvsp[0].item)->lit; strcpy((yyval.item)->type,(yyvsp[0].item)->type);strcpy((yyval.item)->temp_var,(yyvsp[0].item)->temp_var);(yyval.item)->i_number = (yyvsp[0].item)->i_number;}}
-#line 3842 "parser.tab.c"
+#line 3840 "parser.tab.c"
     break;
 
   case 292:
-#line 808 "parser.y"
+#line 806 "parser.y"
                                         {
     if(!first_parse){
     string t = expression_type(yylineno,(yyvsp[-1].item)->type,"",(yyvsp[0].item)->label);
@@ -3858,11 +3856,11 @@ if(!first_parse){
     (yyval.item)->i_number = (yyvsp[-1].item)->i_number;
 }
 }
-#line 3862 "parser.tab.c"
+#line 3860 "parser.tab.c"
     break;
 
   case 293:
-#line 826 "parser.y"
+#line 824 "parser.y"
                                 {
     if(!first_parse){
     string t = expression_type(yylineno,(yyvsp[-1].item)->type,"",(yyvsp[0].item)->label);
@@ -3878,11 +3876,11 @@ if(!first_parse){
     (yyval.item)->i_number = (yyvsp[-1].item)->i_number;
     }
 }
-#line 3882 "parser.tab.c"
+#line 3880 "parser.tab.c"
     break;
 
 
-#line 3886 "parser.tab.c"
+#line 3884 "parser.tab.c"
 
       default: break;
     }
@@ -4120,7 +4118,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 844 "parser.y"
+#line 842 "parser.y"
 
 
 int main(int argc, char** argv){

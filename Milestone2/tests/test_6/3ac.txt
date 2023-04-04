@@ -59,7 +59,7 @@
 58:    goto 51
 59:    goto 51
 60:    goto 51
-61:    goto 63
+61:    goto -1
 62:    goto 11
 63: EndFunc
 
