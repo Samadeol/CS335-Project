@@ -284,11 +284,11 @@ Block   {if(!first_parse){$$->i_number = $1->i_number,$$->next_list = merge($1->
 ;
 
 ConstructorDeclarationHeader:
-Declarator  {strcpy($$->type,"0000"); strcpy($$->label,$1->label); line_number = yylineno;  if(!first_parse){go_in_scope($1->label);string l = $1->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1;}}
-| ClassModifiers Declarator {string x = check_method_modifiers($1->label); strcpy($$->type,x.c_str()); strcpy($$->label,$2->label);  line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1;}}
+Declarator  {strcpy($$->label,$1->label); strcpy($$->type,"0000"); line_number = yylineno; if(!first_parse){go_in_scope($1->label);string l = $1->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$1->label),"",get<0>(arguments[i]),-1);}}
+| ClassModifiers Declarator {string x = check_method_modifiers($1->label); strcpy($$->type,x.c_str()); strcpy($$->label,$2->label); strcpy($$->type,$2->label); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$2->label),"",get<0>(arguments[i]),-1);}}
 
 ConstructorDeclaration:		
-ConstructorDeclarationHeader ConstructorBody {if(first_parse){check_constructor($2->label); make_func_entry($1->label,$1->label,arguments,line_number,$1->type); arguments.clear();emitt("end","","","",-1); $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}}
+ConstructorDeclarationHeader ConstructorBody {if(first_parse){check_constructor($2->label); make_func_entry($1->label,$1->label,arguments,line_number,$1->type);}arguments.clear(); if(!first_parse){print(curr_class_name+"."+curr_class_name); emitt("end","","","",-1); $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}}
 ;
 
 Declarator:

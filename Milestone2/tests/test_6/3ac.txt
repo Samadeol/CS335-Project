@@ -1,5 +1,5 @@
 0: BeginFunc SumOfArray.not_main
-1:    args = popparam
+1:    args = *(stack_pointer-8)
 2:    #t_0 = 5
 3:    num = #t_0
 4:    #t_1 = 0
@@ -65,11 +65,10 @@
 64: EndFunc
 
 65: BeginFunc SumOfArray.main
-66:    args = popparam
+66:    args = *(stack_pointer-8)
 67:    #t_26 = 5
 68:    #t_27 = 4
 69:    #t_28 = #t_26 * #t_27
-70:    array arr = create_memory(#t_28)
 71:    #t_29 = 1
 72:    #t_30 = #t_27 * #t_29
 73:    #t_31 = 3
@@ -79,3 +78,9 @@
 77:    sum = #t_33
 78: EndFunc
 
+79:    push_param #t_28
+80:    stack_pointer +8
+81:    call alloc 1
+82:    stack_pointer -8
+83:    arr = pop 4
+84:    pop 4

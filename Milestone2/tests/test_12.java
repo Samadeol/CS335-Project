@@ -1,13 +1,13 @@
 
 class Account {
     int id;
-    public Account(int x) {
+    Account(int q) {
         this.id = 2;
     }
 }
-
-// public class test_12 {
-//     // public static void main(String[] args) {
-//     //     Account a = new Account();
-//     // }
-// }
+class test_12 {
+    public static void main(String[] args) {
+        int x;
+        Account a = new Account(5);
+    }
+}

@@ -1,4 +1,4 @@
 Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
-args,30,String,,No,0,-4,4
+args,30,String,,No,0,-8,4
 arr,32,int*,,No,0,24,4
 sum,34,int,,No,0,28,4
