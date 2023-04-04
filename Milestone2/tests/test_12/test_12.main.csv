@@ -1,0 +1,7 @@
+Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
+Account,5,Account,,Yes,1,0,8
+a,12,Account,,No,0,4,4
+args,10,String,,No,0,-8,4
+b,4,int,,No,0,4,4
+id,3,int,,No,0,0,4
+x,11,int,,No,0,0,4

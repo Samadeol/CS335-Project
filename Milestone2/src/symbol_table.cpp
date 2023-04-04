@@ -179,12 +179,13 @@ string find_in_scope(string name, char (&label)[1000]){
         if(name[i]=='.') break;
         t.push_back(name[i]);
     }
+    bool stt=false;
     sym_table* temp = curr_sym_table,*temp2;
-    // if(t=="this") {
-    //     final_name=curr_class_name;
-    //     temp2 = (*default_sym_table)[curr_class_name]->child;}
-    // else temp2 == NULL;
-    while(1){
+    if(t=="this") {
+        final_name=curr_class_name;
+        temp2 = (*default_sym_table)[curr_class_name]->child;}
+    else stt=true;
+    while(stt){
         if((*temp).find(t)!=(*temp).end()){
             if(t.size()==name.size()) return (*temp)[t]->type;
             else{

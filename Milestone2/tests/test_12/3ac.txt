@@ -1,0 +1,21 @@
+0: BeginFunc Account.Account
+1:    q = *(stack_pointer-8)
+2:    #t_0 = 2
+3:    #t_1 = 0
+4:    *(Account + #t_1) = #t_0
+5: EndFunc
+
+6: BeginFunc test_12.main
+7:    args = *(stack_pointer-8)
+8:    #t_2 = 5
+9:    #t_4 = 8
+10:    push_param #t_4
+11:    push_param #t_2
+12:    stack_pointer +8
+13:    call Account.Account
+14:    stack_pointer -8
+15:    #t_3 = pop 4
+16:    pop 8
+17:    a = #t_3
+18: EndFunc
+

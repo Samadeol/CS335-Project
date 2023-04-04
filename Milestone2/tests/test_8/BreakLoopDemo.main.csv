@@ -1,2 +1,4 @@
 Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
-bubbleSort,2,void,static ,Yes,0,0,4
+args,3,String*,,No,0,-8,4
+i,11,int,,No,0,4,4
+x,4,int,,No,0,0,4

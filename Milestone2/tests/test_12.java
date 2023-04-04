@@ -1,6 +1,7 @@
 
 class Account {
     int id;
+    int b;
     Account(int q) {
         this.id = 2;
     }
