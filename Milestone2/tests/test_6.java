@@ -23,7 +23,7 @@ public class SumOfArray {
                     if(j==2)
                         continue;//provided support for continue;                
             }
-
+            return;
         }
     }
 

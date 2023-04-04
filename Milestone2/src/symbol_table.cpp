@@ -1,4 +1,5 @@
 #include "symbol_table.h"
+#include "3ac.cpp"
 
 sym_table* curr_sym_table;
 sym_table* dirty_sym_table;
@@ -149,13 +150,13 @@ void make_func_entry(string name, string type, vector<tuple<string,string,int,in
     (*curr_sym_table)[name]->isfunc = true;
     int size = get_size(type);
     (*curr_sym_table)[name]->offset = 0;
-    size = offset - size;
+    int temp = offset - size;
     offset = -size;
     for(int i=0;i<args.size();i++){
-        if(get<2>(args[i])) make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0010");
+        if(get<2>(args[i])) make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0010",-1);
         else make_dirty_entry(get<0>(args[i]),get<1>(args[i]),line_number,"0000",-1);
     }
-    offset = size;
+    offset = temp;
     reset();
 }
 
@@ -242,7 +243,6 @@ string expression_type(int line_num, string type1, string type2, string op){
         type1 = type1+type2;
         return type1;
     }
-    vector<string>  ops1 = {"++","--","+","-","*","/","%"};
     if(op=="&&" || op=="||"){
         if(a==1 && b==1)return "boolean";
         else{
@@ -250,7 +250,7 @@ string expression_type(int line_num, string type1, string type2, string op){
             exit(1);
         }
     }
-    if(op == "declare" || op == "=" || op == "*=" || op == "/=" || op=="+=" || op == "-=" || op == "<<=" || op==">>=" || op==">>>=" || op=="&=" || op=="^=" || op == "|="){
+    if(op == "declare" || op == "=" || op == "*=" || op == "/=" || op=="+=" || op == "-=" || op=="&=" || op=="^=" || op == "|="){
         if(b==0 && op=="declare") return type1;
         if(a==1){
             if(b==1 && (op=="declare" || op == "=")) return "boolean";
@@ -282,6 +282,13 @@ string expression_type(int line_num, string type1, string type2, string op){
             }
         }
     }
+    if(op==">>" || op=="<<" || op==">>>" || op==">>=" || op=="<<=" || op==">>>="){
+        if(a>=2 && a<=6 && b>=2 && b<=6) return type1;
+        else{
+            cout<<"Invalid operand type "<<type1<<" and "<<type2<<" for operator: "<<op<<" in line number "<<line_num<<endl;
+            exit(1);
+        }
+    }
     if(op=="==" || op=="!=" || op=="<=" || op==">=" || op == "<" || op==">"){
         if((a==1 && b==1)||(a==2 && b>=2 && b<=6)||(a>=3 && a<=8 && b>1 && b<=a)||(op=="==" && type2==type1)) return "boolean";
         else{
@@ -290,7 +297,7 @@ string expression_type(int line_num, string type1, string type2, string op){
         }
     }
     if(b==0){
-        if(a>=1) return type1;
+        if(a>=1 && a<9) return type1;
         else{
             cout<<"Unary Expression invalid on "<<type1<<" in line number "<<line_num<<endl;
             exit(1);
@@ -403,9 +410,11 @@ string check_method_modifiers(string str){
 }
 
 void check_gst(string name){
-    if((*default_sym_table).find(name)==(*default_sym_table).end()){
-        cout<<"No datatype or Class name of type: "<<name<<endl;
-        exit(1);
+    if(!first_parse){
+        if((*default_sym_table).find(name)==(*default_sym_table).end()){
+            cout<<"No datatype or Class name of type: "<<name<<endl;
+            exit(1);
+        }
     }
 }
 

@@ -8,5 +8,6 @@ struct Item{
         vector<int>true_list;
         vector<int>false_list;
         vector<int>next_list;
+        vector<int>end_list;
         vector<int>dimension;
 };

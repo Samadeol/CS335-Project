@@ -54,6 +54,9 @@ void print3AC_code(){
         if(code[i].op == "array"){
             tac_file<<i<<":    array "<<code[i].result<<" = create_memory("<<code[i].arg1<<")"<<"\n";
         }
+        else if(code[i].op == "cast"){
+            tac_file<<i<<":    "<<code[i].result<<" = cast_to_"<<code[i].arg2<<" "<<code[i].arg1<<endl;
+        }
         else if(code[i].op == "begin"){
             tac_file<<i<<": BeginFunc "<<code[i].arg1<<endl;
         }
