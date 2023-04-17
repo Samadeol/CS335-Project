@@ -102,7 +102,7 @@ vector<int> merge(vector <int>& list1, vector <int>& list2){
     return list1;
 }
 
-void array_func(string name, vector<int>&dim, string type){
+string array_func(string name, vector<int>&dim, string type){
     string size;
     if(type.substr(0,3)=="int" || type.substr(0,5)=="float") size="4";
     else if(type.substr(0,4)=="char" || type.substr(0,4)=="short") size="2";
@@ -120,5 +120,5 @@ void array_func(string name, vector<int>&dim, string type){
         dim[i]=reduce(t);
         t=k;
     }
-    emitt("array",t,"",name,-1);
+    return "mem("+t+")";
 }

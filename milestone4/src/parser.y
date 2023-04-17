@@ -17,6 +17,7 @@ fstream fout,fin;
 stack<int> st;
 int node_number=1;
 vector<pair<string,string> > v; 
+vector<pair<string,string> > declarations;
 vector<pair<string,string> > function_call;
 vector<tuple<string,string,int,int> > arguments;
 string curr_class_name;
@@ -214,7 +215,8 @@ Type VariableDeclaratorList SEMI_COLON	{
         string t = expression_type(yylineno,$1->type,v[i].second,"declare");
         if(first_parse)   make_entry(v[i].first,t,yylineno,"0000");
     }
-    v.clear();	
+    v.clear();
+    declarations.clear();	
 }
 | ClassModifiers Type VariableDeclaratorList SEMI_COLON {
     for(int i=0;i<v.size();i++){
@@ -222,6 +224,7 @@ Type VariableDeclaratorList SEMI_COLON	{
         if(first_parse) make_entry(v[i].first,t,yylineno,check_method_modifiers($1->label));
     }
     v.clear();
+    declarations.clear();
 }		
 ;
 
@@ -235,17 +238,17 @@ IDENTIFIER EQUALS VariableInitializer   {if(first_parse)v.push_back(make_pair($1
     $$->i_number = $3->i_number;
     string p = $3->type;
     if(p=="boolean"){
-        emitt("","true","",$1->label,-1);
+        emitt("","true","",get_base_offset($1->label),-1);
         backpatch($3->true_list,inst_num-1);
-        emitt("","false","",$1->label,-1);
+        emitt("","false","",get_base_offset($1->label),-1);
         backpatch($3->false_list,inst_num-1);
     }else{
-        emitt("",$3->temp_var,"",$1->label,-1);
+        declarations.push_back(make_pair($1->label,$3->temp_var));
     };
 }}	
 | IDENTIFIER	{v.push_back(make_pair($1->label,""));}	
 | IDENTIFIER Dims	{string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}		
-| IDENTIFIER Dims EQUALS ArrayCreationExpression {if(first_parse){string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}else{if($2->dims == $4->dims) v.push_back(make_pair($1->label,$4->type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}array_func($1->label,$4->dimension,$4->type);$$->dimension = $4->dimension; }}
+| IDENTIFIER Dims EQUALS ArrayCreationExpression {if(first_parse){string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}else{if($2->dims == $4->dims) v.push_back(make_pair($1->label,$4->type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}declarations.push_back(make_pair($1->label,array_func($1->label,$4->dimension,$4->type)));$$->dimension = $4->dimension; }}
 ;
 
 VariableInitializer:
@@ -330,22 +333,30 @@ Type VariableDeclaratorList SEMI_COLON	{
         for(int i=0;i<v.size();i++){
             string t = expression_type(yylineno,$1->type,v[i].second,"declare");
             make_entry(v[i].first,t,yylineno,"0000");
-            
+        }
+        for(int i=0;i<declarations.size();i++){
+            emitt("",declarations[i].second,"",get_base_offset(declarations[i].first),-1);
         }
         if($2->dimension.size()) set_dimensions(v[0].first,$2->dimension);
         $$->i_number = $2->i_number;
     }	
     v.clear();
+    declarations.clear();
 }
 | FINAL Type VariableDeclaratorList SEMI_COLON  {
     if(!first_parse){
         for(int i=0;i<v.size();i++){
             string t = expression_type(yylineno,$2->type,v[i].second,"declare");
-            make_entry(v[i].first,t,yylineno,"0010");
+            make_entry(declarations[i].first,t,yylineno,"0010");
         }
+        for(int i=0;i<declarations.size();i++){
+            emitt("",declarations[i].second,"",get_base_offset(declarations[i].first),-1);
+        }
+        if($3->dimension.size()) set_dimensions(v[0].first,$3->dimension);
         $$->i_number = $3->i_number;
     }	
     v.clear();
+    declarations.clear();
 }
 | Statement		{if(!first_parse){strcpy($$->type,$1->type); $$->next_list = $1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;$$->end_list=$1->end_list;}}
 ;
@@ -479,8 +490,12 @@ Type VariableDeclaratorList{
             string t = expression_type(yylineno,$1->type,v[i].second,"declare");
             make_dirty_entry(v[i].first,t,yylineno,"0000",1);
         }
+        for(int i=0;i<declarations.size();i++){
+            emitt("",declarations[i].second,"",get_base_offset(declarations[i].first),-1);
+        }
         $$->i_number = $2->i_number;
     }	
+    declarations.clear();
     v.clear();
 }
 | FINAL Type VariableDeclaratorList{
@@ -489,8 +504,12 @@ Type VariableDeclaratorList{
             string t = expression_type(yylineno,$1->type,v[i].second,"declare");
             make_dirty_entry(v[i].first,t,yylineno,"0010",1);
         }
+        for(int i=0;i<declarations.size();i++){
+            emitt("",declarations[i].second,"",get_base_offset(declarations[i].first),-1);
+        }
         $$->i_number = $3->i_number;
     }
+    declarations.clear();
     v.clear();
 }
 
@@ -581,7 +600,7 @@ NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){string 
 ;
 
 ArrayAccess:
-DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label,$1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str());vector<int> s = get_dimensions($1->label); strcpy($$->temp_var,array_access($1->label,s,$2->dimension).c_str()); $$->i_number = $2->i_number;}}	
+DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label,$1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str());vector<int> s = get_dimensions($1->label); strcpy($$->temp_var,array_access(get_base_offset($1->label),s,$2->dimension).c_str()); $$->i_number = $2->i_number;}}	
 ;
 
 MethodInvocation:
@@ -619,31 +638,31 @@ DotIdentifiers EQUALS Expression	{
         strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());
         $$->i_number = $3->i_number;
         if($3->dimension.size()){
-            array_func($1->label,$3->dimension,$3->type);
+            //array_func($1->label,$3->dimension,$3->type);
             set_dimensions($1->label,$3->dimension);
         }
-        else if(t=="boolean"){
-            emitt("","true","",$1->label,-1);
+        if(t=="boolean"){
+            emitt("","true","",get_base_offset($1->label),-1);
             backpatch($3->true_list,inst_num-1);
-            emitt("","false","",$1->label,-1);
+            emitt("","false","",get_base_offset($1->label),-1);
             backpatch($3->false_list,inst_num-1);
         }else{
-            if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());}
-            emitt("",$3->temp_var,"",$1->label,-1);
+            if(t!=$3->type){string temp = new_temporary(); strcpy($3->temp_var,temp.c_str());}
+            emitt("",$3->temp_var,"",get_base_offset($1->label),-1);
         }
     }
 }
-| DotIdentifiers STAR_EQUALS Expression	    {if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("*"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| DotIdentifiers SLASH_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("/"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}	
-| DotIdentifiers PERCENT_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("\%"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}	
-| DotIdentifiers PLUS_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("+"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| DotIdentifiers MINUS_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("-"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| DotIdentifiers LESS_THAN_LESS_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("<<",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| DotIdentifiers GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt(">>",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| DotIdentifiers GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt(">>>",l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| DotIdentifiers AMPERSAND_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("&"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| DotIdentifiers POWER_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());$$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("^"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
-| DotIdentifiers BAR_EQUALS Expression{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->label,"",l,-1); string s = new_temporary(); emitt("|"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->label,-1);}}
+| DotIdentifiers STAR_EQUALS Expression	    {if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("*",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
+| DotIdentifiers SLASH_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("/",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}	
+| DotIdentifiers PERCENT_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("\%",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}	
+| DotIdentifiers PLUS_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("+",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
+| DotIdentifiers MINUS_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("-",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
+| DotIdentifiers LESS_THAN_LESS_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("<<",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
+| DotIdentifiers GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt(">>",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
+| DotIdentifiers GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt(">>>",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
+| DotIdentifiers AMPERSAND_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("&",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
+| DotIdentifiers POWER_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());$$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("^",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
+| DotIdentifiers BAR_EQUALS Expression{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); string s = new_temporary(); emitt("|",l,$3->temp_var,s,-1); emitt("",s,"",get_base_offset($1->label),-1);}}
 | ArrayAccess EQUALS Expression{
     if(!first_parse){
         string t = find_in_scope($1->label,$1->label);
@@ -655,22 +674,22 @@ DotIdentifiers EQUALS Expression	{
             emitt("","false","",$1->temp_var,-1);
             backpatch($3->false_list,inst_num-1);
         }else{
-            if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());}
+            
             emitt("",$3->temp_var,"",$1->temp_var,-1);
         }
     }
 }
-| ArrayAccess STAR_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("*"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
-| ArrayAccess SLASH_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("/"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}	
-| ArrayAccess PERCENT_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("\%"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}	
-| ArrayAccess PLUS_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("+"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
-| ArrayAccess MINUS_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("-"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess STAR_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("*",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess SLASH_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("/",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}	
+| ArrayAccess PERCENT_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("\%",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}	
+| ArrayAccess PLUS_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("+",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess MINUS_EQUALS Expression	{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("-",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
 | ArrayAccess LESS_THAN_LESS_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("<<",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
 | ArrayAccess GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt(">>",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
 | ArrayAccess GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt(">>>",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
-| ArrayAccess AMPERSAND_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("&"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
-| ArrayAccess POWER_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());$$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("^"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
-| ArrayAccess BAR_EQUALS Expression{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number;if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("|"+t,l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess AMPERSAND_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("&",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess POWER_EQUALS Expression		{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());$$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("^",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
+| ArrayAccess BAR_EQUALS Expression{if(!first_parse){string t = find_in_scope($1->label,$1->label);strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str()); $$->i_number = $3->i_number; string l = new_temporary(); emitt("",$1->temp_var,"",l,-1); string s = new_temporary(); emitt("|",l,$3->temp_var,s,-1); emitt("",s,"",$1->temp_var,-1);}}
 ;
 
 ConditionalExpression:
@@ -690,17 +709,17 @@ InclusiveOrExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->te
 
 InclusiveOrExpression:
 ExclusiveOrExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;$$->true_list = $1->true_list; $$->false_list = $1->false_list;$$->dimension = $1->dimension;}}
-| InclusiveOrExpression BAR ExclusiveOrExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| InclusiveOrExpression BAR ExclusiveOrExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
 ;
 
 ExclusiveOrExpression:
 AndExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;$$->true_list = $1->true_list; $$->false_list = $1->false_list;$$->dimension = $1->dimension;}}
-| ExclusiveOrExpression POWER AndExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| ExclusiveOrExpression POWER AndExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
 ;
 
 AndExpression:
 EqualityExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;$$->true_list = $1->true_list; $$->false_list = $1->false_list;$$->dimension = $1->dimension;}}
-| AndExpression AMPERSAND EqualityExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| AndExpression AMPERSAND EqualityExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
 ;
 
 EqualityExpression:
@@ -726,15 +745,15 @@ AdditiveExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_
 
 AdditiveExpression:
 MultiplicativeExpression    {if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;$$->dimension = $1->dimension;}}	
-| AdditiveExpression PLUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
-| AdditiveExpression MINUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| AdditiveExpression PLUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| AdditiveExpression MINUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
 ;
 
 MultiplicativeExpression:
 UnaryExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;$$->dimension = $1->dimension;}}
-| MultiplicativeExpression STAR UnaryExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
-| MultiplicativeExpression SLASH UnaryExpression    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
-| MultiplicativeExpression PERCENT UnaryExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} if(t!=$3->type){string temp = new_temporary(); emitt("cast",$3->temp_var,t,temp,-1); strcpy($3->temp_var,temp.c_str());} string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| MultiplicativeExpression STAR UnaryExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| MultiplicativeExpression SLASH UnaryExpression    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| MultiplicativeExpression PERCENT UnaryExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
 ;
 
 UnaryExpression:
@@ -757,7 +776,7 @@ PLUS_PLUS UnaryExpression		{
     strcpy($$->type,t.c_str());
     t = new_temporary();
     emitt("",$2->temp_var,"",t,-1);
-    emitt("+"+t,$2->temp_var,"1",$2->temp_var,-1);
+    emitt("+",$2->temp_var,"1",$2->temp_var,-1);
     strcpy($$->temp_var,t.c_str());
     $$->i_number = $2->i_number;
 }    
@@ -776,7 +795,7 @@ if(!first_parse){
     strcpy($$->type,t.c_str());
     t = new_temporary();
     emitt("",$2->temp_var,"",t,-1);
-    emitt("-"+t,$2->temp_var,"1",$2->temp_var,-1);
+    emitt("-",$2->temp_var,"1",$2->temp_var,-1);
     strcpy($$->temp_var,t.c_str());
     $$->i_number = $2->i_number;
 }
@@ -799,7 +818,7 @@ LEFT_PARANTHESIS PrimitiveType RIGHT_PARANTHESIS UnaryExpression
 
 PostfixExpression:
 Primary		                    {if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;$$->dimension = $1->dimension;}}
-| DotIdentifiers		        {if(!first_parse){$$->lit = false; strcpy($$->type,find_in_scope($1->label,$1->label).c_str());$$->i_number = inst_num; string l = new_temporary(); emitt("",$1->label,"",l,-1); strcpy($$->temp_var,l.c_str()); strcpy($$->label,$1->label);}}
+| DotIdentifiers		        {if(!first_parse){$$->lit = false; strcpy($$->type,find_in_scope($1->label,$1->label).c_str());$$->i_number = inst_num; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); strcpy($$->temp_var,l.c_str()); strcpy($$->label,$1->label);}}
 | PostIncrementExpression		{if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}
 | PostDecrementExpression		{if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}
 ;
@@ -814,8 +833,8 @@ PostfixExpression PLUS_PLUS		{
     }
     $$->lit = false;
     strcpy($$->type,t.c_str());
-    emitt("+"+t,$1->temp_var,"1",$1->temp_var,-1);
-    emitt("",$1->temp_var,"",$1->label,-1);
+    emitt("+",$1->temp_var,"1",$1->temp_var,-1);
+    emitt("",$1->temp_var,"",get_base_offset($1->label),-1);
     strcpy($$->temp_var,$1->temp_var);
     $$->i_number = $1->i_number;
 }
@@ -832,8 +851,8 @@ PostfixExpression MINUS_MINUS	{
     }
     $$->lit = false;
     strcpy($$->type,t.c_str());
-    emitt("-"+t,$1->temp_var,"1",$1->temp_var,-1);
-    emitt("",$1->temp_var,"",$1->label,-1);
+    emitt("-",$1->temp_var,"1",$1->temp_var,-1);
+    emitt("",$1->temp_var,"",get_base_offset($1->label),-1);
     strcpy($$->temp_var,$1->temp_var);
     $$->i_number = $1->i_number;
     }

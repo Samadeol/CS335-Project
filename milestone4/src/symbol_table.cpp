@@ -509,6 +509,14 @@ string get_offset(string name, string func){
 }
 
 string get_base_offset(string name){
-    int offset = (*curr_sym_table)[name]->offset;
-    return "*(stack_pointer + "+ to_string(offset) +")";
+    //return name
+    sym_table* temp = dirty_sym_table;
+    while(temp!=default_sym_table){
+        if((*temp).find(name)!=(*temp).end()) return "*(stack_pointer + "+ to_string((*temp)[name]->offset) +")";
+        if(temp == dirty_sym_table) temp = curr_sym_table;
+        else temp = parent[temp];
+    }
+    cout<<name<<endl;
+    exit(1);
+    //int offset = (*curr_sym_table)[name]->offset;
 }

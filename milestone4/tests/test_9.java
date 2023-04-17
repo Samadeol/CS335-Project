@@ -1,6 +1,6 @@
 public class BubbleSortExample {  
     static void bubbleSort() {  
-        int n = 5,t;
+        int n = 5;
         int arr[] = new int[5];
         arr[0] = 5;
         arr[1] = 3;

@@ -9,7 +9,7 @@ public class test_11 {
  class hero{
     int name;
     int a;
-    int b;
+    int b=7;
     int add(hero h){
         int c=h.a+h.b;
         return c;
