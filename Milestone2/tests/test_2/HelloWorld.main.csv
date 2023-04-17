@@ -1,7 +1,0 @@
-Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
-args,2,String,,No,0,-8,4
-p,6,int,,No,0,12,4
-w,17,int,,No,0,16,4
-x,3,int,,No,0,0,4
-y,4,int,,No,0,4,4
-z,5,int,,No,0,8,4

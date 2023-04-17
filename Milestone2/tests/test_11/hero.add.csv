@@ -1,4 +1,0 @@
-Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
-c,14,int,,No,0,4,4
-h,2,hero,,No,0,0,4
-main,3,void,public static ,Yes,0,0,4
