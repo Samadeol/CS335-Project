@@ -1,0 +1,109 @@
+     .globl main
+.L1:
+_HelloWorld.fib:
+     rsp - 0
+    #t_0 = rbp[24]
+    #t_1 = 1
+    if #t_0 <= #t_1 goto .L2
+    goto .L1
+.L2:
+    #t_2 = 1
+    rax = #t_2
+    return
+    goto .L3
+    #t_3 = rbp[24]
+    #t_4 = 1
+    #t_5 = #t_3 - #t_4
+    push #t_5
+    push rbp[16]
+    call HelloWorld.fib
+    rsp + 16
+    #t_6 = rbp[24]
+    #t_7 = 2
+    #t_8 = #t_6 - #t_7
+    push #t_8
+    push rbp[16]
+    call HelloWorld.fib
+    rsp + 16
+    #t_9 = rax + rax
+    rax = #t_9
+    return
+.L3:
+    return
+_main:
+     rsp - 40
+    #t_10 = 1
+    rbp[-8] = #t_10
+    #t_11 = 2
+    rbp[-16] = #t_11
+    #t_12 = 10
+    rbp[-24] = #t_12
+    #t_13 = 4
+    rbp[-32] = #t_13
+.L4:
+    #t_14 = rbp[-32]
+    #t_15 = 5
+    if #t_14 < #t_15 goto .L6
+    goto .L14
+.L5:
+    #t_16 = rbp[-32]
+    #t_16 = #t_16 + 1
+    rbp[-32] = #t_16
+    goto .L4
+.L6:
+    #t_17 = 9
+    #t_18 = rbp[-32]
+    #t_19 = #t_18 + #t_17
+    rbp[-32] = #t_19
+    #t_20 = rbp[-24]
+    #t_20 = #t_20 - 1
+    rbp[-24] = #t_20
+    #t_21 = rbp[-32]
+    #t_22 = 4
+    if #t_21 > #t_22 goto .L7
+    goto .L8
+.L7:
+    goto .L14
+    goto .L9
+.L8:
+    #t_23 = 1
+    rbp[-16] = #t_23
+    #t_24 = rbp[-24]
+    #t_24 = #t_24 + 1
+    rbp[-24] = #t_24
+.L9:
+    #t_25 = 2
+    rbp[-40] = #t_25
+.L10:
+    #t_26 = rbp[-40]
+    #t_27 = 9
+    if #t_26 < #t_27 goto .L12
+    goto .L5
+.L11:
+    #t_28 = rbp[-40]
+    #t_28 = #t_28 + 1
+    rbp[-40] = #t_28
+    goto .L10
+.L12:
+    #t_29 = rbp[-40]
+    #t_30 = 3
+    if #t_29 > #t_30 goto .L13
+    goto .L11
+.L13:
+    goto .L5
+    goto .L11
+    goto .L5
+.L14:
+    #t_31 = rbp[-24]
+    print(#t_31)
+    #t_32 = rbp[-8]
+    print(#t_32)
+    #t_33 = rbp[-16]
+    print(#t_33)
+    #t_34 = 5
+    push #t_34
+    push rbp[16]
+    call HelloWorld.fib
+    rsp + 16
+    print(rax)
+    return

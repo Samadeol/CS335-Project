@@ -262,13 +262,13 @@ int main(int argc, char**argv){
                     else if(text[i][3]=="-") print("subq",reg2,reg1);
                     else if(text[i][3]=="*") print("imulq",reg2,reg1);
                     else if(text[i][3]=="/" || text[i][2]=="%"){
-                        print("movl",reg1,"rax");
+                        print("movq",reg1,"rax");
                         print("cltd","","");
                         print("idivq",reg2,"");
-                        if(text[i][3] == "/") print("movl","rax",reg1);
-                        else print("movl","rdx",reg1);
+                        if(text[i][3] == "/") print("movq","rax",reg1);
+                        else print("movq","rdx",reg1);
                     }else if(text[i][3]=="<<" || text[i][3]==">>"){
-                        print("movl",reg2,"rcx");
+                        print("movq",reg2,"rcx");
                         if(text[i][3]=="<<") print("salq","rcx",reg1);
                         else print("sarq","rcx",reg1);
                     }
