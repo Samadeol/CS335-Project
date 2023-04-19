@@ -1,5 +1,5 @@
-     .globl _HelloWorld.main
-_HelloWorld.main:
+     .globl main
+_main:
     rsp - 32
     #t_0 = 10
     rbp[-8] = #t_0

@@ -15,14 +15,14 @@ void print(string a, string b, string c){
         if(b.size()>3 && b.substr(0,3)=="rbp"){
             string p = b.substr(4,b.size()-5);
             fout<<"\t"<<p<<"(%rbp)";
-        }else if(b[0]=='r') fout<<"\t%%"<<b;
+        }else if(b[0]=='r') fout<<"\t\%"<<b;
         else fout<<"\t"<<b;
         if(c=="") fout<<endl;
         else{
             if(c.size()>3 && c.substr(0,3)=="rbp"){
                 string p = c.substr(4,c.size()-5);
                 fout<<", "<<p<<"(%rbp)"<<endl;
-            }else if(c[0]=='r') fout<<", %%"<<c<<endl;
+            }else if(c[0]=='r') fout<<", \%"<<c<<endl;
             else fout<<", "<<c<<endl;
         }
     }
@@ -34,9 +34,10 @@ string get_empty_reg(string reg = ""){
     for(auto it:r){
         string x = it.first;
         x = x.substr(1,x.size()-1);
-        if(l<stoi(x)) return "r"+to_string(k);
+        if(l<stoi(x)) return "r"+to_string(l);
         l++;
     }
+    if(l<16) return "r"+to_string(l);
     if(reg != "r8") reg = "r8";
     else reg = "r9";
     print("pushq",reg,"");
@@ -115,11 +116,12 @@ int main(int argc, char**argv){
         cout<<"No main function"<<endl;
         exit(1);
     }
-    fout<<"\t"<<text[0][0]<<" "<<text[0][1];
+    fout<<"\t"<<text[0][0]<<" "<<text[0][1]<<endl;
     for(int i=1;i<text.size();i++){
         string reg1,reg2;
         if(text[i][0][0]=='_'){
-            fout<<text[i][0]<<endl;
+            if(text[i][0]=="_main:") fout<<"main:"<<endl;
+            else fout<<text[i][0]<<endl;
             k = -stoi(text[i+1][2]);
         }else if(text[i][0][0]=='.') fout<<text[i][0]<<endl;
         else{
@@ -130,10 +132,10 @@ int main(int argc, char**argv){
                 }else reg1 = t[text[i][1]];
                 t.erase(text[i][1]);
                 if(t.find(text[i][3])==t.end()){
-                    reg2 = get_empty_reg();
+                    reg2 = get_empty_reg(reg1);
                     print("movq",s[text[i][3]],reg2);
-                }else reg2 = t[text[i][4]];
-                t.erase(text[i][4]);
+                }else reg2 = t[text[i][3]];
+                t.erase(text[i][3]);
                 print("cmpq",reg2,reg1);
                 if(text[i][2]=="<") print("jl",text[i][5],"");
                 if(text[i][2]==">") print("jg",text[i][5],"");
@@ -207,7 +209,8 @@ int main(int argc, char**argv){
                     }else if(text[i][2] == "rax") print("movq","rax",text[i][0]);
                     else if(text[i][0][0]=='#'){ 
                         reg1 = get_empty_reg();
-                        print("movq",text[i][2],reg1);
+                        if(text[i][2][0]=='-' || (text[i][2][0]>='0' && text[i][2][0]<='9'))print("movq","$"+text[i][2],reg1);
+                        else print("movq",text[i][2],reg1);
                         r[reg1] = text[i][0];
                         t[text[i][0]] = reg1;
                     }else{
@@ -219,8 +222,7 @@ int main(int argc, char**argv){
                         print("movq",reg1,text[i][0]);
                         r.erase(reg1);
                     }
-                }
-                if(text[i].size()==4){
+                }else if(text[i].size()==4){
                     if(t.find(text[i][3])==t.end()){
                         reg1 =get_empty_reg();
                         print("movq",s[text[i][3]],reg1);
@@ -236,8 +238,15 @@ int main(int argc, char**argv){
                         print("movq",s[text[i][2]],reg1);
                     }else reg1 = t[text[i][2]];
                     t.erase(text[i][2]);
+                    if(text[i][4]=="1"){
+                        if(text[i][3]=="+") print("incq",reg1,"");
+                        else print("decq",reg1,"");
+                        t[text[i][2]] = reg1;
+                        r[reg1] = text[i][2];
+                        continue;
+                    }
                     if(t.find(text[i][4])==t.end()){
-                        reg2 = get_empty_reg();
+                        reg2 = get_empty_reg(reg1);
                         print("movq",s[text[i][4]],reg2);
                     }else reg2 = t[text[i][4]];
                     t.erase(text[i][4]);

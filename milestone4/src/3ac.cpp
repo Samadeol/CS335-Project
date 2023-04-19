@@ -61,7 +61,10 @@ void print3AC_code(){
     vector<int> x;
     auto it = code.begin();
     for(int i=0;i<code.size();i++){
-        if(code[i].arg1.size()>3 && code[i].arg1.substr(code[i].arg1.size()-4,4)=="main") tac_file<<"     .globl _"<<code[i].arg1<<endl;
+        if(code[i].arg1.size()>3 && code[i].arg1.substr(code[i].arg1.size()-4,4)=="main"){
+            tac_file<<"     .globl main"<<endl;
+            code[i].arg1 = "main";
+        }
         if(code[i].result=="goto") y.insert(code[i].index);
         if(code[i].op=="begin") it = code.begin()+i+1;
         if(code[i].op=="end"){
