@@ -46,42 +46,47 @@ int reduce(string name){
     return stoi(name.substr(3,name.size()-1));
 }
 
+string get_index(int k, vector<int> &x){
+    for(int i=0;i<x.size();i++){
+        if(k==x[i]) return ".L"+to_string(i+1);
+    }
+    return "wtf";
+}
+
 void print3AC_code(){
     ofstream tac_file;
     string file_name = out_file_name+"3ac.txt";
     tac_file.open(file_name);
+    vector<int> x;
     for(int i=0;i<code.size();i++){
-        if(code[i].op == "array"){
-            emitt("string","push_param "+code[i].arg1,"","",-1);
-            emitt("string","stack_pointer +8","","",-1);
-            emitt("string","call alloc 1","","",-1);
-            emitt("string","stack_pointer -8","","",-1);
-            emitt("","pop 4","",code[i].result,-1);
-            emitt("string","pop 4","","",-1);
+        if(code[i].result=="goto") x.push_back(code[i].index);
+    }
+    sort(x.begin(),x.end());
+    int y=0;
+    for(int i=0;i<code.size();i++){
+        if(y<x.size() && i==x[y]){
+            tac_file<<".L"<<(y+1)<<":"<<endl;
+            y++;
         }
-        else if(code[i].op == "string"){
-            tac_file<<i<<":    "<<code[i].arg1<<endl;
-        }
-        else if(code[i].op == "cast"){
-            tac_file<<i<<":    "<<code[i].result<<" = cast_to_"<<code[i].arg2<<" "<<code[i].arg1<<endl;
+        if(code[i].op == "string"){
+            tac_file<<"    "<<code[i].arg1<<endl;
         }
         else if(code[i].op == "begin"){
-            tac_file<<i<<": BeginFunc "<<code[i].arg1<<endl;
+            tac_file<<code[i].arg1<<":"<<endl;
         }
         else if(code[i].op == "end"){
-            tac_file<<i<<": EndFunc"<<endl<<endl;
         }
         else if(code[i].op == "if"){
-            tac_file<<i<<":    if "<<code[i].arg1<<" "<<code[i].result<<" "<<code[i].index<<"\n";
+            tac_file<<"    if "<<code[i].arg1<<" "<<code[i].result<<" "<<get_index(code[i].index,x)<<"\n";
         }
         else if(code[i].result=="goto"){
-            tac_file<<i<<":    goto "<<code[i].index<<endl;
+            tac_file<<"    goto "<<get_index(code[i].index,x)<<endl;
         }
         else if(code[i].op==""){
-            tac_file<<i<<":    "<<code[i].result<<" = "<<code[i].arg1<<endl;
+            tac_file<<"    "<<code[i].result<<" = "<<code[i].arg1<<endl;
         }
         else {
-            tac_file <<i<<":    "<<code[i].result<<" = "<<code[i].arg1<<" "<<code[i].op<<" "<<code[i].arg2<<"\n";
+            tac_file<<"    "<<code[i].result<<" = "<<code[i].arg1<<" "<<code[i].op<<" "<<code[i].arg2<<"\n";
         }
     }
 }
@@ -104,9 +109,9 @@ vector<int> merge(vector <int>& list1, vector <int>& list2){
 
 string array_func(string name, vector<int>&dim, string type){
     string size;
-    if(type.substr(0,3)=="int" || type.substr(0,5)=="float") size="4";
-    else if(type.substr(0,4)=="char" || type.substr(0,4)=="short") size="2";
-    else if(type.substr(0,4)=="byte") size = "1";
+    if(type.substr(0,3)=="int" || type.substr(0,5)=="float") size="8";
+    else if(type.substr(0,4)=="char" || type.substr(0,4)=="short") size="8";
+    else if(type.substr(0,4)=="byte") size = "8";
     else if(type.substr(0,4)=="long" || type.substr(0,6)=="double") size = "8";
     else {
         cout<<"Unexpected Error Occurred. Pls give diff input"<<endl;
@@ -118,7 +123,9 @@ string array_func(string name, vector<int>&dim, string type){
         string k = new_temporary();
         emitt("*","#t_"+to_string(dim[i]),t,k,-1);
         dim[i]=reduce(t);
+        emitt("string", "store "+t, "","",-1);
         t=k;
     }
-    return "mem("+t+")";
+    emitt("string","mem("+t+")","","",-1);
+    return "rax";
 }

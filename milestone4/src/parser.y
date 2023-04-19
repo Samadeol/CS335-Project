@@ -213,7 +213,7 @@ FieldDeclaration:
 Type VariableDeclaratorList SEMI_COLON	{
     for(int i=0;i<v.size();i++){
         string t = expression_type(yylineno,$1->type,v[i].second,"declare");
-        if(first_parse)   make_entry(v[i].first,t,yylineno,"0000");
+        if(first_parse)   make_entry(v[i].first,t,yylineno,"0000",1);
     }
     v.clear();
     declarations.clear();	
@@ -221,7 +221,7 @@ Type VariableDeclaratorList SEMI_COLON	{
 | ClassModifiers Type VariableDeclaratorList SEMI_COLON {
     for(int i=0;i<v.size();i++){
         string t = expression_type(yylineno,$2->type,v[i].second,"declare");
-        if(first_parse) make_entry(v[i].first,t,yylineno,check_method_modifiers($1->label));
+        if(first_parse) make_entry(v[i].first,t,yylineno,check_method_modifiers($1->label),1);
     }
     v.clear();
     declarations.clear();
@@ -255,10 +255,10 @@ VariableInitializer:
 Expression		{if(!first_parse){strcpy($$->type,$1->type);$$->i_number = $1->i_number;}}
 
 MethodDeclarationHeader:
-VOID MethodDeclarator   {if($2->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl; exit(1);} strcpy($$->label,$2->label); strcpy($$->type,"void0000"); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$2->label),"",get<0>(arguments[i]),-1);emitt("",get_offset("this","this"),"","this",-1);print_table = new sym_table;k=0;}}
-| Type MethodDeclarator {string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); strcpy($$->label,$2->label); strcpy($$->type,strcat($1->type,(t+"0000").c_str())); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$2->label),"",get<0>(arguments[i]),-1);emitt("",get_offset("this","this"),"","this",-1);print_table = new sym_table;k=0;}}
-| ClassModifiers VOID MethodDeclarator  {{if($3->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl;exit(1);} string x = check_method_modifiers($1->label); strcpy($$->label,$3->label); strcpy($$->type,("void"+x).c_str()); line_number = yylineno;} if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$3->label),"",get<0>(arguments[i]),-1);emitt("",get_offset("this","this"),"","this",-1);k=0;print_table = new sym_table;}}
-| ClassModifiers Type MethodDeclarator  {{string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); string x = check_method_modifiers($1->label); strcpy($$->label,$3->label); strcpy($$->type,strcat($2->type,(t+x).c_str())); line_number = yylineno;} if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$3->label),"",get<0>(arguments[i]),-1);emitt("",get_offset("this","this"),"","this",-1);k=0;print_table = new sym_table;}}
+VOID MethodDeclarator   {if($2->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl; exit(1);} strcpy($$->label,$2->label); strcpy($$->type,"void0000"); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; print_table = new sym_table;}}
+| Type MethodDeclarator {string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); strcpy($$->label,$2->label); strcpy($$->type,strcat($1->type,(t+"0000").c_str())); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1; print_table = new sym_table;}}
+| ClassModifiers VOID MethodDeclarator  {{if($3->dims){cout<<"Void function cant be of array type in line number "<<yylineno<<endl;exit(1);} string x = check_method_modifiers($1->label); strcpy($$->label,$3->label); strcpy($$->type,("void"+x).c_str()); line_number = yylineno;} if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; print_table = new sym_table;}}
+| ClassModifiers Type MethodDeclarator  {{string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); string x = check_method_modifiers($1->label); strcpy($$->label,$3->label); strcpy($$->type,strcat($2->type,(t+x).c_str())); line_number = yylineno;} if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; print_table = new sym_table;}}
 
 MethodDeclaration:
 MethodDeclarationHeader MethodBody	{if(first_parse){string x = $1->type; make_func_entry($1->label,x.substr(0,x.size()-4),arguments,line_number,x.substr(x.size()-4,4));}else{print(curr_class_name+"."+$1->label);emitt("end","","","",-1); $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}arguments.clear();}
@@ -284,13 +284,13 @@ Type IDENTIFIER     {arguments.push_back(make_tuple($2->label,$1->type,0,0));}
 ;
 
 MethodBody:
-Block   {if(!first_parse){$$->i_number = $1->i_number,$$->next_list = merge($1->next_list,$1->end_list);}}
+Block   {if(!first_parse){$$->i_number = $1->i_number,$$->next_list = $1->next_list;}}
 | SEMI_COLON
 ;
 
 ConstructorDeclarationHeader:
-Declarator  {strcpy($$->label,$1->label); strcpy($$->type,"0000"); line_number = yylineno; if(!first_parse){go_in_scope($1->label);string l = $1->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$1->label),"",get<0>(arguments[i]),-1);}}
-| ClassModifiers Declarator {string x = check_method_modifiers($1->label); strcpy($$->type,x.c_str()); strcpy($$->label,$2->label); strcpy($$->type,$2->label); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1; for(int i=0;i<arguments.size();i++) emitt("",get_offset(get<0>(arguments[i]),$2->label),"",get<0>(arguments[i]),-1);}}
+Declarator  {strcpy($$->label,$1->label); strcpy($$->type,"0000"); line_number = yylineno; if(!first_parse){go_in_scope($1->label);string l = $1->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1; }}
+| ClassModifiers Declarator {string x = check_method_modifiers($1->label); strcpy($$->type,x.c_str()); strcpy($$->label,$2->label); strcpy($$->type,$2->label); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1;}}
 
 ConstructorDeclaration:		
 ConstructorDeclarationHeader ConstructorBody {if(first_parse){check_constructor($2->label); make_func_entry($1->label,$1->label,arguments,line_number,$1->type);}arguments.clear(); if(!first_parse){print(curr_class_name+"."+curr_class_name); emitt("end","","","",-1); $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}}
@@ -319,12 +319,12 @@ INTERFACE IDENTIFIER ClassBody	{if(first_parse) make_class_entry($2->label,yylin
 
 Block:
 LeftCurl RightCurl		{if(!first_parse){$$->i_number = -1;}}
-| LeftCurl BlockStatements RightCurl    {if(!first_parse){$$->i_number = $2->i_number, $$->true_list = $2->true_list; $$->next_list = $2->next_list;$$->end_list=$2->end_list;}}
+| LeftCurl BlockStatements RightCurl    {if(!first_parse){$$->i_number = $2->i_number, $$->true_list = $2->true_list; $$->next_list = $2->next_list;}}
 ;
 
 BlockStatements:
-BlockStatements BlockStatement  {if(!first_parse){backpatch($1->next_list,$2->i_number); $$->next_list = $2->next_list; $$->i_number=$1->i_number; $$->true_list = merge($1->true_list, $2->true_list);$$->end_list=merge($1->end_list,$2->end_list);}}
-| BlockStatement {if(!first_parse){$$->next_list = $1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;$$->end_list=$1->end_list;}}
+BlockStatements BlockStatement  {if(!first_parse){backpatch($1->next_list,$2->i_number); $$->next_list = $2->next_list; $$->i_number=$1->i_number; $$->true_list = merge($1->true_list, $2->true_list);}}
+| BlockStatement {if(!first_parse){$$->next_list = $1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;}}
 ;
 
 BlockStatement:
@@ -332,10 +332,13 @@ Type VariableDeclaratorList SEMI_COLON	{
     if(!first_parse){
         for(int i=0;i<v.size();i++){
             string t = expression_type(yylineno,$1->type,v[i].second,"declare");
-            make_entry(v[i].first,t,yylineno,"0000");
+            make_entry(v[i].first,t,yylineno,"0000",-1);
         }
         for(int i=0;i<declarations.size();i++){
-            emitt("",declarations[i].second,"",get_base_offset(declarations[i].first),-1);
+            char temp[1000];
+            strcpy(temp,(declarations[i].first).c_str());
+            string t = find_in_scope(declarations[i].first,temp);
+            emitt("",declarations[i].second,"",temp,-1);
         }
         if($2->dimension.size()) set_dimensions(v[0].first,$2->dimension);
         $$->i_number = $2->i_number;
@@ -347,10 +350,13 @@ Type VariableDeclaratorList SEMI_COLON	{
     if(!first_parse){
         for(int i=0;i<v.size();i++){
             string t = expression_type(yylineno,$2->type,v[i].second,"declare");
-            make_entry(declarations[i].first,t,yylineno,"0010");
+            make_entry(declarations[i].first,t,yylineno,"0010",-1);
         }
         for(int i=0;i<declarations.size();i++){
-            emitt("",declarations[i].second,"",get_base_offset(declarations[i].first),-1);
+            char temp[1000];
+            strcpy(temp,(declarations[i].first).c_str());
+            string t = find_in_scope(declarations[i].first,temp);
+            emitt("",declarations[i].second,"",temp,-1);
         }
         if($3->dimension.size()) set_dimensions(v[0].first,$3->dimension);
         $$->i_number = $3->i_number;
@@ -358,34 +364,34 @@ Type VariableDeclaratorList SEMI_COLON	{
     v.clear();
     declarations.clear();
 }
-| Statement		{if(!first_parse){strcpy($$->type,$1->type); $$->next_list = $1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;$$->end_list=$1->end_list;}}
+| Statement		{if(!first_parse){strcpy($$->type,$1->type); $$->next_list = $1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;}}
 ;
 
 Statement:
-StatementWithoutTrailingSubstatement		{if(!first_parse){strcpy($$->type,$1->type); $$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;$$->end_list=$1->end_list;}}
+StatementWithoutTrailingSubstatement		{if(!first_parse){strcpy($$->type,$1->type); $$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;}}
 | LabeledStatement		                    {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;}}
-| IfThenStatement		                    {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;$$->end_list=$1->end_list;}}
-| IfThenElseStatement		                {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;$$->end_list=$1->end_list;}}
-| WhileStatement		                    {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;$$->end_list=$1->end_list;}}
-| ForStatement		                        {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;$$->end_list=$1->end_list;}}
+| IfThenStatement		                    {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;}}
+| IfThenElseStatement		                {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;}}
+| WhileStatement		                    {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;}}
+| ForStatement		                        {if(!first_parse){$$->next_list=$1->next_list; $$->i_number=$1->i_number;}}
 ;
 
 StatementNoShortIf:
-StatementWithoutTrailingSubstatement		{if(!first_parse){strcpy($$->type,$1->type); $$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;$$->end_list=$1->end_list;}}
+StatementWithoutTrailingSubstatement		{if(!first_parse){strcpy($$->type,$1->type); $$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;}}
 | LabeledStatementNoShortIf		            {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;}}
-| IfThenElseStatementNoShortIf		        {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;$$->end_list=$1->end_list;}}
-| WhileStatementNoShortIf		            {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number;$$->end_list=$1->end_list;}}
-| ForStatementNoShortIf		                {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number;$$->end_list=$1->end_list;}}
+| IfThenElseStatementNoShortIf		        {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;}}
+| WhileStatementNoShortIf		            {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number;}}
+| ForStatementNoShortIf		                {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number;}}
 ;
 
 StatementWithoutTrailingSubstatement:
-Block		                                    {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;$$->end_list=$1->end_list;}}
+Block		                                    {if(!first_parse){$$->next_list=$1->next_list;$$->i_number=$1->i_number; $$->true_list = $1->true_list;}}
 | EmptyStatement		                        {if(!first_parse){$$->i_number=$1->i_number;}}
 | ExpressionStatement		                    {if(!first_parse){$$->i_number=$1->i_number;}}
 | AssertStatement		                        {if(!first_parse){$$->i_number=$1->i_number;}}
 | BreakStatement	                            {if(!first_parse){$$->i_number=$1->i_number; $$->true_list = $1->true_list;}}	
 | ContinueStatement		                        {if(!first_parse){$$->i_number=$1->i_number;}}
-| ReturnStatement	                            {if(!first_parse){$$->i_number=$1->i_number;$$->end_list=$1->end_list;}}
+| ReturnStatement	                            {if(!first_parse){$$->i_number=$1->i_number;}}
 | ThrowStatement		                        {if(!first_parse){$$->i_number=$1->i_number;}}
 | TryStatement		                            {if(!first_parse){$$->i_number=$1->i_number;}}
 | YieldStatement		                        {if(!first_parse){$$->i_number=$1->i_number;}}
@@ -417,19 +423,19 @@ Assignment		{if(!first_parse){$$->i_number = $1->i_number;}}
 | ClassInstanceCreationExpression   {if(!first_parse){$$->i_number = $1->i_number;}}		
 		
 IfThenStatement:
-IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement	{if(!first_parse){reset(); backpatch($3->true_list,$5->i_number); $$->next_list = merge($3->false_list,$5->next_list); $$->i_number=$3->i_number; $$->true_list = $5->true_list;  $$->end_list = $5->end_list;}}	
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement	{if(!first_parse){reset(); backpatch($3->true_list,$5->i_number); $$->next_list = merge($3->false_list,$5->next_list); $$->i_number=$3->i_number; $$->true_list = $5->true_list;  }}	
 ;
 
 IfThenElseStatement:
-IfThenElseStatementStart ELSE Statement	    {if(!first_parse){reset(); backpatch($$->false_list,$3->i_number); $$->next_list = merge($1->next_list,$3->next_list);$$->i_number = $1->i_number; $$->true_list = merge($1->true_list,$3->true_list); $$->end_list = $3->end_list;}}
+IfThenElseStatementStart ELSE Statement	    {if(!first_parse){reset(); backpatch($$->false_list,$3->i_number); $$->next_list = merge($1->next_list,$3->next_list);$$->i_number = $1->i_number; $$->true_list = merge($1->true_list,$3->true_list); }}
 ;
 
 IfThenElseStatementStart:
-IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf {if(!first_parse){reset(); backpatch($3->true_list,$5->i_number); $$->false_list = $3->false_list; emitt("","","","goto",-1); $$->next_list = $5->next_list; $$->next_list.push_back(inst_num-1); $$->i_number = $3->i_number; $$->true_list = $5->true_list; $$->end_list = $5->end_list;}}
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf {if(!first_parse){reset(); backpatch($3->true_list,$5->i_number); $$->false_list = $3->false_list; emitt("","","","goto",-1); $$->next_list = $5->next_list; $$->next_list.push_back(inst_num-1); $$->i_number = $3->i_number; $$->true_list = $5->true_list; }}
 ;
 
 IfThenElseStatementNoShortIf:
-IfThenElseStatementStart ELSE StatementNoShortIf	{if(!first_parse){reset(); backpatch($$->false_list,$3->i_number); $$->next_list = merge($1->next_list,$3->next_list);$$->i_number = $1->i_number; $$->true_list = merge($1->true_list,$3->true_list); $$->end_list = $3->end_list;}}
+IfThenElseStatementStart ELSE StatementNoShortIf	{if(!first_parse){reset(); backpatch($$->false_list,$3->i_number); $$->next_list = merge($1->next_list,$3->next_list);$$->i_number = $1->i_number; $$->true_list = merge($1->true_list,$3->true_list); }}
 ;
 
 
@@ -439,7 +445,7 @@ ASSERT Expression SEMI_COLON
 ;
 
 WhileStatement:
-WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement	{if(!first_parse){string t = $3->type; if(t!="boolean"){cout<<"Expression must be of type boolean in line number "<<yylineno<<endl;exit(1);} reset(); backpatch($5->next_list,$3->i_number); backpatch($3->true_list,$5->i_number); $$->next_list = merge($3->false_list,$5->true_list); emitt("","","","goto",$3->i_number); $$->i_number = $3->i_number; $$->end_list = $5->end_list;}}	
+WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS Statement	{if(!first_parse){string t = $3->type; if(t!="boolean"){cout<<"Expression must be of type boolean in line number "<<yylineno<<endl;exit(1);} reset(); backpatch($5->next_list,$3->i_number); backpatch($3->true_list,$5->i_number); $$->next_list = merge($3->false_list,$5->true_list); emitt("","","","goto",$3->i_number); $$->i_number = $3->i_number; }}	
 ;
 
 WhileStatementNoShortIf:
@@ -447,35 +453,35 @@ WHILE LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf		{if(!fir
 ;
 
 ForStatement:
-BasicForStatement		{if(!first_parse){$$->i_number = $1->i_number; $$->next_list = $1->next_list;$$->end_list=$1->end_list;}}
+BasicForStatement		{if(!first_parse){$$->i_number = $1->i_number; $$->next_list = $1->next_list;}}
 | EnhancedForStatement		
 ;
 
 ForStatementNoShortIf:
-BasicForStatementNoShortIf		{if(!first_parse){$$->i_number = $1->i_number; $$->next_list = $1->next_list;$$->end_list=$1->end_list;}}
+BasicForStatementNoShortIf		{if(!first_parse){$$->i_number = $1->i_number; $$->next_list = $1->next_list;}}
 | EnhancedForStatementNoShortIf		
 ;
 
 BasicForStatement:
-FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement  {if(!first_parse){reset();$$->i_number = $6->i_number; backpatch($6->next_list,$6->i_number); $$->next_list = $6->true_list;  emitt("","","","goto",$6->i_number);$$->end_list=$6->end_list;}} 		
-| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement  {if(!first_parse){reset();$$->i_number = $7->i_number; backpatch($7->next_list,$5->i_number); $$->next_list = $7->true_list;  emitt("","","","goto",$5->i_number);  backpatch($5->next_list,$7->i_number);$$->end_list=$7->end_list;}} 		
-| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 		{if(!first_parse){string t = $4->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression in line number "<<yylineno<<endl; exit(1);}reset();$$->i_number = $4->i_number; if($7->i_number==-1) $7->i_number = inst_num; backpatch($4->true_list,$7->i_number); backpatch($7->next_list,$4->i_number); $$->next_list = merge($4->false_list,$7->true_list);  emitt("","","","goto",$4->i_number);$$->end_list=$7->end_list;}}
-| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{if(!first_parse){string t = $4->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression in line number "<<yylineno<<endl; exit(1);}reset();$$->i_number = $4->i_number;if($8->i_number==-1) $8->i_number = inst_num; backpatch($4->true_list,$8->i_number); backpatch($8->next_list,$6->i_number); $$->next_list = merge($4->false_list,$8->true_list);  emitt("","","","goto",$6->i_number);  backpatch($6->next_list,$4->i_number);$$->end_list=$8->end_list;}}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement 		{if(!first_parse){reset();$$->i_number = $3->i_number; backpatch($7->next_list,$7->i_number); $$->next_list = $7->true_list;  emitt("","","","goto",$7->i_number);$$->end_list=$7->end_list;}}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{if(!first_parse){reset();$$->i_number = $3->i_number; backpatch($8->next_list,$6->i_number); $$->next_list = $8->true_list;  emitt("","","","goto",$6->i_number);  backpatch($6->next_list,$8->i_number);$$->end_list=$8->end_list;}}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 		{if(!first_parse){string t = $5->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression in line number "<<yylineno<<endl; exit(1);}reset();$$->i_number = $3->i_number; if($8->i_number==-1) $8->i_number = inst_num;backpatch($5->true_list,$8->i_number); backpatch($8->next_list,$5->i_number); $$->next_list = merge($5->false_list,$8->true_list); emitt("","","","goto",$5->i_number);$$->end_list=$8->end_list;}}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement		{if(!first_parse){string t = $5->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression in line number "<<yylineno<<endl; exit(1);}reset();$$->i_number = $3->i_number;if($9->i_number==-1) $9->i_number = inst_num; backpatch($5->true_list,$9->i_number); backpatch($9->next_list,$7->i_number); $$->next_list = merge($5->false_list,$9->true_list); emitt("","","","goto",$7->i_number); backpatch($7->next_list,$5->i_number);$$->end_list=$9->end_list;}}
+FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement  {if(!first_parse){reset();$$->i_number = $6->i_number; backpatch($6->next_list,$6->i_number); $$->next_list = $6->true_list;  emitt("","","","goto",$6->i_number);}} 		
+| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement  {if(!first_parse){reset();$$->i_number = $7->i_number; backpatch($7->next_list,$5->i_number); $$->next_list = $7->true_list;  emitt("","","","goto",$5->i_number);  backpatch($5->next_list,$7->i_number);}} 		
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 		{if(!first_parse){string t = $4->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression in line number "<<yylineno<<endl; exit(1);}reset();$$->i_number = $4->i_number; if($7->i_number==-1) $7->i_number = inst_num; backpatch($4->true_list,$7->i_number); backpatch($7->next_list,$4->i_number); $$->next_list = merge($4->false_list,$7->true_list);  emitt("","","","goto",$4->i_number);}}
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{if(!first_parse){string t = $4->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression in line number "<<yylineno<<endl; exit(1);}reset();$$->i_number = $4->i_number;if($8->i_number==-1) $8->i_number = inst_num; backpatch($4->true_list,$8->i_number); backpatch($8->next_list,$6->i_number); $$->next_list = merge($4->false_list,$8->true_list);  emitt("","","","goto",$6->i_number);  backpatch($6->next_list,$4->i_number);}}
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS Statement 		{if(!first_parse){reset();$$->i_number = $3->i_number; backpatch($7->next_list,$7->i_number); $$->next_list = $7->true_list;  emitt("","","","goto",$7->i_number);}}
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement 		{if(!first_parse){reset();$$->i_number = $3->i_number; backpatch($8->next_list,$6->i_number); $$->next_list = $8->true_list;  emitt("","","","goto",$6->i_number);  backpatch($6->next_list,$8->i_number);}}
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS Statement 		{if(!first_parse){string t = $5->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression in line number "<<yylineno<<endl; exit(1);}reset();$$->i_number = $3->i_number; if($8->i_number==-1) $8->i_number = inst_num;backpatch($5->true_list,$8->i_number); backpatch($8->next_list,$5->i_number); $$->next_list = merge($5->false_list,$8->true_list); emitt("","","","goto",$5->i_number);}}
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS Statement		{if(!first_parse){string t = $5->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression in line number "<<yylineno<<endl; exit(1);}reset();$$->i_number = $3->i_number;if($9->i_number==-1) $9->i_number = inst_num; backpatch($5->true_list,$9->i_number); backpatch($9->next_list,$7->i_number); $$->next_list = merge($5->false_list,$9->true_list); emitt("","","","goto",$7->i_number); backpatch($7->next_list,$5->i_number);}}
 ;
 
 BasicForStatementNoShortIf:
-FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf  {if(!first_parse){reset();$$->i_number = $6->i_number; backpatch($6->next_list,$6->i_number); $$->next_list = $6->true_list;  emitt("","","","goto",$6->i_number);$$->end_list=$6->end_list;}} 		
-| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf  {if(!first_parse){reset();$$->i_number = $7->i_number; backpatch($7->next_list,$5->i_number); $$->next_list = $7->true_list;  emitt("","","","goto",$5->i_number);  backpatch($5->next_list,$7->i_number);$$->end_list=$7->end_list;}} 		
-| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){string t = $4->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();$$->i_number = $4->i_number; if($7->i_number==-1) $7->i_number = inst_num;  backpatch($4->true_list,$7->i_number); backpatch($7->next_list,$4->i_number); $$->next_list = merge($4->false_list,$7->true_list);  emitt("","","","goto",$4->i_number);$$->end_list=$7->end_list;}}
-| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){string t = $4->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();$$->i_number = $4->i_number;if($8->i_number==-1) $8->i_number = inst_num;  backpatch($4->true_list,$8->i_number); backpatch($8->next_list,$6->i_number); $$->next_list = merge($4->false_list,$8->true_list);  emitt("","","","goto",$6->i_number);  backpatch($6->next_list,$4->i_number);$$->end_list=$8->end_list;}}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){reset();$$->i_number = $3->i_number; backpatch($7->next_list,$7->i_number); $$->next_list = $7->true_list;  emitt("","","","goto",$7->i_number);$$->end_list=$7->end_list;}}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){reset();$$->i_number = $3->i_number; backpatch($8->next_list,$6->i_number); $$->next_list = $8->true_list;  emitt("","","","goto",$6->i_number);  backpatch($6->next_list,$8->i_number);$$->end_list=$8->end_list;}}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){string t = $5->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();$$->i_number = $3->i_number;if($8->i_number==-1) $8->i_number = inst_num;  backpatch($5->true_list,$8->i_number); backpatch($8->next_list,$5->i_number); $$->next_list = merge($5->false_list,$8->true_list); emitt("","","","goto",$5->i_number);$$->end_list=$8->end_list;}}
-| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf		{if(!first_parse){string t = $5->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();$$->i_number = $3->i_number;if($9->i_number==-1) $9->i_number = inst_num;  backpatch($5->true_list,$9->i_number); backpatch($9->next_list,$7->i_number); $$->next_list = merge($5->false_list,$9->true_list); emitt("","","","goto",$7->i_number); backpatch($7->next_list,$5->i_number);$$->end_list=$9->end_list;}}
+FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf  {if(!first_parse){reset();$$->i_number = $6->i_number; backpatch($6->next_list,$6->i_number); $$->next_list = $6->true_list;  emitt("","","","goto",$6->i_number);}} 		
+| FOR LEFT_PARANTHESIS SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf  {if(!first_parse){reset();$$->i_number = $7->i_number; backpatch($7->next_list,$5->i_number); $$->next_list = $7->true_list;  emitt("","","","goto",$5->i_number);  backpatch($5->next_list,$7->i_number);}} 		
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){string t = $4->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();$$->i_number = $4->i_number; if($7->i_number==-1) $7->i_number = inst_num;  backpatch($4->true_list,$7->i_number); backpatch($7->next_list,$4->i_number); $$->next_list = merge($4->false_list,$7->true_list);  emitt("","","","goto",$4->i_number);}}
+| FOR LEFT_PARANTHESIS SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){string t = $4->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();$$->i_number = $4->i_number;if($8->i_number==-1) $8->i_number = inst_num;  backpatch($4->true_list,$8->i_number); backpatch($8->next_list,$6->i_number); $$->next_list = merge($4->false_list,$8->true_list);  emitt("","","","goto",$6->i_number);  backpatch($6->next_list,$4->i_number);}}
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){reset();$$->i_number = $3->i_number; backpatch($7->next_list,$7->i_number); $$->next_list = $7->true_list;  emitt("","","","goto",$7->i_number);}}
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){reset();$$->i_number = $3->i_number; backpatch($8->next_list,$6->i_number); $$->next_list = $8->true_list;  emitt("","","","goto",$6->i_number);  backpatch($6->next_list,$8->i_number);}}
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON RIGHT_PARANTHESIS StatementNoShortIf 		{if(!first_parse){string t = $5->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();$$->i_number = $3->i_number;if($8->i_number==-1) $8->i_number = inst_num;  backpatch($5->true_list,$8->i_number); backpatch($8->next_list,$5->i_number); $$->next_list = merge($5->false_list,$8->true_list); emitt("","","","goto",$5->i_number);}}
+| FOR LEFT_PARANTHESIS ForInit SEMI_COLON Expression SEMI_COLON ForUpdate RIGHT_PARANTHESIS StatementNoShortIf		{if(!first_parse){string t = $5->type; if(t!="boolean"){cout<<"Second argument for \"FOR\" has to be a boolean expression"<<endl; exit(1);}reset();$$->i_number = $3->i_number;if($9->i_number==-1) $9->i_number = inst_num;  backpatch($5->true_list,$9->i_number); backpatch($9->next_list,$7->i_number); $$->next_list = merge($5->false_list,$9->true_list); emitt("","","","goto",$7->i_number); backpatch($7->next_list,$5->i_number);}}
 ;
 
 ForInit:
@@ -488,10 +494,13 @@ Type VariableDeclaratorList{
     if(!first_parse){
         for(int i=0;i<v.size();i++){
             string t = expression_type(yylineno,$1->type,v[i].second,"declare");
-            make_dirty_entry(v[i].first,t,yylineno,"0000",1);
+            make_dirty_entry(v[i].first,t,yylineno,"0000",-1);
         }
         for(int i=0;i<declarations.size();i++){
-            emitt("",declarations[i].second,"",get_base_offset(declarations[i].first),-1);
+            char temp[1000];
+            strcpy(temp,(declarations[i].first).c_str());
+            string t = find_in_scope(declarations[i].first,temp);
+            emitt("",declarations[i].second,"",temp,-1);
         }
         $$->i_number = $2->i_number;
     }	
@@ -502,10 +511,13 @@ Type VariableDeclaratorList{
     if(!first_parse){
         for(int i=0;i<v.size();i++){
             string t = expression_type(yylineno,$1->type,v[i].second,"declare");
-            make_dirty_entry(v[i].first,t,yylineno,"0010",1);
+            make_dirty_entry(v[i].first,t,yylineno,"0010",-1);
         }
         for(int i=0;i<declarations.size();i++){
-            emitt("",declarations[i].second,"",get_base_offset(declarations[i].first),-1);
+            char temp[1000];
+            strcpy(temp,(declarations[i].first).c_str());
+            string t = find_in_scope(declarations[i].first,temp);
+            emitt("",declarations[i].second,"",temp,-1);
         }
         $$->i_number = $3->i_number;
     }
@@ -545,8 +557,8 @@ CONTINUE SEMI_COLON		{if(!first_parse){emitt("","","","goto",-1); $$->next_list.
 ;
 
 ReturnStatement:
-RETURN SEMI_COLON		            {if(!first_parse){emitt("","","","goto",-1);$$->end_list.push_back(inst_num-1);$$->i_number = inst_num-1;}}
-|  RETURN Expression SEMI_COLON		 {if(!first_parse){emitt("",$2->temp_var,"","*(stack_pointer-4)",-1); emitt("","","","goto",-1);$$->i_number=$2->i_number;$$->end_list.push_back(inst_num-1);}}
+RETURN SEMI_COLON		            {if(!first_parse){emitt("string","return","","",-1);$$->i_number = inst_num-1;}}
+|  RETURN Expression SEMI_COLON		 {if(!first_parse){emitt("",$2->temp_var,"","rax",-1); emitt("string","return","","",-1);$$->i_number=$2->i_number;}}
 ;
 
 ThrowStatement:
@@ -595,19 +607,19 @@ UnqualifiedClassInstanceCreationExpression	{if(!first_parse){strcpy($$->type,$1-
 ;
 
 UnqualifiedClassInstanceCreationExpression:
-NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){string l = new_temporary(); $$->i_number = inst_num; strcpy($$->temp_var,l.c_str()); string t = find_in_scope($2->label,$2->label); strcpy($$->type,get_method(t,t,function_call,l).c_str());}}	
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 	{if(!first_parse){string l = new_temporary(); $$->i_number = $3->i_number; strcpy($$->temp_var,l.c_str()); string t = find_in_scope($2->label,$2->label); strcpy($$->type,get_method(t,t,function_call,l).c_str());}}
+NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());}}	
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = $3->i_number; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());}}
 ;
 
 ArrayAccess:
-DotIdentifiers DimExprs 	{if(!first_parse){string t = find_in_scope($1->label,$1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<$1->label<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str());vector<int> s = get_dimensions($1->label); strcpy($$->temp_var,array_access(get_base_offset($1->label),s,$2->dimension).c_str()); $$->i_number = $2->i_number;}}	
+DotIdentifiers DimExprs 	{if(!first_parse){string bruh = $1->label; string t = find_in_scope($1->label,$1->label); int count=0; for(int i=0;i<t.size();i++)if(t[i]=='*') count++; if(count<$2->dims){cout<<"Accessing Higher Dimensions of "<<bruh<<" in line number "<<yylineno<<endl; exit(1);} string l = (t.substr(0,t.size()-$2->dims));strcpy($$->type,l.c_str());vector<int> s = get_dimensions(bruh); strcpy($$->temp_var,array_access($1->label,s,$2->dimension).c_str()); $$->i_number = $2->i_number; strcpy($$->label,bruh.c_str());}}	
 ;
 
 MethodInvocation:
-IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){string l = new_temporary();$$->i_number = inst_num; strcpy($$->temp_var,l.c_str()); strcpy($$->type,get_method($1->label,"",function_call,l).c_str());}}
-| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS     {if(!first_parse){string l = new_temporary(); $$->i_number = $3->i_number;strcpy($$->temp_var,l.c_str()); strcpy($$->type,get_method($1->label,"",function_call,l).c_str());function_call.clear();}}		
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){string c = $1->label; emitt("string","push_param "+c,"","",-1); string l = new_temporary(); $$->i_number = inst_num;strcpy($$->temp_var,l.c_str()); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call,l).c_str());}}
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{if(!first_parse){string c = $1->label; emitt("string","push_param "+c,"","",-1); string l = new_temporary();$$->i_number = $5->i_number; strcpy($$->temp_var,l.c_str()); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call,l).c_str()); function_call.clear();}}	
+IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($1->label,"",function_call).c_str());}}
+| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS     {if(!first_parse){strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($1->label,"",function_call).c_str());function_call.clear();}}		
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num;strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call).c_str());}}
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = $5->i_number; strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call).c_str()); function_call.clear();}}	
 ;
 
 ArrayCreationExpression:
@@ -634,12 +646,12 @@ ConditionalExpression		{if(!first_parse){strcpy($$->type,$1->type);$$->i_number=
 Assignment:
 DotIdentifiers EQUALS Expression	{
     if(!first_parse){
+        string bruh = $1->label;
         string t = find_in_scope($1->label,$1->label);
         strcpy($$->type,expression_type(yylineno,t,$3->type,$2->label).c_str());
         $$->i_number = $3->i_number;
         if($3->dimension.size()){
-            //array_func($1->label,$3->dimension,$3->type);
-            set_dimensions($1->label,$3->dimension);
+            set_dimensions(bruh,$3->dimension);
         }
         if(t=="boolean"){
             emitt("","true","",get_base_offset($1->label),-1);
@@ -709,51 +721,51 @@ InclusiveOrExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->te
 
 InclusiveOrExpression:
 ExclusiveOrExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;$$->true_list = $1->true_list; $$->false_list = $1->false_list;$$->dimension = $1->dimension;}}
-| InclusiveOrExpression BAR ExclusiveOrExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| InclusiveOrExpression BAR ExclusiveOrExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());  string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
 ;
 
 ExclusiveOrExpression:
 AndExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;$$->true_list = $1->true_list; $$->false_list = $1->false_list;$$->dimension = $1->dimension;}}
-| ExclusiveOrExpression POWER AndExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| ExclusiveOrExpression POWER AndExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());  string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
 ;
 
 AndExpression:
 EqualityExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;$$->true_list = $1->true_list; $$->false_list = $1->false_list;$$->dimension = $1->dimension;}}
-| AndExpression AMPERSAND EqualityExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| AndExpression AMPERSAND EqualityExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());  string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
 ;
 
 EqualityExpression:
 RelationalExpression	{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;$$->true_list = $1->true_list; $$->false_list = $1->false_list;$$->dimension = $1->dimension;}}
-| EqualityExpression EQUALS_EQUALS RelationalExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());emitt("if",strcat($1->temp_var,strcat($2->label,$3->temp_var)),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}
-| EqualityExpression EXCLAIM_EQUALS RelationalExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());emitt("if",strcat($1->temp_var,strcat($2->label,$3->temp_var)),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}	
+| EqualityExpression EQUALS_EQUALS RelationalExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());char pp[1000] = " "; emitt("if",strcat($1->temp_var,strcat(pp,strcat($2->label,strcat(pp,$3->temp_var)))),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}
+| EqualityExpression EXCLAIM_EQUALS RelationalExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());char pp[1000] = " "; emitt("if",strcat($1->temp_var,strcat(pp,strcat($2->label,strcat(pp,$3->temp_var)))),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}	
 ;
 
 RelationalExpression:
 ShiftExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;$$->dimension = $1->dimension;}}
-| RelationalExpression LESS_THAN ShiftExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str()); emitt("if",strcat($1->temp_var,strcat($2->label,$3->temp_var)),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}	
-| RelationalExpression GREATER_THAN ShiftExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());emitt("if",strcat($1->temp_var,strcat($2->label,$3->temp_var)),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}
-| RelationalExpression LESS_THAN_EQUALS ShiftExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());emitt("if",strcat($1->temp_var,strcat($2->label,$3->temp_var)),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}
-| RelationalExpression GREATER_THAN_EQUALS ShiftExpression  {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());emitt("if",strcat($1->temp_var,strcat($2->label,$3->temp_var)),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}
+| RelationalExpression LESS_THAN ShiftExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str()); char pp[1000] = " "; emitt("if",strcat($1->temp_var,strcat(pp,strcat($2->label,strcat(pp,$3->temp_var)))),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}	
+| RelationalExpression GREATER_THAN ShiftExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());char pp[1000] = " "; emitt("if",strcat($1->temp_var,strcat(pp,strcat($2->label,strcat(pp,$3->temp_var)))),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}
+| RelationalExpression LESS_THAN_EQUALS ShiftExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());char pp[1000] = " "; emitt("if",strcat($1->temp_var,strcat(pp,strcat($2->label,strcat(pp,$3->temp_var)))),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}
+| RelationalExpression GREATER_THAN_EQUALS ShiftExpression  {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());char pp[1000] = " "; emitt("if",strcat($1->temp_var,strcat(pp,strcat($2->label,strcat(pp,$3->temp_var)))),"","goto",-1);$$->true_list.push_back(inst_num-1);emitt("","","","goto",-1); $$->false_list.push_back(inst_num-1); $$->i_number = $1->i_number;}}
 ;
 
 ShiftExpression:
 AdditiveExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;$$->dimension = $1->dimension;}}
-| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
-| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
-| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());} string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| ShiftExpression LESS_THAN_LESS_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str()); string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| ShiftExpression GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str()); string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| ShiftExpression GREATER_THAN_GREATER_THAN_GREATER_THAN AdditiveExpression		{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str()); string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
 ;
 
 AdditiveExpression:
 MultiplicativeExpression    {if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;$$->dimension = $1->dimension;}}	
-| AdditiveExpression PLUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
-| AdditiveExpression MINUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| AdditiveExpression PLUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());  string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| AdditiveExpression MINUS MultiplicativeExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());  string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
 ;
 
 MultiplicativeExpression:
 UnaryExpression		{if(!first_parse){strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;$$->dimension = $1->dimension;}}
-| MultiplicativeExpression STAR UnaryExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
-| MultiplicativeExpression SLASH UnaryExpression    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
-| MultiplicativeExpression PERCENT UnaryExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());if(t!=$1->type){string temp = new_temporary(); emitt("cast",$1->temp_var,t,temp,-1); strcpy($1->temp_var,temp.c_str());}  string l = new_temporary(); emitt(strcat($2->label,t.c_str()),$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| MultiplicativeExpression STAR UnaryExpression	    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());  string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
+| MultiplicativeExpression SLASH UnaryExpression    {if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());  string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}
+| MultiplicativeExpression PERCENT UnaryExpression	{if(!first_parse){string t = expression_type(yylineno,$1->type,$3->type,$2->label); strcpy($$->type,t.c_str());  string l = new_temporary(); emitt($2->label,$1->temp_var,$3->temp_var,l,-1); strcpy($$->temp_var,l.c_str()); $$->i_number = $1->i_number;}}	
 ;
 
 UnaryExpression:
@@ -818,7 +830,7 @@ LEFT_PARANTHESIS PrimitiveType RIGHT_PARANTHESIS UnaryExpression
 
 PostfixExpression:
 Primary		                    {if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;$$->dimension = $1->dimension;}}
-| DotIdentifiers		        {if(!first_parse){$$->lit = false; strcpy($$->type,find_in_scope($1->label,$1->label).c_str());$$->i_number = inst_num; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); strcpy($$->temp_var,l.c_str()); strcpy($$->label,$1->label);}}
+| DotIdentifiers		        {if(!first_parse){$$->lit = false; strcpy($$->type,find_in_scope($1->label,$1->label).c_str()); $$->i_number = inst_num; string l = new_temporary(); emitt("",get_base_offset($1->label),"",l,-1); strcpy($$->temp_var,l.c_str()); strcpy($$->label,$1->label);}}
 | PostIncrementExpression		{if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}
 | PostDecrementExpression		{if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}
 ;

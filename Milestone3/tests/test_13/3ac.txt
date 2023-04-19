@@ -1,0 +1,15 @@
+0: BeginFunc Sample4.k
+1:    this = *(stack_pointer-4)
+2:    #t_0 = 0
+3:    #t_1 = *(this + #t_0)
+4:    #t_2 = a
+5:    #t_3 = #t_1 +int #t_2
+6:    *(stack_pointer-4) = #t_3
+7:    goto 8
+8: EndFunc
+
+9: BeginFunc Sample4.main
+10:    args = *(stack_pointer-16)
+11:    this = *(stack_pointer-20)
+12: EndFunc
+
