@@ -16,7 +16,6 @@ int main(){
     for(int i=0;i>10;i++){
         i=i+10;
     }
-    a[1] = 3;
     // int s = 8;
     // for(int i=0;i<10;i++){
     //     x++;

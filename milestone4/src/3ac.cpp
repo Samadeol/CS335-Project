@@ -57,16 +57,16 @@ void print3AC_code(){
     ofstream tac_file;
     string file_name = out_file_name+"3ac.txt";
     tac_file.open(file_name);
+    set<int> y;
     vector<int> x;
     for(int i=0;i<code.size();i++){
-        if(code[i].result=="goto") x.push_back(code[i].index);
+        if(code[i].result=="goto") y.insert(code[i].index);
     }
-    sort(x.begin(),x.end());
-    int y=0;
+    for(auto it:y) x.push_back(it);
+    int k=0;
     for(int i=0;i<code.size();i++){
-        if(y<x.size() && i==x[y]){
-            tac_file<<".L"<<(y+1)<<":"<<endl;
-            y++;
+        if(k<x.size() && x[k]==i){
+            tac_file<<".L"<<(k+1)<<":"<<endl;
         }
         if(code[i].op == "string"){
             tac_file<<"    "<<code[i].arg1<<endl;

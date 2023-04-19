@@ -198,7 +198,7 @@ string find_in_scope(string name, char (&label)[1000]){
         if((*temp).find(t)!=(*temp).end()){
             if(t.size()==name.size()){
                 if(parent[temp]==default_sym_table){
-                    final_name="*(rbp[16] "+to_string((*temp)[t]->offset)+")";
+                    final_name="*(rbp[16] + "+to_string((*temp)[t]->offset)+")";
                 }
                 else final_name = "rbp["+to_string((*temp)[t]->offset)+"]";
                 strcpy(label,final_name.c_str());
@@ -210,7 +210,7 @@ string find_in_scope(string name, char (&label)[1000]){
                     exit(1);
                 }
                 else{
-                    if(parent[temp]==default_sym_table) final_name="*(rbp[16] "+to_string((*temp)[t]->offset)+")";
+                    if(parent[temp]==default_sym_table) final_name="*(rbp[16] + "+to_string((*temp)[t]->offset)+")";
                     else final_name = "rbp["+to_string((*temp)[t]->offset)+"]";
                     temp2 = (*default_sym_table)[class_name]->child;
                 }
@@ -231,7 +231,7 @@ string find_in_scope(string name, char (&label)[1000]){
                     exit(1);
                 }
                 else{
-                    final_name = "*("+final_name+" "+to_string((*temp2)[p]->offset)+")";
+                    final_name = "*("+final_name+" + "+to_string((*temp2)[p]->offset)+")";
                     temp2 = (*default_sym_table)[class_name]->child;
                 }
             }
@@ -243,7 +243,7 @@ string find_in_scope(string name, char (&label)[1000]){
         cout<<name<<" not declared in this scope "<<yylineno<<endl;
         exit(1);
     }
-    final_name = "*("+final_name+" "+to_string((*temp2)[p]->offset)+")";
+    final_name = "*("+final_name+" + "+to_string((*temp2)[p]->offset)+")";
     strcpy(label,final_name.c_str());
     return (*temp2)[p]->type;
 }
