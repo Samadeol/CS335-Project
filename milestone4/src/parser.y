@@ -821,7 +821,7 @@ if(!first_parse){
 
 UnaryExpressionNotPlusMinus:
 PostfixExpression	{if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type); strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;$$->dimension = $1->dimension;}}
-| TILDA UnaryExpression		
+| TILDA UnaryExpression		    {if(!first_parse){$$->lit = $2->lit; strcpy($$->type,$2->type); string p = new_temporary(); emitt("~","",$2->temp_var,p,-1); strcpy($$->temp_var,p.c_str());$$->i_number = $2->i_number;}}
 | EXCLAIM UnaryExpression		{if(!first_parse){string t = $2->type; if(t!="boolean"){cout<<"! operation only allowed on boolean in line number "<<yylineno<<endl; exit(1);}else{strcpy($$->type,$2->type);} $$->true_list = $2->false_list; $$->false_list = $2->true_list; $$->i_number = $2->i_number;}}
 | CastExpression        
 ;

@@ -25,8 +25,11 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	subq	$32, %rsp
-	movl	$4, -24(%rbp)
+	movl	$3, -24(%rbp)
 	movl	$4, -20(%rbp)
+	movl	-20(%rbp), %eax
+	movl	%eax, %ecx
+	sall	%cl, -24(%rbp)
 	movl	-20(%rbp), %edx
 	movl	-24(%rbp), %eax
 	movl	%edx, %esi

@@ -3,9 +3,9 @@ using namespace std;
 
 fstream fin,fout;
 vector<vector<string> > text;
-map<string,string> v;
-map<string,set<string> > r;
-map<string,string> t;
+map<string,string> t; 
+map<string,string> r;
+map<string,string> s;
 
 int main(int argc, char**argv){
     string input,output;
@@ -75,11 +75,13 @@ int main(int argc, char**argv){
         cout<<"No main function"<<endl;
         exit(1);
     }
+    int k;
     fout<<"\t"<<text[0][0]<<" "<<text[0][1];
     for(int i=1;i<text.size();i++){
         string reg1,reg2,op;
         if(text[i][0][0]=='_'){
             fout<<text[i][0]<<endl;
+            k = -stoi(text[i+1][2]);
         }else if(text[i][0][0]=='.') fout<<text[i][0]<<endl;
         else{
             if(text[i][0]=="if"){
@@ -100,21 +102,64 @@ int main(int argc, char**argv){
 
             }else{
                 if(text[i].size()==3){
-                    if(text[i][0][0]=='#'){ 
-                        if(v.find(text[i][2])==v.end()){
-                            reg1 = get_empty_reg(text[i][2]);
-                            print("movq",text[i][2],reg1);
-                        }
-                        else reg1 = v[text[i][2]];
-                        r[reg1].insert(text[i][0]);
+                    if(text[i][0]=="rsp"){
+                        if(text[i][1]=="+") print("addq","$"+text[i][2],"rsp");
+                        else print("subq","$"+text[i][2],"rsp");
+                    }else if(text[i][0][0]=='#'){ 
+                        reg1 = get_empty_reg();
+                        print("movq",text[i][2],reg1);
+                        r[reg1] = text[i][0];
+                        t[text[i][0]] = reg1;
                     }else{
-                        if(v.find(text[i][2])==v.end()){
-                            reg1 = get_empty_reg(text[i][2]);
-                            print("movq",text[i][2],reg1);
-                        }
-                        else reg1 = v[text[i][2]];
-                        r[reg1].insert(text[i][0]);
+                        if(t.find(text[i][2])==t.end()){
+                            reg1 = get_empty_reg();
+                            print("movq",s[text[i][2]],reg1);
+                        }else reg1 = t[text[i][2]];
+                        t.erase(text[i][2]);
+                        print("movq",reg1,text[i][0]);
+                        r.erase(reg1);
                     }
+                }
+                if(text[i].size()==4){
+                    if(t.find(text[i][3]==t.end())){
+                        reg1 =get_empty_reg();
+                        print("movq",s[text[i][3]],reg1);
+                    }else reg1 = t[text[i][3]];
+                    t.erase(text[i][3]);
+                    if(text[i][2]=="-") print("negq",reg1,"");
+                    if(text[i][2]=="~") print("notq",reg1,"");
+                    r[reg1] = text[i][0];
+                    t[text[i][0]] = reg1;
+                }else{
+                    if(t.find(text[i][2])==t.end())){
+                        reg1 = get_empty_reg();
+                        print("movq",s[text[i][2]],reg1);
+                    }else reg1 = t[text[i][2]];
+                    t.erase(text[i][2]);
+                    if(t.find(text[i][4])==t.end())){
+                        reg2 = get_empty_reg();
+                        print("movq",s[text[i][4]],reg2);
+                    }else reg2 = t[text[i][4]];
+                    t.erase(text[i][4]);
+                    if(text[i][3]=="+") print("addq",reg2,reg1);
+                    else if(text[i][3]=="-") print("subq",reg2,reg1);
+                    else if(text[i][3]=="*") print("imulq",reg2,reg1);
+                    else if(text[i][3]=="/" || text[i][2]=="%"){
+                        print("movl",reg1,"rax");
+                        print("cltd","","");
+                        print("idivq",reg2);
+                        if(text[i][3] == "/") print("movl","rax",reg1);
+                        else print("movl","rdx",reg1);
+                    }else if(text[i][3]=="<<" || text[i][3]==">>"){
+                        print("movl",reg2,"rcx");
+                        if(text[i][3]=="<<") print("salq","rcx",reg1);
+                        else print("sarq","rcx",reg1);
+                    }
+                    else if(text[i][3]=="&") print("andq",reg2,reg1);
+                    else if(text[i][3]=="|") print("orq",reg2,reg1);
+                    else if(text[i][3]=="^") print("xorq",reg2,reg1);
+                    r[reg1]=text[i][0];
+                    t[text[i][0]] = reg1;
                 }
             }
         }

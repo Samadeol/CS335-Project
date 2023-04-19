@@ -6,8 +6,9 @@ int sex(int a,int b){
 }
 
 int main(){
-    int x = 3+1;
+    int x = 3;
     int y  = 4;
+    x = x<<y;
     int t  = printf("%d",sex(x,y));
     printf("%d",t);
     int z = y<<x;
