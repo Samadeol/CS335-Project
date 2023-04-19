@@ -214,7 +214,12 @@ int main(int argc, char**argv){
                             r.erase(t[text[i][2]]);
                             t.erase(text[i][2]);
                         }
-                    }else if(text[i][2] == "rax") print("movq","rax",text[i][0]);
+                    }else if(text[i][2] == "rax"){
+                        reg1 = get_empty_reg();
+                        print("movq","rax",reg1);
+                        r[reg1]=text[i][0];
+                        t[text[i][0]] = reg1;
+                    }
                     else if(text[i][0][0]=='#'){ 
                         reg1 = get_empty_reg();
                         if(text[i][2][0]=='-' || (text[i][2][0]>='0' && text[i][2][0]<='9'))print("movq","$"+text[i][2],reg1);

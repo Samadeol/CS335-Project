@@ -1,9 +1,4 @@
 class HelloWorld {
-
-   int fib(int n){
-      if(n<=1) return 1;
-      else return fib(n-1)+fib(n-2);
-   }
    public static void main(String[] args) {
          int x=1;
          int y=2;
@@ -27,6 +22,15 @@ class HelloWorld {
          System.out.println(z);
          System.out.println(x);
          System.out.println(y);
-         System.out.println(fib(5));
+         fin p = new fin();
+         System.out.println(p.fib(5));
+         
 }
+
+}
+class fin{
+   int fib(int n){
+      if(n<=1) return 1;
+      else return 7;
+   }
 }

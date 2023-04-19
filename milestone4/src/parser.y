@@ -247,7 +247,7 @@ IDENTIFIER EQUALS VariableInitializer   {if(first_parse)v.push_back(make_pair($1
         declarations.push_back(make_pair($1->label,$3->temp_var));
     };
 }}	
-| IDENTIFIER	{v.push_back(make_pair($1->label,""));}	
+| IDENTIFIER	{if(first_parse)v.push_back(make_pair($1->label,""));else{}}	
 | IDENTIFIER Dims	{string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}		
 | IDENTIFIER Dims EQUALS ArrayCreationExpression {if(first_parse){string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}else{if($2->dims == $4->dims) v.push_back(make_pair($1->label,$4->type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}declarations.push_back(make_pair($1->label,$4->temp_var));$$->dimension = $4->dimension; }}
 ;
@@ -612,8 +612,8 @@ UnqualifiedClassInstanceCreationExpression	{if(!first_parse){strcpy($$->type,$1-
 ;
 
 UnqualifiedClassInstanceCreationExpression:
-NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());function_call.clear();}}	
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = $3->i_number; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());function_call.clear();}}
+NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());function_call.clear(); string pp = new_temporary();emitt("","rax","",pp,-1); strcpy($$->temp_var,pp.c_str());}}	
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = $3->i_number; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());function_call.clear();string pp = new_temporary();emitt("","rax","",pp,-1); strcpy($$->temp_var,pp.c_str());}}
 ;
 
 ArrayAccess:
@@ -621,10 +621,10 @@ DotIdentifiers DimExprs 	{if(!first_parse){string bruh = $1->label; string t = f
 ;
 
 MethodInvocation:
-IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($1->label,"",function_call).c_str());}}
-| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS     {if(!first_parse){strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($1->label,"",function_call).c_str());function_call.clear();}}		
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num;strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call,$1->label).c_str());}}
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = $5->i_number; strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call,$1->label).c_str()); function_call.clear();}}	
+IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($1->label,"",function_call).c_str());string pp = new_temporary();emitt("","rax","",pp,-1); strcpy($$->temp_var,pp.c_str());}}
+| IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS     {if(!first_parse){strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($1->label,"",function_call).c_str());function_call.clear();string pp = new_temporary();emitt("","rax","",pp,-1); strcpy($$->temp_var,pp.c_str());}}		
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num;strcpy($$->temp_var,"rax"); string ab = find_in_scope($1->label,$1->label); strcpy($$->type,get_method($3->label,ab,function_call,$1->label).c_str());string pp = new_temporary();emitt("","rax","",pp,-1); strcpy($$->temp_var,pp.c_str());}}
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = $5->i_number; strcpy($$->temp_var,"rax"); string ab = find_in_scope($1->label,$1->label); strcpy($$->type,get_method($3->label,ab,function_call,$1->label).c_str()); function_call.clear();string pp = new_temporary();emitt("","rax","",pp,-1); strcpy($$->temp_var,pp.c_str());}}	
 ;
 
 ArrayCreationExpression:

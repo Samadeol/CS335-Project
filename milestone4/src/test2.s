@@ -3,51 +3,10 @@
 	.string "%ld\n"
 	.text
 	.globl main
-.L1:
-_HelloWorld.fib:
-	pushq	%rbp
-	movq	%rsp, %rbp
-	subq	$0, %rsp
-	movq	24(%rbp), %r8
-	movq	$1, %r9
-	cmpq	%r9, %r8
-	jle	.L2
-	jmp	.L1
-.L2:
-	movq	$1, %r8
-	movq	%r8, %rax
-	leave
-	ret
-	jmp	.L3
-	movq	24(%rbp), %r8
-	movq	$1, %r9
-	subq	%r9, %r8
-	pushq	%r8
-	movq	16(%rbp), %r8
-	pushq	%r8
-	call	_HelloWorld.fib
-	addq	$16, %rsp
-	movq	24(%rbp), %r8
-	movq	$2, %r9
-	subq	%r9, %r8
-	pushq	%r8
-	movq	16(%rbp), %r8
-	pushq	%r8
-	call	_HelloWorld.fib
-	addq	$16, %rsp
-	movq
-	movq
-	addq	%r8, %r8
-	movq	%r8, %rax
-	leave
-	ret
-.L3:
-	leave
-	ret
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	subq	$40, %rsp
+	subq	$48, %rsp
 	movq	$1, %r8
 	movq	%r8, -8(%rbp)
 	movq	$2, %r8
@@ -56,18 +15,18 @@ main:
 	movq	%r8, -24(%rbp)
 	movq	$4, %r8
 	movq	%r8, -32(%rbp)
-.L4:
+.L1:
 	movq	-32(%rbp), %r8
 	movq	$5, %r9
 	cmpq	%r9, %r8
-	jl	.L6
-	jmp	.L14
-.L5:
+	jl	.L3
+	jmp	.L11
+.L2:
 	movq	-32(%rbp), %r8
 	incq	%r8
 	movq	%r8, -32(%rbp)
-	jmp	.L4
-.L6:
+	jmp	.L1
+.L3:
 	movq	$9, %r8
 	movq	-32(%rbp), %r9
 	addq	%r8, %r9
@@ -78,42 +37,42 @@ main:
 	movq	-32(%rbp), %r8
 	movq	$4, %r9
 	cmpq	%r9, %r8
-	jg	.L7
-	jmp	.L8
-.L7:
-	jmp	.L14
-	jmp	.L9
-.L8:
+	jg	.L4
+	jmp	.L5
+.L4:
+	jmp	.L11
+	jmp	.L6
+.L5:
 	movq	$1, %r8
 	movq	%r8, -16(%rbp)
 	movq	-24(%rbp), %r8
 	incq	%r8
 	movq	%r8, -24(%rbp)
-.L9:
+.L6:
 	movq	$2, %r8
 	movq	%r8, -40(%rbp)
-.L10:
+.L7:
 	movq	-40(%rbp), %r8
 	movq	$9, %r9
 	cmpq	%r9, %r8
-	jl	.L12
-	jmp	.L5
-.L11:
+	jl	.L9
+	jmp	.L2
+.L8:
 	movq	-40(%rbp), %r8
 	incq	%r8
 	movq	%r8, -40(%rbp)
-	jmp	.L10
-.L12:
+	jmp	.L7
+.L9:
 	movq	-40(%rbp), %r8
 	movq	$3, %r9
 	cmpq	%r9, %r8
-	jg	.L13
-	jmp	.L11
-.L13:
-	jmp	.L5
-	jmp	.L11
-	jmp	.L5
-.L14:
+	jg	.L10
+	jmp	.L8
+.L10:
+	jmp	.L2
+	jmp	.L8
+	jmp	.L2
+.L11:
 	movq	-24(%rbp), %r8
 	movq	%r8, %rsi
 	leaq	.LC0(%rip), %rdi
@@ -129,16 +88,44 @@ main:
 	leaq	.LC0(%rip), %rdi
 	movq	$0, %rax
 	call	printf@PLT
+	movq	$0, %rdi
+	call	malloc@PLT
+	movq	%rax, %r8
+	movq	%r8, -48(%rbp)
 	movq	$5, %r8
 	pushq	%r8
-	movq	16(%rbp), %r8
+	movq	-48(%rbp), %r8
 	pushq	%r8
-	call	_HelloWorld.fib
+	call	_fin.fib
 	addq	$16, %rsp
-	movq
+	movq	%rax, %r8
+	movq	%r8, %rsi
 	leaq	.LC0(%rip), %rdi
 	movq	$0, %rax
 	call	printf@PLT
 	movq	$0, %rax
+	leave
+	ret
+_fin.fib:
+	pushq	%rbp
+	movq	%rsp, %rbp
+	subq	$0, %rsp
+	movq	24(%rbp), %r8
+	movq	$1, %r9
+	cmpq	%r9, %r8
+	jle	.L12
+	jmp	.L13
+.L12:
+	movq	$1, %r8
+	movq	%r8, %rax
+	leave
+	ret
+	jmp	.L14
+.L13:
+	movq	$7, %r8
+	movq	%r8, %rax
+	leave
+	ret
+.L14:
 	leave
 	ret
