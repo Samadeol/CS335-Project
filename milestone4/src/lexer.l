@@ -144,6 +144,7 @@ VAR                          var
 VOID                         void
 WHILE                        while 
 YIELD                        yield
+PRINT                        System.out.println
 
 
 %%
@@ -154,6 +155,7 @@ YIELD                        yield
 
 {WHITESPACE}                                    {}        
 {LINE_TERMINATOR}                               {}
+{PRINT}                                         {yylval.item = new struct Item;  strcpy(yylval.item->label,yytext); return PRINT;}
 {TRIPLE_DOT}                                    {yylval.item = new struct Item;  strcpy(yylval.item->label,yytext); return TRIPLE_DOT;}
 {AMPERSAND}                                     {yylval.item = new struct Item;  strcpy(yylval.item->label,yytext); return AMPERSAND;} 
 {AMPERSAND_AMPERSAND}                           {yylval.item = new struct Item;  strcpy(yylval.item->label,yytext); return AMPERSAND_AMPERSAND;}
