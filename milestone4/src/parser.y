@@ -431,7 +431,7 @@ IfThenElseStatementStart ELSE Statement	    {if(!first_parse){reset(); backpatch
 ;
 
 IfThenElseStatementStart:
-IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf {if(!first_parse){reset(); backpatch($3->true_list,$5->i_number); $$->false_list = $3->false_list; $$->next_list = $5->next_list; $$->next_list.push_back(inst_num-1); $$->i_number = $3->i_number; $$->true_list = $5->true_list; }}
+IF LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS StatementNoShortIf {if(!first_parse){reset(); backpatch($3->true_list,$5->i_number); emitt("","","","goto",-1); $$->false_list = $3->false_list; $$->next_list = $5->next_list; $$->next_list.push_back(inst_num-1); $$->i_number = $3->i_number; $$->true_list = $5->true_list; }}
 ;
 
 IfThenElseStatementNoShortIf:

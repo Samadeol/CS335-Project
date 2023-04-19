@@ -62,6 +62,18 @@ main:
 .L4:
 	cmpl	$10, -28(%rbp)
 	jg	.L5
+	movq	-8(%rbp), %rax
+	addq	$8, %rax
+	movl	(%rax), %edx
+	movq	-8(%rbp), %rax
+	addq	$12, %rax
+	movl	(%rax), %eax
+	cmpl	%eax, %edx
+	jge	.L6
+	movq	-8(%rbp), %rax
+	addq	$8, %rax
+	movl	$4, (%rax)
+.L6:
 	movl	$0, %eax
 	leave
 	ret
