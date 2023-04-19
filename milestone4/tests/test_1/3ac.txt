@@ -1,70 +1,66 @@
      .globl main
 _main:
-    rsp - 32
+     rsp - 16
     #t_0 = 10
     rbp[-8] = #t_0
     #t_1 = 11
     rbp[-16] = #t_1
     #t_2 = 1
-    rbp[-24] = #t_2
-    #t_3 = rbp[-24]
-    #t_4 = rbp[-8]
-    #t_5 = #t_3 + #t_4
+    #t_3 = rbp[-8]
+    #t_4 = #t_3 + #t_2
+    rbp[-8] = #t_4
+    #t_5 = rbp[-16]
+    rbp[-8] = #t_5
     #t_6 = rbp[-16]
-    #t_7 = #t_5 + #t_6
-    rbp[-32] = #t_7
-    #t_8 = 1
+    #t_7 = 3
+    #t_8 = #t_6 + #t_7
+    rbp[-8] = #t_8
     #t_9 = rbp[-8]
-    #t_10 = #t_9 + #t_8
-    rbp[-8] = #t_10
-    #t_11 = rbp[-16]
-    rbp[-8] = #t_11
-    #t_12 = rbp[-16]
-    #t_13 = 3
-    #t_14 = #t_12 + #t_13
-    rbp[-8] = #t_14
-    #t_15 = rbp[-8]
-    #t_16 = 10
-    if #t_15 < #t_16 goto .L1
-.L1:
+    #t_10 = 10
+    if #t_9 < #t_10 goto .L1
     goto .L2
-    #t_17 = rbp[-8]
-    #t_17 = #t_17 - 1
-    rbp[-8] = #t_17
-.L2:
+.L1:
+    #t_11 = rbp[-8]
+    #t_12 = 1
+    #t_13 = #t_11 - #t_12
+    rbp[-8] = #t_13
     goto .L3
-    #t_18 = rbp[-8]
-    #t_18 = #t_18 + 1
+.L2:
+    #t_14 = rbp[-8]
+    #t_15 = 1
+    #t_16 = #t_14 + #t_15
+    rbp[-8] = #t_16
 .L3:
-    rbp[-8] = #t_18
-    #t_19 = rbp[-8]
-    #t_20 = rbp[-16]
-    if #t_19 < #t_20 goto .L7
-.L4:
+    #t_17 = rbp[-8]
+    #t_18 = rbp[-16]
+    if #t_17 < #t_18 goto .L7
     goto .L4
-    #t_21 = rbp[-8]
-    #t_22 = 100
-    if #t_21 > #t_22 goto .L7
-.L5:
+.L4:
+    #t_19 = rbp[-8]
+    #t_20 = 100
+    if #t_19 > #t_20 goto .L7
     goto .L5
-    #t_23 = rbp[-8]
-    #t_24 = 5
-    if #t_23 < #t_24 goto .L7
-.L6:
+.L5:
+    #t_21 = rbp[-8]
+    #t_22 = 5
+    if #t_21 < #t_22 goto .L7
     goto .L6
-    #t_25 = rbp[-8]
-    #t_26 = 7
-    if #t_25 > #t_26 goto .L7
+.L6:
+    #t_23 = rbp[-8]
+    #t_24 = 7
+    if #t_23 > #t_24 goto .L7
+    goto .L9
 .L7:
+    #t_25 = rbp[-8]
+    #t_26 = 3
+    if #t_25 != #t_26 goto .L8
     goto .L9
-    #t_27 = rbp[-8]
-    #t_28 = 3
-    if #t_27 == #t_28 goto .L8
 .L8:
-    goto .L9
-    #t_29 = 3
-    #t_30 = rbp[-8]
-    #t_31 = #t_30 * #t_29
+    #t_27 = 3
+    #t_28 = rbp[-8]
+    #t_29 = #t_28 * #t_27
+    rbp[-8] = #t_29
 .L9:
-    rbp[-8] = #t_31
+    #t_30 = rbp[-8]
+    print(#t_30)
     return

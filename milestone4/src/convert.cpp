@@ -54,6 +54,7 @@ int main(int argc, char**argv){
         cout<<"No Actions Provided"<<endl;
         exit(1);
     }
+    bool please;
     for(int i=1;i<argc;i++){
         string k = argv[i];
         if(k.size()<6){
@@ -111,7 +112,7 @@ int main(int argc, char**argv){
         if(temp.size()) lol.push_back(temp);
         if(lol.size()) text.push_back(lol);
     }
-    fout<<"\t.section\t.rodata"<<endl<<".LC0:"<<endl<<"\t.string \"ld\\n\"\n\t.text"<<endl;
+    fout<<"\t.section\t.rodata"<<endl<<".LC0:"<<endl<<"\t.string \"\%ld\\n\"\n\t.text"<<endl;
     if(text[0][0]!=".globl"){
         cout<<"No main function"<<endl;
         exit(1);
@@ -120,9 +121,15 @@ int main(int argc, char**argv){
     for(int i=1;i<text.size();i++){
         string reg1,reg2;
         if(text[i][0][0]=='_'){
-            if(text[i][0]=="_main:") fout<<"main:"<<endl;
+            please = false;
+            if(text[i][0]=="_main:"){
+                please=true;
+                fout<<"main:"<<endl;
+            }
             else fout<<text[i][0]<<endl;
             k = -stoi(text[i+1][2]);
+            print("pushq","rbp","");
+            print("movq","rsp","rbp");
         }else if(text[i][0][0]=='.') fout<<text[i][0]<<endl;
         else{
             if(text[i][0]=="if"){
@@ -152,6 +159,7 @@ int main(int argc, char**argv){
                 r.erase(t[text[i][1]]);
                 t.erase(text[i][1]);
             }else if(text[i][0]=="return"){
+                if(please) print("movq","$0","rax");
                 print("leave","","");
                 print("ret","","");
                 s.clear();

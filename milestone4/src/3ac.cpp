@@ -59,27 +59,18 @@ void print3AC_code(){
     tac_file.open(file_name);
     set<int> y;
     vector<int> x;
-    auto it = code.begin();
+    vector<pair<int,int> > bruh;
     for(int i=0;i<code.size();i++){
         if(code[i].arg1.size()>3 && code[i].arg1.substr(code[i].arg1.size()-4,4)=="main"){
             tac_file<<"     .globl main"<<endl;
             code[i].arg1 = "main";
         }
         if(code[i].result=="goto") y.insert(code[i].index);
-        if(code[i].op=="begin") it = code.begin()+i+1;
-        if(code[i].op=="end"){
-            quadruple entry;
-            entry.op="string";
-            entry.arg1="rsp - "+code[i].arg1;
-            entry.arg2="";
-            entry.result="";
-            entry.index=-1;
-            code.emplace(it,entry);
-            i++;
-        }
+        if(code[i].op=="begin")  bruh.push_back(make_pair(i+1,0));
+        if(code[i].op=="end") bruh[bruh.size()-1].second = stoi(code[i].arg1);
     }
     for(auto it:y) x.push_back(it);
-    int k=0;
+    int k=0,p=0;
     bool s = false;
     for(int i=0;i<code.size();i++){
         if(code[i].op=="begin") s=true;
@@ -94,6 +85,8 @@ void print3AC_code(){
             }
             else if(code[i].op == "begin"){
                 tac_file<<"_"<<code[i].arg1<<":"<<endl;
+                tac_file<<"     rsp - "<<bruh[p].second<<endl;
+                p++;
             }
             else if(code[i].op == "end"){
                 tac_file<<"    return"<<endl;
