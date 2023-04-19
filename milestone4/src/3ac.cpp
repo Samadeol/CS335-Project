@@ -140,10 +140,10 @@ string array_func(string name, vector<int>&dim, string type){
     string t = new_temporary();
     emitt("",size,"",t,-1);
     for(int i=dim.size()-1;i>=0;i--){
+        emitt("string", "store "+t, "","",-1);
         string k = new_temporary();
         emitt("*","#t_"+to_string(dim[i]),t,k,-1);
         dim[i]=reduce(t);
-        emitt("string", "store "+t, "","",-1);
         t=k;
     }
     emitt("string","mem("+t+")","","",-1);

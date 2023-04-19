@@ -12,7 +12,7 @@ int main(){
     int t  = printf("%d",sex(x,y));
     printf("%d",t);
     int z = y<<x;
-    int *a = (int*)malloc(8*sizeof(int));
+    int *a = (int*)malloc(y*sizeof(int));
     a[2]=2;
     for(int i=0;i>10;i++){
         i=i+10;

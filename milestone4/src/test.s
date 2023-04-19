@@ -51,7 +51,10 @@ main:
 	sall	%cl, %edx
 	movl	%edx, %eax
 	movl	%eax, -12(%rbp)
-	movl	$32, %edi
+	movl	-20(%rbp), %eax
+	cltq
+	salq	$2, %rax
+	movq	%rax, %rdi
 	call	malloc@PLT
 	movq	%rax, -8(%rbp)
 	movq	-8(%rbp), %rax

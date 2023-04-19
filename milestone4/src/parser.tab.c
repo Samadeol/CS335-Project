@@ -3335,13 +3335,13 @@ yyreduce:
 
   case 204:
 #line 615 "parser.y"
-                                                        {if(!first_parse){(yyval.item)->i_number = inst_num; strcpy((yyval.item)->temp_var,"rax"); check_gst((yyvsp[-2].item)->label); strcpy((yyval.item)->type,get_method((yyvsp[-2].item)->label,"constructor",function_call).c_str());}}
+                                                        {if(!first_parse){(yyval.item)->i_number = inst_num; strcpy((yyval.item)->temp_var,"rax"); check_gst((yyvsp[-2].item)->label); strcpy((yyval.item)->type,get_method((yyvsp[-2].item)->label,"constructor",function_call).c_str());function_call.clear();}}
 #line 3340 "parser.tab.c"
     break;
 
   case 205:
 #line 616 "parser.y"
-                                                                        {if(!first_parse){(yyval.item)->i_number = (yyvsp[-2].item)->i_number; strcpy((yyval.item)->temp_var,"rax"); check_gst((yyvsp[-3].item)->label); strcpy((yyval.item)->type,get_method((yyvsp[-3].item)->label,"constructor",function_call).c_str());}}
+                                                                        {if(!first_parse){(yyval.item)->i_number = (yyvsp[-2].item)->i_number; strcpy((yyval.item)->temp_var,"rax"); check_gst((yyvsp[-3].item)->label); strcpy((yyval.item)->type,get_method((yyvsp[-3].item)->label,"constructor",function_call).c_str());function_call.clear();}}
 #line 3346 "parser.tab.c"
     break;
 
