@@ -60,6 +60,7 @@ void print3AC_code(){
     set<int> y;
     vector<int> x;
     for(int i=0;i<code.size();i++){
+        if(code[i].arg1.size()>3 && code[i].arg1.substr(code[i].arg1.size()-4,4)=="main") tac_file<<"     .globl _"<<code[i].arg1<<endl;
         if(code[i].result=="goto") y.insert(code[i].index);
     }
     for(auto it:y) x.push_back(it);
@@ -77,7 +78,7 @@ void print3AC_code(){
                 tac_file<<"    "<<code[i].arg1<<endl;
             }
             else if(code[i].op == "begin"){
-                tac_file<<code[i].arg1<<":"<<endl;
+                tac_file<<"_"<<code[i].arg1<<":"<<endl;
             }
             else if(code[i].op == "end"){
                 tac_file<<"    return"<<endl;

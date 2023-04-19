@@ -1,0 +1,6 @@
+Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
+arr,4,int*,,No,0,-16,8
+i,11,int,,No,0,-32,8
+j,12,int,,No,0,-40,8
+n,3,int,,No,0,-8,8
+temp,10,int,,No,0,-24,8
