@@ -3,6 +3,9 @@ using namespace std;
 
 fstream fin,fout;
 vector<vector<string> > text;
+map<string,string> v;
+map<string,set<string> > r;
+map<string,string> t;
 
 int main(int argc, char**argv){
     string input,output;
@@ -73,6 +76,48 @@ int main(int argc, char**argv){
         exit(1);
     }
     fout<<"\t"<<text[0][0]<<" "<<text[0][1];
+    for(int i=1;i<text.size();i++){
+        string reg1,reg2,op;
+        if(text[i][0][0]=='_'){
+            fout<<text[i][0]<<endl;
+        }else if(text[i][0][0]=='.') fout<<text[i][0]<<endl;
+        else{
+            if(text[i][0]=="if"){
 
+            }else if(text[i][0]=="store"){
+
+            }else if(text[i][0]=="return"){
+
+            }else if(text[i][0]=="goto"){
+
+            }else if(text[i][0]=="call"){
+            
+            }else if(text[i][0]=="push"){
+                
+            }else if(text[i][0].size()>=5 && text[i][0].substr(0,5)=="print"){
+
+            }else if(text[i][0].size()>=3 && text[i][0].substr(0,3)=="mem"){
+
+            }else{
+                if(text[i].size()==3){
+                    if(text[i][0][0]=='#'){ 
+                        if(v.find(text[i][2])==v.end()){
+                            reg1 = get_empty_reg(text[i][2]);
+                            print("movq",text[i][2],reg1);
+                        }
+                        else reg1 = v[text[i][2]];
+                        r[reg1].insert(text[i][0]);
+                    }else{
+                        if(v.find(text[i][2])==v.end()){
+                            reg1 = get_empty_reg(text[i][2]);
+                            print("movq",text[i][2],reg1);
+                        }
+                        else reg1 = v[text[i][2]];
+                        r[reg1].insert(text[i][0]);
+                    }
+                }
+            }
+        }
+    }
 
 }

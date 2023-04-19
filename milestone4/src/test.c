@@ -16,6 +16,7 @@ int main(){
     for(int i=0;i>10;i++){
         i=i+10;
     }
+    a[2] = -a[3];
     if(a[2]<a[3]) a[2]=4;
     // int s = 8;
     // for(int i=0;i<10;i++){

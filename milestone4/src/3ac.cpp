@@ -59,9 +59,21 @@ void print3AC_code(){
     tac_file.open(file_name);
     set<int> y;
     vector<int> x;
+    auto it = code.begin();
     for(int i=0;i<code.size();i++){
         if(code[i].arg1.size()>3 && code[i].arg1.substr(code[i].arg1.size()-4,4)=="main") tac_file<<"     .globl _"<<code[i].arg1<<endl;
         if(code[i].result=="goto") y.insert(code[i].index);
+        if(code[i].op=="begin") it = code.begin()+i+1;
+        if(code[i].op=="end"){
+            quadruple entry;
+            entry.op="string";
+            entry.arg1="rsp - "+code[i].arg1;
+            entry.arg2="";
+            entry.result="";
+            entry.index=-1;
+            code.emplace(it,entry);
+            i++;
+        }
     }
     for(auto it:y) x.push_back(it);
     int k=0;

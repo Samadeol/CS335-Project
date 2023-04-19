@@ -23,6 +23,7 @@ vector<tuple<string,string,int,int> > arguments;
 string curr_class_name;
 extern sym_table* print_table;
 extern int inst_num;
+extern int offset;
 int k=0;
 
 void yyerror(const char* error){
@@ -261,7 +262,7 @@ VOID MethodDeclarator   {if($2->dims){cout<<"Void function cant be of array type
 | ClassModifiers Type MethodDeclarator  {{string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); string x = check_method_modifiers($1->label); strcpy($$->label,$3->label); strcpy($$->type,strcat($2->type,(t+x).c_str())); line_number = yylineno;} if(!first_parse){go_in_scope($3->label);string l = $3->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1);$$->i_number = inst_num-1; print_table = new sym_table;}}
 
 MethodDeclaration:
-MethodDeclarationHeader MethodBody	{if(first_parse){string x = $1->type; make_func_entry($1->label,x.substr(0,x.size()-4),arguments,line_number,x.substr(x.size()-4,4));}else{print(curr_class_name+"."+$1->label);emitt("end","","","",-1); $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}arguments.clear();}
+MethodDeclarationHeader MethodBody	{if(first_parse){string x = $1->type; make_func_entry($1->label,x.substr(0,x.size()-4),arguments,line_number,x.substr(x.size()-4,4));}else{print(curr_class_name+"."+$1->label); emitt("end",to_string(-offset),"","",-1); offset=0; $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}arguments.clear();}
 ;
 
 MethodDeclarator:
@@ -293,7 +294,7 @@ Declarator  {strcpy($$->label,$1->label); strcpy($$->type,"0000"); line_number =
 | ClassModifiers Declarator {string x = check_method_modifiers($1->label); strcpy($$->type,x.c_str()); strcpy($$->label,$2->label); strcpy($$->type,$2->label); line_number = yylineno; if(!first_parse){go_in_scope($2->label);string l = $2->label; l=curr_class_name+"."+l; emitt("begin",l,"","",-1); $$->i_number = inst_num-1;}}
 
 ConstructorDeclaration:		
-ConstructorDeclarationHeader ConstructorBody {if(first_parse){check_constructor($2->label); make_func_entry($1->label,$1->label,arguments,line_number,$1->type);}arguments.clear(); if(!first_parse){print(curr_class_name+"."+curr_class_name); emitt("end","","","",-1); $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}}
+ConstructorDeclarationHeader ConstructorBody {if(first_parse){check_constructor($2->label); make_func_entry($1->label,$1->label,arguments,line_number,$1->type);}arguments.clear(); if(!first_parse){print(curr_class_name+"."+curr_class_name); emitt("end",to_string(-offset),"","",-1); offset = 0; $$->i_number = $1->i_number; backpatch($2->next_list,inst_num-1);}}
 ;
 
 Declarator:
@@ -627,7 +628,7 @@ IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number =
 ;
 
 ArrayCreationExpression:
-NEW PrimitiveType DimExprs 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims; $$->dimension = $3->dimension; $$->i_number = $3->i_number;strcpy($$->temp_var,array_func($1->label,$3->dimension,$2->type).c_str());}}	
+NEW PrimitiveType DimExprs 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims; $$->i_number = $3->i_number;strcpy($$->temp_var,array_func($1->label,$3->dimension,$2->type).c_str()); $$->dimension = $3->dimension;}}	
 | NEW PrimitiveType DimExprs Dims 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); for(int i=0;i<$4->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims + $4->dims;}}
 | NEW ClassType DimExprs 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims; $$->dimension = $3->dimension; $$->i_number = $3->i_number;}}	
 | NEW ClassType DimExprs Dims 		{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); for(int i=0;i<$4->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims + $4->dims;}}

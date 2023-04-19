@@ -388,7 +388,7 @@ string get_method(string name, string scope, vector<pair<string,string > > args,
                 }
                 emitt("string","push rbp[16]","","",-1);
                 emitt("string","call "+curr_class_name+"."+name,"","",-1);
-                emitt("string","rsp - "+to_string((*temp)[name]->size+8),"","",-1);
+                emitt("string","rsp + "+to_string((*temp)[name]->size+8),"","",-1);
                 return (*temp)[name]->type;
             }
             temp = parent[temp];
@@ -417,7 +417,7 @@ string get_method(string name, string scope, vector<pair<string,string > > args,
             emitt("string","push rax","","",-1);
             emitt("string","call "+name+"."+name,"","",-1);
             int size = get_size((*temp)[name]->type);
-            emitt("string","rsp - "+to_string((*temp)[name]->size+8),"","",-1);
+            emitt("string","rsp + "+to_string((*temp)[name]->size+8),"","",-1);
             return name;
         }
     }
@@ -449,7 +449,7 @@ string get_method(string name, string scope, vector<pair<string,string > > args,
             emitt("string","push "+caller,"","",-1);
             emitt("string","call "+scope+"."+name,"","",-1);
             int size = get_size((*temp)[name]->type);
-            emitt("string","rsp - "+to_string((*temp)[name]->size+8),"","",-1);
+            emitt("string","rsp + "+to_string((*temp)[name]->size+8),"","",-1);
             return (*temp)[name]->type;
         }
         else{
