@@ -248,7 +248,7 @@ IDENTIFIER EQUALS VariableInitializer   {if(first_parse)v.push_back(make_pair($1
 }}	
 | IDENTIFIER	{v.push_back(make_pair($1->label,""));}	
 | IDENTIFIER Dims	{string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}		
-| IDENTIFIER Dims EQUALS ArrayCreationExpression {if(first_parse){string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}else{if($2->dims == $4->dims) v.push_back(make_pair($1->label,$4->type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}declarations.push_back(make_pair($1->label,array_func($1->label,$4->dimension,$4->type)));$$->dimension = $4->dimension; }}
+| IDENTIFIER Dims EQUALS ArrayCreationExpression {if(first_parse){string t; for(int i=0;i<$2->dims;i++) t.push_back('*'); v.push_back(make_pair($1->label,t));}else{if($2->dims == $4->dims) v.push_back(make_pair($1->label,$4->type)); else{cout<<"Dimensions of array not matched in line number: "<<yylineno<<endl; exit(1);}declarations.push_back(make_pair($1->label,$4->temp_var));$$->dimension = $4->dimension; }}
 ;
 
 VariableInitializer:
@@ -582,7 +582,7 @@ CATCH LEFT_PARANTHESIS FormalParameter RIGHT_PARANTHESIS Block
 
 Primary:
 PrimaryNoNewArray	{if(!first_parse){$$->lit = $1->lit; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}	
-| ArrayCreationExpression	{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);$$->dimension = $1->dimension;$$->i_number = $1->i_number;}}	
+| ArrayCreationExpression	{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->dimension = $1->dimension;$$->i_number = $1->i_number;}}	
 ;
 
 PrimaryNoNewArray:
@@ -623,7 +623,7 @@ IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number =
 ;
 
 ArrayCreationExpression:
-NEW PrimitiveType DimExprs 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims; $$->dimension = $3->dimension; $$->i_number = $3->i_number;}}	
+NEW PrimitiveType DimExprs 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims; $$->dimension = $3->dimension; $$->i_number = $3->i_number;strcpy($$->temp_var,array_func($1->label,$3->dimension,$2->type).c_str());}}	
 | NEW PrimitiveType DimExprs Dims 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); for(int i=0;i<$4->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims + $4->dims;}}
 | NEW ClassType DimExprs 	{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims; $$->dimension = $3->dimension; $$->i_number = $3->i_number;}}	
 | NEW ClassType DimExprs Dims 		{if(!first_parse){string t; for(int i=0;i<$3->dims;i++) t.push_back('*'); for(int i=0;i<$4->dims;i++) t.push_back('*'); strcpy($$->type,strcat($2->type,t.c_str()));$$->dims = $3->dims + $4->dims;}}

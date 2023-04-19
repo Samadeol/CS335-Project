@@ -273,6 +273,7 @@ string expression_type(int line_num, string type1, string type2, string op){
     if(type2=="") b=0;
     string t;
     if(type2.size()!=type1.size() && type2.substr(0,type1.size())==type1) return type2;
+    if(a!=0 && b!=0 && type1==type2 && type1[type1.size()-1]=='*' && op == "=") return type1;
     if(type1[type1.size()-1]=='*'){
         string s;
         for(int i=0;i<type1.size();i++){
