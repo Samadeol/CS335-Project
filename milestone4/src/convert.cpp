@@ -48,6 +48,34 @@ string get_empty_reg(string reg = ""){
     return reg;
 }
 
+string decode(string x){
+    string reg,p;
+    for(int i=0;i<x.size();i++){
+        if(x[i]=='r'){
+            for(;i<x.size();i++){
+                if(x[i]==' ') break;
+                p.push_back(x[i]);
+            }
+            reg = get_empty_reg();
+            print("movq",p,reg);
+            r[reg] = "busy";
+            p.clear();
+        }
+        if(x[i]>='0' && x[i]<='9'){
+            p.push_back(x[i]);
+        }
+        if(x[i]==')'){
+            print("addq","$"+p,reg);
+            p.clear();
+            if(i==x.size()-1) return "(%"+reg+")";
+            string temp = get_empty_reg(reg);
+            print("movq","(%+"+reg+")",temp);
+            print("movq",temp,reg);
+        }
+    }
+    return "";
+}
+
 int main(int argc, char**argv){
     string input,output;
     if(argc<2){
@@ -204,6 +232,8 @@ int main(int argc, char**argv){
                 print("call","malloc@PLT","");
             }else{
                 if(text[i].size()==3){
+                    if(text[i][0][0]=='*') text[i][0] = decode(text[i][0]);
+                    if(text[i][2][0]=='*') text[i][2] = decode(text[i][2]);
                     if(text[i][0]=="rsp"){
                         if(text[i][1]=="+") print("addq","$"+text[i][2],"rsp");
                         else print("subq","$"+text[i][2],"rsp");
