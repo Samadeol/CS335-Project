@@ -612,8 +612,8 @@ UnqualifiedClassInstanceCreationExpression	{if(!first_parse){strcpy($$->type,$1-
 ;
 
 UnqualifiedClassInstanceCreationExpression:
-NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());}}	
-| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = $3->i_number; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());}}
+NEW DotIdentifiers LEFT_PARANTHESIS RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());function_call.clear();}}	
+| NEW DotIdentifiers LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 	{if(!first_parse){$$->i_number = $3->i_number; strcpy($$->temp_var,"rax"); check_gst($2->label); strcpy($$->type,get_method($2->label,"constructor",function_call).c_str());function_call.clear();}}
 ;
 
 ArrayAccess:
