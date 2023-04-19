@@ -622,8 +622,8 @@ DotIdentifiers DimExprs 	{if(!first_parse){string bruh = $1->label; string t = f
 MethodInvocation:
 IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num; strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($1->label,"",function_call).c_str());}}
 | IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS     {if(!first_parse){strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($1->label,"",function_call).c_str());function_call.clear();}}		
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num;strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call).c_str());}}
-| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = $5->i_number; strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call).c_str()); function_call.clear();}}	
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = inst_num;strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call,$1->label).c_str());}}
+| DotIdentifiers DOT IDENTIFIER LEFT_PARANTHESIS Expressions RIGHT_PARANTHESIS 		{if(!first_parse){$$->i_number = $5->i_number; strcpy($$->temp_var,"rax"); strcpy($$->type,get_method($3->label,find_in_scope($1->label,$1->label),function_call,$1->label).c_str()); function_call.clear();}}	
 ;
 
 ArrayCreationExpression:

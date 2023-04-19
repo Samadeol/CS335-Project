@@ -1,4 +1,5 @@
-BubbleSortExample.bubbleSort:
+.globl _BubbleSortExample.main:
+_BubbleSortExample.main:
     #t_0 = 5
     rbp[-8] = #t_0
     #t_1 = 5

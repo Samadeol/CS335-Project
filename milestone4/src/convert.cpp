@@ -67,8 +67,12 @@ int main(int argc, char**argv){
         if(temp.size()) lol.push_back(temp);
         if(lol.size()) text.push_back(lol);
     }
-    for(int i=0;i<text.size();i++){
-        for(int j=0;j<text[i].size();j++) cout<<text[i][j]<<",";
-        cout<<endl;
+    fout<<"\t.section\t.rodata"<<endl<<".LC0:"<<endl<<"\t.string \"ld\\n\"\n\t.text"<<endl;
+    if(text[0][0]!=".globl"){
+        cout<<"No main function"<<endl;
+        exit(1);
     }
+    fout<<"\t"<<text[0][0]<<" "<<text[0][1];
+
+
 }

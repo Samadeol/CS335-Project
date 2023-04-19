@@ -367,7 +367,7 @@ string expression_type(int line_num, string type1, string type2, string op){
     else return type2;
 }
 
-string get_method(string name, string scope, vector<pair<string,string > > args){
+string get_method(string name, string scope, vector<pair<string,string > > args, string caller = ""){
     if(scope==""){
         sym_table* temp = curr_sym_table;
         while(temp!=default_sym_table){
@@ -407,7 +407,6 @@ string get_method(string name, string scope, vector<pair<string,string > > args)
                 exit(1);
             }
             emitt("string", "mem("+to_string((*default_sym_table)[name]->size)+")","","",-1);
-            emitt("string","push rax","","",-1);
             for(int i=0;i<args.size();i++){
                 if(args[i].first!=get<1>((*temp)[name]->arguments[i])){
                     cout<<"Invalid argument type "<<args[i].first<<" to "<<get<1>((*temp)[name]->arguments[i])<<endl;
@@ -415,6 +414,7 @@ string get_method(string name, string scope, vector<pair<string,string > > args)
                 }
                 emitt("string","push "+ args[args.size()-i-1].second,"","",-1);
             }
+            emitt("string","push rax","","",-1);
             emitt("string","call "+name+"."+name,"","",-1);
             int size = get_size((*temp)[name]->type);
             emitt("string","rsp - "+to_string((*temp)[name]->size+8),"","",-1);
@@ -446,6 +446,7 @@ string get_method(string name, string scope, vector<pair<string,string > > args)
                 }
                 emitt("string","push "+ args[args.size()-i-1].second,"","",-1);
             }
+            emitt("string","push "+caller,"","",-1);
             emitt("string","call "+scope+"."+name,"","",-1);
             int size = get_size((*temp)[name]->type);
             emitt("string","rsp - "+to_string((*temp)[name]->size+8),"","",-1);
