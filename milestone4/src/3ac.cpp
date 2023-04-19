@@ -64,29 +64,36 @@ void print3AC_code(){
     }
     for(auto it:y) x.push_back(it);
     int k=0;
+    bool s = false;
     for(int i=0;i<code.size();i++){
-        if(k<x.size() && x[k]==i){
-            tac_file<<".L"<<(k+1)<<":"<<endl;
-        }
-        if(code[i].op == "string"){
-            tac_file<<"    "<<code[i].arg1<<endl;
-        }
-        else if(code[i].op == "begin"){
-            tac_file<<code[i].arg1<<":"<<endl;
-        }
-        else if(code[i].op == "end"){
-        }
-        else if(code[i].op == "if"){
-            tac_file<<"    if "<<code[i].arg1<<" "<<code[i].result<<" "<<get_index(code[i].index,x)<<"\n";
-        }
-        else if(code[i].result=="goto"){
-            tac_file<<"    goto "<<get_index(code[i].index,x)<<endl;
-        }
-        else if(code[i].op==""){
-            tac_file<<"    "<<code[i].result<<" = "<<code[i].arg1<<endl;
-        }
-        else {
-            tac_file<<"    "<<code[i].result<<" = "<<code[i].arg1<<" "<<code[i].op<<" "<<code[i].arg2<<"\n";
+        if(code[i].op=="begin") s=true;
+        else if(code[i].op=="false") s=false;
+        if(s){
+            if(k<x.size() && x[k]==i){
+                tac_file<<".L"<<(k+1)<<":"<<endl;
+                k++;
+            }
+            if(code[i].op == "string"){
+                tac_file<<"    "<<code[i].arg1<<endl;
+            }
+            else if(code[i].op == "begin"){
+                tac_file<<code[i].arg1<<":"<<endl;
+            }
+            else if(code[i].op == "end"){
+                tac_file<<"    return"<<endl;
+            }
+            else if(code[i].op == "if"){
+                tac_file<<"    if "<<code[i].arg1<<" "<<code[i].result<<" "<<get_index(code[i].index,x)<<"\n";
+            }
+            else if(code[i].result=="goto"){
+                tac_file<<"    goto "<<get_index(code[i].index,x)<<endl;
+            }
+            else if(code[i].op==""){
+                tac_file<<"    "<<code[i].result<<" = "<<code[i].arg1<<endl;
+            }
+            else {
+                tac_file<<"    "<<code[i].result<<" = "<<code[i].arg1<<" "<<code[i].op<<" "<<code[i].arg2<<"\n";
+            }
         }
     }
 }

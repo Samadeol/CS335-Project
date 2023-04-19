@@ -88,16 +88,34 @@ void reset(){
     dirty_sym_table = new sym_table;
 }
 
-bool check(string name){
-    if(curr_sym_table == default_sym_table || parent[curr_sym_table]==default_sym_table){
-        if((*curr_sym_table).find(name)==(*curr_sym_table).end()) return true;
-        else return false;
-    }
+bool dirty_check(string name){
     if((*dirty_sym_table).find(name)!=(*dirty_sym_table).end()) return false;
     sym_table* temp = curr_sym_table;
     while(parent[temp]!=default_sym_table){
         if((*temp).find(name)==(*temp).end()) temp = parent[temp];
-        else  return false;
+        else{
+            cout<<"Redclaring "<<name<<"in line number "<<yylineno<<endl;
+            exit(1);
+        }
+    }
+    return true;
+}
+
+bool check(string name){
+    if(curr_sym_table == default_sym_table || parent[curr_sym_table]==default_sym_table){
+        if((*curr_sym_table).find(name)==(*curr_sym_table).end()) return true;
+        else{
+            cout<<"Redclaring "<<name<<"in line number "<<yylineno<<endl;
+            exit(1);
+        };
+    }
+    sym_table* temp = curr_sym_table;
+    while(parent[temp]!=default_sym_table){
+        if((*temp).find(name)==(*temp).end()) temp = parent[temp];
+        else{
+            cout<<"Redclaring "<<name<<"in line number "<<yylineno<<endl;
+            exit(1);
+        }
     }
     return true;
 }
@@ -112,7 +130,7 @@ int get_size(string type){
 
 void make_dirty_entry(string name, string type, int line_number, string modifiers, int t){
     sym_entry* new_sym_entry = new sym_entry;
-    if(check(name)) (*dirty_sym_table).insert(make_pair(name,new_sym_entry));
+    if(dirty_check(name)) (*dirty_sym_table).insert(make_pair(name,new_sym_entry));
     int size = get_size(type);
     (*dirty_sym_table)[name]->line_number = line_number;
     (*dirty_sym_table)[name]->source_file = curr_file;
