@@ -56,7 +56,7 @@ string get_index(int k, vector<int> &x){
 
 void print3AC_code(){
     ofstream tac_file;
-    string file_name = out_file_name+"3ac.txt";
+    string file_name = out_file_name.substr(0,out_file_name.size()-1)+".3ac";
     tac_file.open(file_name);
     set<int> y;
     vector<int> x;

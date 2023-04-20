@@ -1,6 +1,0 @@
-Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
-answer,9,int,,No,0,-24,8
-args,3,String,,No,0,24,8
-game,10,int,,No,0,-32,8
-x,4,int,,No,0,-8,8
-y,5,int,,No,0,-16,8

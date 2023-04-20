@@ -1,4 +1,0 @@
-Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
-a,6,int,,No,0,24,8
-b,6,int,,No,0,32,8
-c,7,int,,No,0,-8,8

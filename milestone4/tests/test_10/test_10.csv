@@ -1,3 +1,0 @@
-Lexeme,Line Number,Type,Modifiers,Function,Num of Arguments,Offset,Size
-add,6,int,static ,Yes,2,0,16
-main,2,void,public static ,Yes,1,0,8
