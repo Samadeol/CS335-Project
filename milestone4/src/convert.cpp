@@ -30,14 +30,9 @@ void print(string a, string b, string c){
 
 string get_empty_reg(string reg = ""){
     if(r.empty()) return "r8";
-    int l=8;
-    for(auto it:r){
-        string x = it.first;
-        x = x.substr(1,x.size()-1);
-        if(l<stoi(x)) return "r"+to_string(l);
-        l++;
+    for(int l=8;l<16;l++){
+        if(r.find("r"+to_string(l))==r.end()) return "r"+to_string(l);
     }
-    if(l<16) return "r"+to_string(l);
     if(reg != "r8") reg = "r8";
     else reg = "r9";
     print("pushq",reg,"");
@@ -156,6 +151,7 @@ int main(int argc, char**argv){
             }
             else fout<<text[i][0]<<endl;
             k = -stoi(text[i+1][2]);
+            //cout<<k<<endl;
             print("pushq","rbp","");
             print("movq","rsp","rbp");
         }else if(text[i][0][0]=='.') fout<<text[i][0]<<endl;
@@ -164,6 +160,7 @@ int main(int argc, char**argv){
                 if(t.find(text[i][1])==t.end()){
                     reg1 = get_empty_reg();
                     print("movq",s[text[i][1]],reg1);
+                    r[reg1]="busy";
                 }else reg1 = t[text[i][1]];
                 t.erase(text[i][1]);
                 if(t.find(text[i][3])==t.end()){
@@ -247,13 +244,12 @@ int main(int argc, char**argv){
                     }else if(text[i][2] == "rax"){
                         reg1 = get_empty_reg();
                         print("movq","rax",reg1);
-                        r[reg1]=text[i][0];
-                        t[text[i][0]] = reg1;
                     }
                     else if(text[i][0][0]=='#'){ 
                         reg1 = get_empty_reg();
                         if(text[i][2][0]=='-' || (text[i][2][0]>='0' && text[i][2][0]<='9'))print("movq","$"+text[i][2],reg1);
                         else print("movq",text[i][2],reg1);
+                        if(text[i][2][0]=='(') r.erase(text[i][2].substr(2,text[i][2].size()-3));
                         r[reg1] = text[i][0];
                         t[text[i][0]] = reg1;
                     }else{
@@ -263,6 +259,7 @@ int main(int argc, char**argv){
                         }else reg1 = t[text[i][2]];
                         t.erase(text[i][2]);
                         print("movq",reg1,text[i][0]);
+                        if(text[i][0][0]=='(') r.erase(text[i][0].substr(2,text[i][0].size()-3));
                         r.erase(reg1);
                     }
                 }else if(text[i].size()==4){
@@ -280,6 +277,7 @@ int main(int argc, char**argv){
                         reg1 = get_empty_reg();
                         print("movq",s[text[i][2]],reg1);
                     }else reg1 = t[text[i][2]];
+                    r[reg1] = "busy";
                     t.erase(text[i][2]);
                     if(text[i][4]=="1"){
                         if(text[i][3]=="+") print("incq",reg1,"");

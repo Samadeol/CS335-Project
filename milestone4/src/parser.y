@@ -594,7 +594,7 @@ PrimaryNoNewArray:
 Literal			{if(!first_parse){$$->lit = true;strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var);$$->i_number = $1->i_number;}}	
 | LEFT_PARANTHESIS Expression RIGHT_PARANTHESIS{if(!first_parse){$$->lit = false; strcpy($$->type,$2->type);strcpy($$->temp_var,$2->temp_var);$$->true_list = $2->true_list; $$->false_list = $2->false_list; $$->i_number = $2->i_number;}}
 | ClassInstanceCreationExpression	{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type); $$->i_number = $1->i_number; strcpy($$->temp_var,$1->temp_var);}}	
-| ArrayAccess		{if(!first_parse){$$->lit = false;  strcpy($$->type,$1->type);$$->i_number = $1->i_number;}}
+| ArrayAccess		{if(!first_parse){$$->lit = false;  strcpy($$->type,$1->type);$$->i_number = $1->i_number; string z = new_temporary(); emitt("",$1->temp_var,"",z,-1); strcpy($$->temp_var,z.c_str());}}
 | MethodInvocation		{if(!first_parse){$$->lit = false; strcpy($$->type,$1->type);strcpy($$->temp_var,$1->temp_var); $$->i_number = $1->i_number;}}
 ;
 

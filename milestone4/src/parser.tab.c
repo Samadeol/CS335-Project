@@ -3281,7 +3281,7 @@ yyreduce:
 
   case 195:
 #line 597 "parser.y"
-                        {if(!first_parse){(yyval.item)->lit = false;  strcpy((yyval.item)->type,(yyvsp[0].item)->type);(yyval.item)->i_number = (yyvsp[0].item)->i_number;}}
+                        {if(!first_parse){(yyval.item)->lit = false;  strcpy((yyval.item)->type,(yyvsp[0].item)->type);(yyval.item)->i_number = (yyvsp[0].item)->i_number; string z = new_temporary(); emitt("",(yyvsp[0].item)->temp_var,"",z,-1); strcpy((yyval.item)->temp_var,z.c_str());}}
 #line 3286 "parser.tab.c"
     break;
 

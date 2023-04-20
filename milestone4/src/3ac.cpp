@@ -34,6 +34,7 @@ string array_access(string name, vector<int> a, vector<int> b){
         }
     }
     return "*("+name+" + "+t+")";
+
 }
 
 string new_temporary(){

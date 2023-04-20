@@ -1,5 +1,5 @@
 public class BubbleSortExample {  
-    static void bubbleSort() {  
+    static void main() {  
         int n = 5;
         int arr[] = new int[5];
         arr[0] = 5;
@@ -17,7 +17,7 @@ public class BubbleSortExample {
                                  arr[j] = temp;  
                          }  
                           
-                 }  
+                 }
          }  
   
     }  
