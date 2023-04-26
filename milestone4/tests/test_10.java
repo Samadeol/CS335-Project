@@ -1,10 +1,20 @@
-public class test_10 {
-    public static void main(String[] args){
-        int c=3;
-    }
+public class Sample3 {
+    public static void main() {
+        int x=5;
+        int z=10;
+        z++;
+        x--;
+        if(x>3){
+            for(int i=0;i<10;i++){
+                while(i<3){
+                    z++;
+                    i++;
+                    }
+            }
+        }
 
-    static int add(int a, int b){
-        int c=a+b;
-        return c;
+        System.out.println(z);
+
+
     }
 }

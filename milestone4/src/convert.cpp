@@ -242,8 +242,10 @@ int main(int argc, char**argv){
                             t.erase(text[i][2]);
                         }
                     }else if(text[i][2] == "rax"){
-                        reg1 = get_empty_reg();
+                         reg1 = get_empty_reg();
                         print("movq","rax",reg1);
+                        t[text[i][0]] = reg1;
+                        r[reg1] = text[i][0];
                     }
                     else if(text[i][0][0]=='#'){ 
                         reg1 = get_empty_reg();

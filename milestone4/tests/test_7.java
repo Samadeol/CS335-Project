@@ -1,21 +1,18 @@
-class HelloWorld {
-    kit ob; 
-    public static void main(String[] args) {
-        ob=new kit();
-        HelloWorld h=new HelloWorld();
-        h.ob.name=1;
-        h.ob.id=2;
-        h.ob.roll=3;    
-    }
+public class test_11 {
+
+    public static void main(){
+        int x=3;
+        int y=6;
+        if(x>2 || x<5 || x==y){
+            x++;
+            y--;
+        }
+        x*=3;
+        x^=2;
+        x=x<<2;
+        for(int i=0;i<4;i++){
+            y=2*y;
+        }
 }
 
-class kit{
-    int name;
-    int id;
-    int roll;
-    public static void main(String[] args){
-        kit k=new kit();
-        k.name=1;
-        k.id=2;
-    }
 }

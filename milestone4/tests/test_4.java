@@ -1,6 +1,8 @@
 class PalindromeExample{  
 	public static void main(String args[]){  
-	 int r,sum=0,temp;    
+	 int r=0;
+	 int sum=0;
+	 int temp=0;   
 	 int n=454;//It is the number variable to be checked for palindrome  
 	 
 	 temp=n;    
@@ -12,6 +14,6 @@ class PalindromeExample{
 		break;  // supporting break statement
 	  }
    }    
-  
+  System.out.println(n);
    }  
    } 
